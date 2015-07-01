@@ -3,6 +3,7 @@ package mx.com.pineahat.auth10;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -52,7 +53,9 @@ public class Login extends AccountAuthenticatorActivity {
         Account[] cuentas = accountManager.getAccountsByType("mx.com.pineahat.auth10");
         if(cuentas.length>0)
         {
-            Toast.makeText(this,"Ya existe una cuenta",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, Principal.class);
+            startActivity(intent);
+            finish();
         }
         conexion= new Conexion(getApplicationContext());
         SQLiteDatabase bd = conexion.getBD();
@@ -79,6 +82,10 @@ public class Login extends AccountAuthenticatorActivity {
                     if(resp!=null)
                     {
                         boolean respuesta = crearUsuario(usuario,contra,resp);
+                        Intent intent = new Intent(v.getContext(), Principal.class);
+                        startActivity(intent);
+                        finish();
+
                     }
                 }
                 else
@@ -88,7 +95,9 @@ public class Login extends AccountAuthenticatorActivity {
                     JSONArray resp = iniciarSesion(usuario, contra);
                     if(resp!=null)
                     {
-
+                        Intent intent = new Intent(v.getContext(), Principal.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }
             }
@@ -145,7 +154,7 @@ public class Login extends AccountAuthenticatorActivity {
             miBundle.putString("JSON", array.toString());
             accountManager.addAccountExplicitly(account, contra, miBundle);
 
-            //String myData = accountManager.getUserData(account, "id");
+            //String myData = accountManager.getUserData(account, "JSON");
             //Toast.makeText(v.getContext(),myData,Toast.LENGTH_SHORT).show();
             flag=true;
         }catch (Exception e)
