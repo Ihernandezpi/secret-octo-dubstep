@@ -38,6 +38,11 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+        <activity
+            android:name=".Configuracion"
+            android:label="@string/title_activity_configuracion"
+            android:theme="@style/AppTheme2">
+        </activity>
 
     </application>
 

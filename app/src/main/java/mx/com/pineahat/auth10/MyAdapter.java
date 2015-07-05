@@ -24,6 +24,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private String name;        //String Resource for header View Name
     private int profile;        //int Resource for header view profile picture
     private String email;       //String Resource for header view email
+    public String midGrupo[];
 
     Context context;
 
@@ -33,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         int Holderid;
-
+        String sGrupo;
         TextView textView;
         ImageView imageView;
         ImageView profile;
@@ -53,6 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 textView = (TextView) itemView.findViewById(R.id.rowText); // Creating TextView object with the id of textView from item_row.xml
                 imageView = (ImageView) itemView.findViewById(R.id.rowIcon);// Creating ImageView object with the id of ImageView from item_row.xml
                 Holderid = 1;                                               // setting holder id as 1 as the object being populated are of type item row
+                sGrupo="";
             }
             else{
 
@@ -68,13 +70,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
 
-    MyAdapter(String Titles[],int Icons[],String Name,String Email, int Profile, Context passedContext){ // MyAdapter Constructor with titles and icons parameter
+    MyAdapter(String Titles[],String idGrupo[],int Icons[],String Name,String Email, int Profile, Context passedContext){ // MyAdapter Constructor with titles and icons parameter
         // titles, icons, name, email, profile pic are passed from the main activity as we
         mNavTitles = Titles;                //have seen earlier
         mIcons = Icons;
         name = Name;
         email = Email;
         profile = Profile;                     //here we assign those passed values to the values we declared here
+        midGrupo =idGrupo;
         //in adapter
 
         this.context=passedContext;
@@ -94,7 +97,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row,parent,false); //Inflating the layout
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row,parent,false);//Inflating the layout
+
 
 
             ViewHolder vhItem = new ViewHolder(v,viewType,context); //Creating ViewHolder and passing the object of type view
@@ -122,20 +126,50 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Tells us item at which position is being constructed to be displayed and the holder id of the holder object tell us
     // which view type is being created 1 for item row
     @Override
-    public void onBindViewHolder(MyAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final MyAdapter.ViewHolder holder, int position) {
         if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
             // position by 1 and pass it to the holder while setting the text and image
             holder.textView.setText(mNavTitles[position - 1]); // Setting the Text with the array of our Titles
             holder.imageView.setImageResource(mIcons[position -1]);// Settimg the image with array of our icons
-            if(getItemCount() == position + 1) {
+            holder.sGrupo=midGrupo[position-1];
+       /*     if(getItemCount() == position + 1) {
                 holder.itemView.setClickable(true);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(v.getContext(), "Cerrar sesión", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), "Cerrar sesión" +holder.sGrupo, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
+            if(getItemCount() == position+2) {
+                holder.itemView.setClickable(true);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), "Ayuda y Comentarios"+holder.sGrupo, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            if(getItemCount() == position+3) {
+                holder.itemView.setClickable(true);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), "Configuracion" +holder.sGrupo, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            if(getItemCount() > position+3) {
+                holder.itemView.setClickable(true);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(v.getContext(), "es grupo" +holder.sGrupo, Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
+            }*/
         }
         else{
 

@@ -15,5 +15,7 @@
     <string name="open">Menú</string>
     <string name="close">Actividades</string>
     <string name="title_activity_item_card_view">itemCardView</string>
+    <string name="title_activity_configuracion">Configuracion</string>
+
 </resources>
 
