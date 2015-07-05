@@ -14,5 +14,6 @@
     <string name="infoAUTH10">Aplicación docente de la Universidad Tecnológica de Huejotzingo</string>
     <string name="open">Menú</string>
     <string name="close">Actividades</string>
+        <string name="title_activity_configuracion">Configuracion</string>
 </resources>
 

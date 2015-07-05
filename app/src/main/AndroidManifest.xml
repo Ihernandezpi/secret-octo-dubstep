@@ -23,22 +23,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Principal"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme2"
-            >
+            android:theme="@style/AppTheme2" >
         </activity>
 
-        <service
-            android:name=".ServicioLogin" >
+        <service android:name=".ServicioLogin" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator"
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
+        <activity
+            android:name=".Configuracion"
+            android:label="@string/title_activity_configuracion"
+            android:theme="@style/AppTheme2">
+        </activity>
     </application>
 
 </manifest>
