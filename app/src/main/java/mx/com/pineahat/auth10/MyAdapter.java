@@ -137,7 +137,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(v.getContext(), "Cerrar sesión" +holder.sGrupo, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), "Cerrar sesiÃ³n" +holder.sGrupo, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

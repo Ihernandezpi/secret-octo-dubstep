@@ -67,7 +67,7 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
 
         try
         {
-             miCardView.setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
+             //miCardView.setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
             ((TextView) holder.mTextView.findViewById(R.id.infoText)).setText(mDataset.getJSONObject(position).getString("nombre"));
             ((TextView) holder.mTextView.findViewById(R.id.descripcion)).setText(mDataset.getJSONObject(position).getString("descripcion"));
             ((TextView) holder.mTextView.findViewById(R.id.txtFecha)).setText(mDataset.getJSONObject(position).getString("fechaCreacion"));
@@ -76,6 +76,7 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
         {
             e.printStackTrace();
         }
+
 
     }
 

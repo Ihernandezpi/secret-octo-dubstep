@@ -59,6 +59,8 @@ public class Principal extends ActionBarActivity
     //Declaring Action Bar Drawer Toggle
     ActionBarDrawerToggle mDrawerToggle;
 
+            AccountManager miAccountManager;
+
 
 
 
@@ -69,9 +71,12 @@ public class Principal extends ActionBarActivity
         /*Assing the toolbar object to the view
         and setting the ActionBar to our Tool_bar
          */
-        AccountManager miAccountManager = AccountManager.get(getApplicationContext());
+        miAccountManager =  (AccountManager) this.getSystemService(ACCOUNT_SERVICE);
         Account [] account = miAccountManager.getAccountsByType("mx.com.pineahat.auth10");
         String myData = miAccountManager.getUserData(account[0], "JSON");
+        /**
+         * VErificar cuando no mantenga la sesión
+         */
         try
         {
             JSONArray jsonArray = new JSONArray(myData);
@@ -121,7 +126,7 @@ public class Principal extends ActionBarActivity
 
                 Fragment fragment = new MyFragment();
                 Bundle args = new Bundle();
-                args.putString(MyFragment.ID_GRUPO, " Esto es un Fragment El ID del grupo es "+IDGRUPO[0]);
+                args.putString(MyFragment.ID_GRUPO, IDGRUPO[0]);
                 fragment.setArguments(args);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -169,8 +174,7 @@ public class Principal extends ActionBarActivity
                                 if(recyclerView.getChildPosition(child)==recyclerView.getChildCount()-3)
                                 {
                                     Toast.makeText(Principal.this, "Esto es configuracion con ID" + IDGRUPO[recyclerView.getChildPosition(child) - 1], Toast.LENGTH_SHORT).show();
-                                    intent=new Intent(getApplicationContext(),Configuracion.class);
-                                    startActivity(intent);
+
                                 }
                                 if(recyclerView.getChildPosition(child)==recyclerView.getChildCount()-2)
                                 {
@@ -178,7 +182,13 @@ public class Principal extends ActionBarActivity
                                 }
                                 if(recyclerView.getChildPosition(child)==recyclerView.getChildCount()-1)
                                 {
-                                    Toast.makeText(Principal.this, "Esto es Salir con ID" + IDGRUPO[recyclerView.getChildPosition(child)-1], Toast.LENGTH_SHORT).show();
+                                    Account [] arAccounts = miAccountManager.getAccountsByType("mx.com.pineahat.auth10");
+                                    if(arAccounts.length>=1) {
+                                            miAccountManager.removeAccount(arAccounts[0],null,null);
+                                    }
+                                    Intent intent2 = new Intent(getApplicationContext(), Login.class);
+                                    startActivity(intent2);
+                                    finish();
                                 }
 
                             }

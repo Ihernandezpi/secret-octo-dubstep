@@ -1,4 +1,4 @@
-package mx.com.pineahat.auth10;
+package mx.com.pineahat.auth10.DAO;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,20 +14,22 @@ import mx.com.pineahat.auth10.utilerias.Conexion;
  */
 public class DAOCardViewItem {
     private Context miContext;
-    public DAOCardViewItem (Context miContext)
+    private String idGrupo;
+    public DAOCardViewItem (Context miContext, String idGrupo)
     {
         this.miContext= miContext;
+        this.idGrupo=idGrupo;
     }
 
     public JSONArray getActividades ()
     {
-        JSONArray miArray = null;
+        JSONArray miArray = new JSONArray();
         Conexion miConexion = new Conexion(miContext);
         SQLiteDatabase miDatabase = miConexion.getBD();
         JSONObject miJsonObject;
         try
         {
-            String consulta="";
+            String consulta="select * from actividades;";
             Cursor cursor = miDatabase.rawQuery(consulta, null);
             try{
 

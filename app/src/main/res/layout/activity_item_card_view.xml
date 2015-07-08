@@ -2,16 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginBottom="8dp">
+    android:layout_marginRight="16dp">
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="4dp"
-        android:translationZ="1dp">
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        android:layout_marginTop="8sp"
+        android:layout_marginBottom="@dimen/navigation_padding_bottom"
+        >
         <LinearLayout
             android:id="@+id/linearColor"
             android:orientation="vertical"
@@ -22,8 +24,11 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical">
+                android:layout_height="wrap_content"
+                android:padding="0px"
+                android:layout_margin="0px"
+                android:layout_weight="3.21"
+                android:gravity="fill_vertical">
 
                 <TextView
                     android:id="@+id/infoText"
@@ -44,8 +49,10 @@
                     android:text="15/06/1994"
                     android:id="@+id/txtFecha"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="4dp"
                     android:layout_weight="0.07"
+                    android:textColor="#000000"
                     android:gravity="right" />
             </LinearLayout>
 
@@ -54,7 +61,10 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="8dp"
+                android:layout_margin="1dp"
+                android:paddingTop="4dp"
                 android:text="Descripción"
                 android:textColor="#000000"
                 android:id="@+id/descripcion" />

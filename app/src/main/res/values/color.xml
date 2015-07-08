@@ -5,4 +5,8 @@
     <color name="accent">#009688</color>
     <color name="background">#009688</color>
     <color name="blanco">#ffffff</color>
+    <color name="ripple">#F06292</color>
+    <color name="accent_pressed">#C2185B</color>
+    <color name="primary2">#E91E63</color>
+    <color name="primary_dark2">#D81B60</color>
 </resources>

@@ -11,5 +11,11 @@
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>
     </style>
+    <style name="Mytheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/primary2</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark2</item>
+
+    </style>
+
 
 </resources>
