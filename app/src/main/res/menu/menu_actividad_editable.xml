@@ -2,15 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="mx.com.pineahat.auth10.ActividadEditable">
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_team"
+        android:orderInCategory="200"
+        android:title="Team"
+        android:icon="@mipmap/ic_action_add_team"
+        app:showAsAction="ifRoom"
+        ></item>
+    <item
+        android:id="@+id/action_palette_color"
+        android:orderInCategory="100"
+        android:title="Color"
+        android:icon="@mipmap/ic_action_palette"
+        app:showAsAction="ifRoom"
+        ></item>
 
-    <item android:id="@+id/action_groups"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom"
-        android:icon="@mipmap/ic_action_add_group"/>
-    <item android:id="@+id/action_color"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom"
-        android:icon="@mipmap/ic_action_add_group"/>
+
 </menu>

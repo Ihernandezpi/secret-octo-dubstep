@@ -19,5 +19,9 @@
     <string name="title_activity_actividad_editable">ActividadEditable</string>
     <string name="titulo">Titulo</string>
     <string name="descripcion">Descripción</string>
+    <string name="colorActividad">Color de Actividad</string>
+    <string name="Recordarme">Recordarme</string>
+    <string name="fecha">Fecha</string>
+    <string name="hora">Hora</string>
 </resources>
 

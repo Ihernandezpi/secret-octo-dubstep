@@ -47,7 +47,7 @@
         <activity
             android:name=".ActividadEditable"
             android:label="@string/title_activity_actividad_editable"
-            android:theme="@style/Mytheme">
+            android:theme="@style/AppTheme2">
         </activity>
     </application>
 

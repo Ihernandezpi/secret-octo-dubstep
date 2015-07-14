@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:baselineAligned="false">
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="29sp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/fecha"
+        android:layout_marginLeft="16dp"
+        android:id="@+id/textFecha"
+
+        android:layout_weight="0.33"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="27sp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/hora"
+        android:layout_marginLeft="8dp"
+        android:id="@+id/textHora"
+        android:layout_weight="0.33"
+        android:gravity="center" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/editablefechaclose"
+        android:paddingLeft="8sp"
+        android:src="@mipmap/ic_action_close"
+        android:layout_marginLeft="16dp"
+        android:padding="8dp"
+        android:layout_weight="0.33"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
