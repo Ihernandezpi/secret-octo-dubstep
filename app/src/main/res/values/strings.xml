@@ -23,5 +23,6 @@
     <string name="Recordarme">Recordarme</string>
     <string name="fecha">Fecha</string>
     <string name="hora">Hora</string>
+    <string name="provider_name">Actividades</string>
 </resources>
 

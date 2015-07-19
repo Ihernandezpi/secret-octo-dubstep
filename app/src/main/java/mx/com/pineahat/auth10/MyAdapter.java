@@ -1,7 +1,11 @@
 package mx.com.pineahat.auth10;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.net.URL;
+
 /**
  * Created by Stephani on 28/06/2015.
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+
+
     private static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
     // IF the view under inflation and population is header or Item
     private static final int TYPE_ITEM = 1;
@@ -33,11 +42,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // ViewHolder are used to to store the inflated views in order to recycle them
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public static ImageView profile;
         int Holderid;
         String sGrupo;
         TextView textView;
         ImageView imageView;
-        ImageView profile;
         TextView Name;
         TextView email;
         Context contxt;
@@ -173,6 +182,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
         else{
 
+            new LoadImage().execute("http://pineahat.com.mx/image/PinaHat100.png");
             holder.profile.setImageResource(profile);           // Similarly we set the resources for header view
             holder.Name.setText(name);
             holder.email.setText(email);
@@ -194,8 +204,40 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         return TYPE_ITEM;
     }
+    public Bitmap bitmap;
 
     private boolean isPositionHeader(int position) {
         return position == 0;
+    }
+
+    private class LoadImage extends AsyncTask<String, String, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        protected Bitmap doInBackground(String... args) {
+            try {
+                bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        protected void onPostExecute(Bitmap image) {
+
+            if (image != null) {
+
+                ViewHolder.profile.setImageBitmap(image);
+                ViewHolder.profile.refreshDrawableState();
+
+            } else {
+
+            }
+        }
+
     }
 }

@@ -2,8 +2,14 @@ package mx.com.pineahat.auth10;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -12,29 +18,41 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.URL;
 
 import mx.com.pineahat.auth10.DAO.PrincipalDAO;
 
 
 
 public class Principal extends ActionBarActivity
-        {
+{   Button load_img;
+    ImageView img;
+    Bitmap bitmap;
+    ProgressDialog pDialog;
+    de.hdodenhof.circleimageview.CircleImageView mCircleImageView;
+
+
     //First We declare Titles and Icons for our Navigation Drawable ListView
     //This Icons and titles are holded in an array as you can see
-   // String TITLES[]={"1-A Dipositivos Moviles","9-A Desarrollo de Aplicaciones","Configuracion","Ayuda y comentarios","Cerrar Sesion"};
+    // String TITLES[]={"1-A Dipositivos Moviles","9-A Desarrollo de Aplicaciones","Configuracion","Ayuda y comentarios","Cerrar Sesion"};
     String []TITLES;
     String []IDGRUPO;
     int []ICONS;
-   // int ICONS[]={R.mipmap.ic_action_group,R.mipmap.ic_action_group,R.mipmap.ic_action_settings,R.mipmap.ic_action_help,R.mipmap.ic_closesession};
+    // int ICONS[]={R.mipmap.ic_action_group,R.mipmap.ic_action_group,R.mipmap.ic_action_settings,R.mipmap.ic_action_help,R.mipmap.ic_closesession};
 
     //Similary we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile pricture in the header view
@@ -59,7 +77,7 @@ public class Principal extends ActionBarActivity
     //Declaring Action Bar Drawer Toggle
     ActionBarDrawerToggle mDrawerToggle;
 
-            AccountManager miAccountManager;
+    AccountManager miAccountManager;
 
 
 
@@ -68,6 +86,12 @@ public class Principal extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+        //Get id
+        Toast.makeText(getApplicationContext(), Build.SERIAL,Toast.LENGTH_SHORT).show();
+
+
+        //AgregarImagen
+
         /*Assing the toolbar object to the view
         and setting the ActionBar to our Tool_bar
          */
@@ -99,8 +123,8 @@ public class Principal extends ActionBarActivity
                     ICONS[i]=R.mipmap.ic_action_group;
                     IDGRUPO[i]=miJsonObject.get("idAsignacion").toString();
                 }
-                TITLES[jsonarrayP.length()]="Configuracion";
-                ICONS[jsonarrayP.length()]=R.mipmap.ic_action_settings;
+                TITLES[jsonarrayP.length()]="Papelera";
+                ICONS[jsonarrayP.length()]=R.mipmap.ic_action;
                 IDGRUPO[jsonarrayP.length()]=" IDCONFIG";
 
                 TITLES[jsonarrayP.length()+1]="Ayuda y Comentarios";
@@ -115,18 +139,23 @@ public class Principal extends ActionBarActivity
                 //Setting toolbar as the ActionBar
                 setSupportActionBar(toolbar);
 
+
                 mRecyclerView=(RecyclerView) findViewById(R.id.RecyclerView);
 
                 mRecyclerView.setHasFixedSize(true);
                 mAdapter=new MyAdapter(TITLES,IDGRUPO,ICONS,NAME,EMAIL,PROFILE,this);
 
                 mRecyclerView.setAdapter(mAdapter);
+                mCircleImageView=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.cicleView);
+
 
                 //Inflando Fragmen por default
 
                 Fragment fragment = new MyFragment();
                 Bundle args = new Bundle();
+                String tipo="Actividades";
                 args.putString(MyFragment.ID_GRUPO, IDGRUPO[0]);
+                args.putString(MyFragment.TYPE, tipo);
                 fragment.setArguments(args);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -159,11 +188,11 @@ public class Principal extends ActionBarActivity
                                 //Toast.makeText(Principal.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
                                 if (recyclerView.getChildPosition(child)<recyclerView.getChildCount()-3)
                                 {
-                                    Toast.makeText(Principal.this, "The Item Clicked is a group and his ID: "+ IDGRUPO[recyclerView.getChildPosition(child)-1] , Toast.LENGTH_SHORT).show();
-                                   // Toast.makeText(Principal.this, "SON " + recyclerView.getChildCount(), Toast.LENGTH_SHORT).show();
                                     Fragment fragment = new MyFragment();
                                     Bundle args = new Bundle();
-                                    args.putString(MyFragment.ID_GRUPO, " Esto es un Fragment El ID del grupo es "+IDGRUPO[recyclerView.getChildPosition(child)-1]);
+                                    args.putString(MyFragment.ID_GRUPO, IDGRUPO[recyclerView.getChildPosition(child)-1]);
+                                    String tipo="Actividades";
+                                    args.putString(MyFragment.TYPE, tipo);
                                     fragment.setArguments(args);
 
                                     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -173,7 +202,17 @@ public class Principal extends ActionBarActivity
                                 }
                                 if(recyclerView.getChildPosition(child)==recyclerView.getChildCount()-3)
                                 {
-                                    Toast.makeText(Principal.this, "Esto es configuracion con ID" + IDGRUPO[recyclerView.getChildPosition(child) - 1], Toast.LENGTH_SHORT).show();
+                                    String id =IDGRUPO[recyclerView.getChildPosition(child) - 1];
+                                    String tipo="Papelera";
+                                    Fragment fragment = new MyFragment();
+                                    Bundle args = new Bundle();
+                                    args.putString(MyFragment.ID_GRUPO, IDGRUPO[recyclerView.getChildPosition(child)-1]);
+                                    args.putString(MyFragment.TYPE, tipo);
+                                    fragment.setArguments(args);
+                                    FragmentManager fragmentManager = getSupportFragmentManager();
+                                    fragmentManager.beginTransaction()
+                                            .replace(R.id.content_frame, fragment).commit();
+                                    getSupportActionBar().setTitle(TITLES[recyclerView.getChildPosition(child) - 1]);
 
                                 }
                                 if(recyclerView.getChildPosition(child)==recyclerView.getChildCount()-2)
@@ -184,7 +223,7 @@ public class Principal extends ActionBarActivity
                                 {
                                     Account [] arAccounts = miAccountManager.getAccountsByType("mx.com.pineahat.auth10");
                                     if(arAccounts.length>=1) {
-                                            miAccountManager.removeAccount(arAccounts[0],null,null);
+                                        miAccountManager.removeAccount(arAccounts[0],null,null);
                                     }
                                     Intent intent2 = new Intent(getApplicationContext(), Login.class);
                                     startActivity(intent2);
@@ -222,13 +261,13 @@ public class Principal extends ActionBarActivity
                         super.onDrawerOpened(drawerView);
                         // code here will execute once the drawer is opened( As I dont want anything happened whe drawer is
                         // open I am not going to put anything here)
-                        Toast.makeText(getApplicationContext(),"Abierto",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"Abierto",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
                         super.onDrawerClosed(drawerView);
-                        Toast.makeText(getApplicationContext(),"cerrado",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"cerrado",Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -271,4 +310,17 @@ public class Principal extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        if(!Login.keepSession)
+        {
+            Account [] arAccounts = miAccountManager.getAccountsByType("mx.com.pineahat.auth10");
+            if(arAccounts.length>=1) {
+                miAccountManager.removeAccount(arAccounts[0],null,null);
+            }
+        }
+        super.onDestroy();
+
+    }
 }

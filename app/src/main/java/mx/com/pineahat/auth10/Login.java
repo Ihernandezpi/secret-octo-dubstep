@@ -5,11 +5,14 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +34,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +42,21 @@ import java.util.List;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
-public class Login extends AccountAuthenticatorActivity {
+public class Login extends AppCompatActivity {
+    public static boolean keepSession=true;
     AccountManager accountManager;
     EditText txtUsuario;
     EditText txtPass;
     Conexion conexion;
     CheckBox miCheckBox;
+    View coordinatorLayoutView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         accountManager = AccountManager.get(getApplicationContext());
+        coordinatorLayoutView = findViewById(R.id.cordinatorLogin);
         Account[] cuentas = accountManager.getAccountsByType("mx.com.pineahat.auth10");
         if(cuentas.length>0)
         {
@@ -74,32 +81,35 @@ public class Login extends AccountAuthenticatorActivity {
         miButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (miCheckBox.isChecked())
-                {
-                    String usuario=txtUsuario.getText().toString();
-                    String contra=txtUsuario.getText().toString();
-                    JSONArray resp = iniciarSesion(usuario, contra);
-                    if(resp!=null)
-                    {
-                        boolean respuesta = crearUsuario(usuario,contra,resp);
-                        Intent intent = new Intent(v.getContext(), Principal.class);
-                        startActivity(intent);
-                        finish();
+                String usuario=txtUsuario.getText().toString();
+                String contra=txtPass.getText().toString();
+                if(!usuario.equals("") && !contra.equals("")) {
+                    if (miCheckBox.isChecked()) {
+                        keepSession = true;
+                        JSONArray resp = iniciarSesion(usuario, contra);
+                        if (resp != null) {
+                            boolean respuesta = crearUsuario(usuario, contra, resp);
+                            Intent intent = new Intent(v.getContext(), Principal.class);
+                            startActivity(intent);
+                            finish();
 
+                        }
+                    } else {
+                        keepSession = false;
+                        JSONArray resp = iniciarSesion(usuario, contra);
+                        if (resp != null) {
+                            boolean respuesta = crearUsuario(usuario, contra, resp);
+                            Intent intent = new Intent(v.getContext(), Principal.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 }
                 else
                 {
-                    String usuario=txtUsuario.getText().toString();
-                    String contra=txtUsuario.getText().toString();
-                    JSONArray resp = iniciarSesion(usuario, contra);
-                    if(resp!=null)
-                    {
-                        Intent intent = new Intent(v.getContext(), Principal.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                    Snackbar.make(coordinatorLayoutView,"Campos vacios",Snackbar.LENGTH_SHORT).show();
                 }
+
             }
         });
     }
@@ -108,7 +118,6 @@ public class Login extends AccountAuthenticatorActivity {
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            Toast.makeText(this.getApplicationContext(),"No hay internet",Toast.LENGTH_SHORT).show();
             Task miTask = new Task(usuario,contra);
             try {
                 resp = miTask.execute().get();
@@ -117,7 +126,7 @@ public class Login extends AccountAuthenticatorActivity {
             }
 
         } else {
-            Toast.makeText(this.getApplicationContext(),"No hay internet",Toast.LENGTH_SHORT).show();
+            Snackbar.make(coordinatorLayoutView,"No hay internet",Snackbar.LENGTH_SHORT).show();
         }
 
         return resp;
@@ -181,6 +190,8 @@ public class Login extends AccountAuthenticatorActivity {
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse SetServerString =Client.execute(httpPost);
                 resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
+
+
             } catch (Exception e) {
             }
             return resp;

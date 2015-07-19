@@ -12,6 +12,13 @@
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+
+        android:id="@+id/snackbarPosition">
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -25,11 +32,12 @@
         fab:fab_shadow="true"
         android:layout_marginBottom="@dimen/abc_action_button_min_height_material"
         android:elevation="10dp"
-
         />
     <TextView
         android:id="@+id/tv_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>
