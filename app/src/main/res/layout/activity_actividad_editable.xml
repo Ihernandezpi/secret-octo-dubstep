@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:id="@+id/layoutEditable">
 
 
         <include
@@ -64,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/Recordarme"
+            android:text="@string/recordarme"
             android:id="@+id/txtRecordarme"
             android:layout_marginBottom="@dimen/abc_action_button_min_width_overflow_material"
             android:layout_marginTop="@dimen/abc_action_bar_content_inset_material"
