@@ -115,6 +115,7 @@ public class Principal extends ActionBarActivity
                 //Setting toolbar as the ActionBar
                 setSupportActionBar(toolbar);
 
+
                 mRecyclerView=(RecyclerView) findViewById(R.id.RecyclerView);
 
                 mRecyclerView.setHasFixedSize(true);

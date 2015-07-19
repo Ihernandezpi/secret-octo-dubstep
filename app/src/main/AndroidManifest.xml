@@ -47,7 +47,12 @@
         <activity
             android:name=".ActividadEditable"
             android:label="@string/title_activity_actividad_editable"
-            android:theme="@style/AppTheme2">
+            android:theme="@style/AppTheme2"
+            android:parentActivityName=".Principal">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Principal"
+                />
         </activity>
     </application>
 

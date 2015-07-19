@@ -23,5 +23,11 @@
     <string name="Recordarme">Recordarme</string>
     <string name="fecha">Fecha</string>
     <string name="hora">Hora</string>
+    <string name="color_swatch_description">Color %1$d</string>
+    <string name="color_swatch_description_selected">Color %1$d selected</string>
+    <string name="color_picker_default_title">Select a Color</string>
+    <string name="dialog_title">Color de Actividad</string>
+    <string name="dia">Dia</string>
+
 </resources>
 
