@@ -13,6 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import mx.com.pineahat.auth10.DAO.DAOSync;
+
 /**
  * Created by ${Ignacio} on 12/07/2015.
  */
@@ -28,23 +34,30 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 
+      try
+      {
         ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-
+            Log.d("*********************", "Hay conexion");
             AccountManager miManager = AccountManager.get(context);
             Account a[] = miManager.getAccountsByType("mx.com.pineahat.auth10");
-            miManager.getUserData(a[0],"id");
+            String myData = miManager.getUserData(account, "JSON");
+            String fecha = miManager.getUserData(account, "fechaSync");
+
+            //Aqui va tu logíca de negocios
 
 
-
-
-
-
-            Log.d("*********************", "Hay conexión");
-        }
-
-
-
+            //Asignar ultima fecha de actualizacion fechaSync
+            Calendar calendar= Calendar.getInstance();
+            Date rightNow = calendar.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String strDate = sdf.format(rightNow.getTime());
+            miManager.setUserData(a[0],"fechaSync",strDate);
+        }}
+      catch (Exception e)
+      {
+          e.printStackTrace();
+      }
     }
 }

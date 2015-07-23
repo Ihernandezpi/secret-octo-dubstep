@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,9 +37,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import mx.com.pineahat.auth10.DAO.DAOCarga;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
@@ -50,6 +55,7 @@ public class Login extends AppCompatActivity {
     Conexion conexion;
     CheckBox miCheckBox;
     View coordinatorLayoutView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +167,13 @@ public class Login extends AppCompatActivity {
             Account account = new Account(usuario, "mx.com.pineahat.auth10");
             Bundle miBundle = new Bundle();
             miBundle.putString("JSON", array.toString());
+
+            Calendar calendar= Calendar.getInstance();
+            Date rightNow = calendar.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String strDate = sdf.format(rightNow.getTime());
+            miBundle.putString("fechaSync",strDate);
+
             accountManager.addAccountExplicitly(account, contra, miBundle);
 
             //String myData = accountManager.getUserData(account, "JSON");
@@ -190,13 +203,56 @@ public class Login extends AppCompatActivity {
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse SetServerString =Client.execute(httpPost);
                 resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
+                try {
+                    JSONObject jsonObject = resp.getJSONObject(0);
+                    String idProfe = jsonObject.getString("idProfesor");
+                    TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
+                }
+                catch (Exception e)
+                {
 
-
+                }
             } catch (Exception e) {
             }
             return resp;
         }
         protected void onPostExecute(String feed) {
+
+        }
+    }
+    class TaskTrunck extends AsyncTask<String, String,JSONArray> {
+        String idProfe;
+        public TaskTrunck(String idProfe)
+        {
+            this.idProfe=idProfe;
+        }
+        protected JSONArray doInBackground(String... urls) {
+            JSONArray resp=null;
+            JSONObject jsonIn = new JSONObject();
+
+            try {
+                jsonIn.put("idProfesor",this.idProfe);
+                jsonIn.put("tipoAccion","inicio");
+                HttpClient Client = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost("");
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("jsonIn", jsonIn.toString()));
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse SetServerString =Client.execute(httpPost);
+                resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
+                try {
+                    DAOCarga carga= new DAOCarga(getBaseContext());
+                    carga.trunck(resp);
+                }catch (Exception e)
+                {
+
+                }
+            } catch (Exception e) {
+            }
+            return resp;
+        }
+        protected void onPostExecute(String feed) {
+
         }
     }
 }

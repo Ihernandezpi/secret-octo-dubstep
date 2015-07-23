@@ -50,9 +50,11 @@ public class DAOCardViewItem {
                             miJsonObject.put("nombre",cursor.getString(2));
                             miJsonObject.put("descripcion",cursor.getString(3));
                             miJsonObject.put("fechaCreacion",cursor.getString(4));
-                            miJsonObject.put("estado",cursor.getString(5));
-                            miJsonObject.put("tipo",cursor.getString(6));
-                            miJsonObject.put("color",cursor.getString(7));
+                            miJsonObject.put("fechaRealizacion",cursor.getString(5));
+                            miJsonObject.put("fechaActualizacion",cursor.getString(6));
+                            miJsonObject.put("estado",cursor.getString(7));
+                            miJsonObject.put("tipo",cursor.getString(8));
+                            miJsonObject.put("color",cursor.getString(9));
                             miArray.put(miJsonObject);
                             miDatabase.close();
                             miConexion.close();
@@ -85,7 +87,7 @@ public class DAOCardViewItem {
         SQLiteDatabase miDatabase = miConexion.getBD();
         try
         {
-            String query ="UPDATE actividades SET fechaCreacion='"+strDate+"', estado ='Papelera' WHERE (idActividades="+id+")";
+            String query ="UPDATE actividades SET fechaCreacion='"+strDate+"', estado ='Papelera' WHERE (idActividades='"+id+"')";
 
             miDatabase.execSQL(query);
         }
@@ -105,7 +107,7 @@ public class DAOCardViewItem {
         SQLiteDatabase miDatabase = miConexion.getBD();
         try
         {
-            String query ="UPDATE actividades SET fechaCreacion='"+strDate+"', estado ='Activo' WHERE (idActividades="+id+")";
+            String query ="UPDATE actividades SET fechaCreacion='"+strDate+"', estado ='Activo' WHERE (idActividades='"+id+"')";
 
             miDatabase.execSQL(query);
         }
@@ -138,9 +140,11 @@ public class DAOCardViewItem {
                             miJsonObject.put("nombre",cursor.getString(2));
                             miJsonObject.put("descripcion",cursor.getString(3));
                             miJsonObject.put("fechaCreacion",cursor.getString(4));
-                            miJsonObject.put("estado",cursor.getString(5));
-                            miJsonObject.put("tipo",cursor.getString(6));
-                            miJsonObject.put("color",cursor.getString(7));
+                            miJsonObject.put("fechaRealizacion",cursor.getString(5));
+                            miJsonObject.put("fechaActualizacion",cursor.getString(6));
+                            miJsonObject.put("estado",cursor.getString(7));
+                            miJsonObject.put("tipo",cursor.getString(8));
+                            miJsonObject.put("color",cursor.getString(9));
                             miArray.put(miJsonObject);
                             miDatabase.close();
                             miConexion.close();

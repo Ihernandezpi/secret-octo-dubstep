@@ -61,6 +61,7 @@ public class MyFragment extends Fragment{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ActividadEditable.class);
+                    intent.putExtra("idAsignacion", mText);
                     startActivity(intent);
                 }
             });
@@ -88,7 +89,7 @@ public class MyFragment extends Fragment{
             mData = miDaoCardViewItem.getPapelera();
 
         if(mData!=null) {
-            miAdapterCardView = new AdapterCardView(mData);
+            miAdapterCardView = new AdapterCardView(mData,MyFragment.this);
             miRecyclerView.setAdapter(miAdapterCardView);
             SwipeableRecyclerViewTouchListener swipeTouchListener =
                     new SwipeableRecyclerViewTouchListener(miRecyclerView,
@@ -115,9 +116,6 @@ public class MyFragment extends Fragment{
                                         {
                                             moverActividades(coordinatorLayoutView,miDaoCardViewItem,finalId,position, getView());
                                         }
-
-
-
                                     }
                                 }
                                 @Override
@@ -172,7 +170,7 @@ public class MyFragment extends Fragment{
                     mLayoutManager = new LinearLayoutManager(v.getContext());
                     miRecyclerView.setLayoutManager(mLayoutManager);
                     miAdapterCardView = null;
-                    miAdapterCardView = new AdapterCardView(mData);
+                    miAdapterCardView = new AdapterCardView(mData,MyFragment.this);
                     miRecyclerView.setAdapter(miAdapterCardView);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -202,7 +200,7 @@ public class MyFragment extends Fragment{
             mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
             miRecyclerView.setLayoutManager(mLayoutManager);
             miAdapterCardView = null;
-            miAdapterCardView = new AdapterCardView(mData);
+            miAdapterCardView = new AdapterCardView(mData,MyFragment.this);
             miRecyclerView.setAdapter(miAdapterCardView);
         } catch (JSONException e) {
 
@@ -222,7 +220,7 @@ public class MyFragment extends Fragment{
                     mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
                     miRecyclerView.setLayoutManager(mLayoutManager);
                     miAdapterCardView = null;
-                    miAdapterCardView = new AdapterCardView(mData);
+                    miAdapterCardView = new AdapterCardView(mData,MyFragment.this);
                     miRecyclerView.setAdapter(miAdapterCardView);
 
                 } catch (Exception e) {
@@ -253,20 +251,39 @@ public class MyFragment extends Fragment{
             mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
             miRecyclerView.setLayoutManager(mLayoutManager);
             miAdapterCardView = null;
-            miAdapterCardView = new AdapterCardView(mData);
-            miRecyclerView.setAdapter(miAdapterCardView);
-            miRecyclerView.setHasFixedSize(true);
-            mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-            miRecyclerView.setLayoutManager(mLayoutManager);
-            miAdapterCardView = null;
-            miAdapterCardView = new AdapterCardView(mData);
+            miAdapterCardView = new AdapterCardView(mData,this);
             miRecyclerView.setAdapter(miAdapterCardView);
         } catch (Exception e) {
 
             e.printStackTrace();
         }
     }
+    public void refresh () {
+        final DAOCardViewItem miDaoCardViewItem = new DAOCardViewItem(getActivity().getApplicationContext(), mText);
+        if (tipo.equals("Actividades"))
+            mData = miDaoCardViewItem.getActividades();
+        else if (tipo.equals("Papelera"))
+            mData = miDaoCardViewItem.getPapelera();
 
+        if (mData != null) {
+            miRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+            miRecyclerView.setLayoutManager(mLayoutManager);
+            miAdapterCardView = null;
+            miAdapterCardView = new AdapterCardView(mData,this);
+            miRecyclerView.setAdapter(miAdapterCardView);
+        }
+    }
 
+    @Override
+    public void onResume() {
+        refresh();
+        super.onResume();
+    }
 
+    @Override
+    public void onStart() {
+        refresh();
+        super.onStart();
+    }
 }

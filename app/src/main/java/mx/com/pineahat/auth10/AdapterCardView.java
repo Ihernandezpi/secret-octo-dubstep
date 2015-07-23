@@ -1,6 +1,12 @@
 package mx.com.pineahat.auth10;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +19,14 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import mx.com.pineahat.auth10.DAO.DAOActividades;
+
 
 public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHolder> {
     private JSONArray mDataset;
+    private Vibrator vibrator;
+    private ViewGroup parent;
+    private MyFragment root;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -30,14 +41,18 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public AdapterCardView(JSONArray myDataset) {
+    public AdapterCardView(JSONArray myDataset, MyFragment root) {
         this.mDataset = myDataset;
+        this.root=root;
+
     }
 
     // Create new views (invoked by the layout manager)
     @Override
     public AdapterCardView.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
         // create a new view
+        this.parent = parent;
+        vibrator=(Vibrator) parent.getContext().getSystemService(Context.VIBRATOR_SERVICE);
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_item_card_view, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -54,20 +69,50 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
         miCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try
-                {
-                    JSONObject miJson =mDataset.getJSONObject(position);
-                    Toast.makeText(v.getContext(), "Inflar activity "+ miJson.getString("nombre"), Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject miJson = mDataset.getJSONObject(position);
+                    Intent intent = new Intent(v.getContext(), ActividadEditable.class);
+                    intent.putExtra("info", miJson.toString());
+                    intent.putExtra("idAsignacion",miJson.getString("idAsignacion"));
+                    v.getContext().startActivity(intent);
+                } catch (Exception e) {
                 }
-                catch (Exception e)
-                {
+            }
+        });
+        miCardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                try {
+                    vibrator.vibrate(1000);
+                    final JSONObject miJson = mDataset.getJSONObject(position);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    final DAOActividades miDaoActividades = new DAOActividades(v.getContext());
+                    builder.setTitle("Borrar actividad permanentemente?");
+                    builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            miDaoActividades.eliminar(miJson);
+                            root.refresh();
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                } catch (Exception e) {
                 }
+                return true;
             }
         });
 
         try
         {
-             //miCardView.setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
+
+            ((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
             ((TextView) holder.mTextView.findViewById(R.id.infoText)).setText(mDataset.getJSONObject(position).getString("nombre"));
             ((TextView) holder.mTextView.findViewById(R.id.descripcion)).setText(mDataset.getJSONObject(position).getString("descripcion"));
             ((TextView) holder.mTextView.findViewById(R.id.txtFecha)).setText(mDataset.getJSONObject(position).getString("fechaCreacion"));

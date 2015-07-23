@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URL;
 
+import mx.com.pineahat.auth10.DAO.DAOCarga;
+import mx.com.pineahat.auth10.DAO.DAOSync;
 import mx.com.pineahat.auth10.DAO.PrincipalDAO;
 
 
@@ -86,11 +89,7 @@ public class Principal extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
-        //Get id
-        Toast.makeText(getApplicationContext(), Build.SERIAL,Toast.LENGTH_SHORT).show();
 
-
-        //AgregarImagen
 
         /*Assing the toolbar object to the view
         and setting the ActionBar to our Tool_bar
