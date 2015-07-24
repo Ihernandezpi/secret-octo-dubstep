@@ -19,6 +19,11 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 
 
@@ -115,7 +120,12 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
             ((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
             ((TextView) holder.mTextView.findViewById(R.id.infoText)).setText(mDataset.getJSONObject(position).getString("nombre"));
             ((TextView) holder.mTextView.findViewById(R.id.descripcion)).setText(mDataset.getJSONObject(position).getString("descripcion"));
-            ((TextView) holder.mTextView.findViewById(R.id.txtFecha)).setText(mDataset.getJSONObject(position).getString("fechaCreacion"));
+            String fecha = mDataset.getJSONObject(position).getString("fechaCreacion");
+            DateFormat miDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = miDateFormat.parse(fecha);
+            DateFormat miFormat = new SimpleDateFormat("dd-MMMM-yyyy \n hh:mm a");
+            String fechaF =miFormat.format(date);
+             ((TextView) holder.mTextView.findViewById(R.id.txtFecha)).setText(fechaF);
         }
         catch (Exception e)
         {

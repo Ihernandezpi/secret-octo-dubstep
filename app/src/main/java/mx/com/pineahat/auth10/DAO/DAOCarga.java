@@ -30,7 +30,7 @@ public class DAOCarga {
                 String table = object.getString("tabla");
                 JSONArray nombres = object.names();
                 StringBuffer query = new StringBuffer();
-                query.append("insert into "+table+" ( ");
+                query.append("insert or replace into "+table+" ( ");
                 for (int x = 0;x<nombres.length();x++)
                 {
                     if(x!=0) {
@@ -60,7 +60,7 @@ public class DAOCarga {
 
                 }
                 query.append(");");
-//                bd.execSQL(query.toString());
+                bd.execSQL(query.toString());
                 Log.d("****************",query.toString());
             }
 

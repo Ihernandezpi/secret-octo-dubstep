@@ -385,12 +385,13 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
     @Override
     protected void onPause() {
         if(changed) {
-            if (j == null) {
+            if (key == null) {
                 key = miDaoActividades.insertActividades(idAsignacion);
             }
             DAOActividades miDaoActividades = new DAOActividades(getApplicationContext());
             miDaoActividades.actualizar(key, titulo.getText().toString(), descripcion.getText().toString(), colorSelect, this.year, this.monthOfYear, this.dayOfMonth, this.hourOfDay, this.minute, flagClosed);
         }
+
         super.onPause();
     }
 }

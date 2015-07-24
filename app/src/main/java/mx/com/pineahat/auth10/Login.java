@@ -93,22 +93,51 @@ public class Login extends AppCompatActivity {
                     if (miCheckBox.isChecked()) {
                         keepSession = true;
                         JSONArray resp = iniciarSesion(usuario, contra);
-                        if (resp != null) {
+                        if (resp!=null) {
+                            try {
+                                JSONObject jsonObject = resp.getJSONObject(0);
+                                String idProfe = jsonObject.getString("idProfesor");
+                                TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
+                                JSONArray a = miTaskTrunck.execute().get();
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
                             boolean respuesta = crearUsuario(usuario, contra, resp);
                             Intent intent = new Intent(v.getContext(), Principal.class);
                             startActivity(intent);
                             finish();
 
                         }
+                        else
+                        {
+                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contrase�a",Snackbar.LENGTH_SHORT).show();
+                        }
                     } else {
                         keepSession = false;
                         JSONArray resp = iniciarSesion(usuario, contra);
-                        if (resp != null) {
+                        if (resp!=null) {
+                            try {
+                                JSONObject jsonObject = resp.getJSONObject(0);
+                                String idProfe = jsonObject.getString("idProfesor");
+                                TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
+                                miTaskTrunck.execute();
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
                             boolean respuesta = crearUsuario(usuario, contra, resp);
                             Intent intent = new Intent(v.getContext(), Principal.class);
                             startActivity(intent);
                             finish();
                         }
+                        else
+                        {
+                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contrase�a",Snackbar.LENGTH_SHORT).show();
+                        }
+
                     }
                 }
                 else
@@ -196,22 +225,14 @@ public class Login extends AppCompatActivity {
             JSONArray resp=null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WS/inicio");
+                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("usuario", this.usuario));
                 nameValuePairs.add(new BasicNameValuePair("contra", this.contra));
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse SetServerString =Client.execute(httpPost);
                 resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
-                try {
-                    JSONObject jsonObject = resp.getJSONObject(0);
-                    String idProfe = jsonObject.getString("idProfesor");
-                    TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
-                }
-                catch (Exception e)
-                {
 
-                }
             } catch (Exception e) {
             }
             return resp;
@@ -220,7 +241,7 @@ public class Login extends AppCompatActivity {
 
         }
     }
-    class TaskTrunck extends AsyncTask<String, String,JSONArray> {
+    class TaskTrunck extends AsyncTask<String, String, JSONArray> {
         String idProfe;
         public TaskTrunck(String idProfe)
         {
@@ -231,12 +252,14 @@ public class Login extends AppCompatActivity {
             JSONObject jsonIn = new JSONObject();
 
             try {
-                jsonIn.put("idProfesor",this.idProfe);
                 jsonIn.put("tipoAccion","inicio");
+                jsonIn.put("idProfesor",this.idProfe);
+                JSONArray miArray = new JSONArray();
+                miArray.put(jsonIn);
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("");
+                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("jsonIn", jsonIn.toString()));
+                nameValuePairs.add(new BasicNameValuePair("jsonIn", miArray.toString()));
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse SetServerString =Client.execute(httpPost);
                 resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));

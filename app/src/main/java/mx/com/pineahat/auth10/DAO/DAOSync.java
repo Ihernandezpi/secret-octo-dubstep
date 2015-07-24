@@ -33,8 +33,11 @@ public class DAOSync {
         {
             JSONObject infoDispositivo = new JSONObject();
 
-            infoDispositivo.put("idDispo", Build.SERIAL);
+            //infoDispositivo.put("idDispo", Build.SERIAL);
+            //infoDispositivo.put("ultimaFecha",date);
+            infoDispositivo.put("tipoAccion", "dispositivo");
             infoDispositivo.put("ultimaFecha",date);
+
             miArray.put(infoDispositivo);
 
             String query ="select * from actividades where datetime(fechaCreacion) > datetime('"+date+"');";
@@ -42,7 +45,7 @@ public class DAOSync {
             if(resp.moveToFirst())
             {
                 do{
-                    if(resp.getString(6).equals("Activo") || resp.getString(6).equals("Papelera")) {
+                    if(resp.getString(7).equals("Activo") || resp.getString(7).equals("Papelera")) {
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("tipoAccion","actualizar");
                         jsonObject.put("idActividades",resp.getString(0));
@@ -51,17 +54,16 @@ public class DAOSync {
                         jsonObject.put("descripcion",resp.getString(3));
                         jsonObject.put("fechaCreacion",resp.getString(4));
                         jsonObject.put("fechaRealizacion",resp.getString(5));
-                        jsonObject.put("estado",resp.getString(6));
-                        jsonObject.put("tipo",resp.getString(7));
-                        jsonObject.put("color", resp.getString(8));
-                        Log.d("*********************", jsonObject.toString());
+                        jsonObject.put("fechaActualizacion",resp.getString(6));
+                        jsonObject.put("estado",resp.getString(7));
+                        jsonObject.put("tipo",resp.getString(8));
+                        jsonObject.put("color",resp.getString(9));
                         miArray.put(jsonObject);
-                    }else if (resp.getString(6).equals("Terminado"))
+                    }else if (resp.getString(7).equals("Terminado"))
                     {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("tipo","terminar");
-                        jsonObject.put("ididActividades",resp.getString(0));
-                        Log.d("*********************", jsonObject.toString());
+                        jsonObject.put("tipoAccion","eliminar");
+                        jsonObject.put("idActividades",resp.getString(0));
                         miArray.put(jsonObject);
                     }
                 }while (resp.moveToNext());
