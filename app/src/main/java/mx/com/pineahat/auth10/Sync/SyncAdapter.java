@@ -19,6 +19,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -48,37 +49,54 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-
-      try
-      {
-        ConnectivityManager connMgr = (ConnectivityManager)context.getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            Log.d("*********************", "Hay conexion");
+        try {
+            Log.d("*********************", "Sync");
             AccountManager miManager = AccountManager.get(context);
             Account a[] = miManager.getAccountsByType("mx.com.pineahat.auth10");
             String myData = miManager.getUserData(account, "JSON");
             String fecha = miManager.getUserData(account, "fechaSync");
+            String dateS = "";
+            dateS = miManager.getUserData(account, "fechaSyncS");
 
-            //Aqui va tu logíca de negocios
+            //Aqui va tu logï¿½ca de negocios
             DAOSync sync = new DAOSync(context);
-            JSONArray jsonArray = sync.getActividades(fecha);
+            JSONArray jsonArray = sync.getActividades(fecha,dateS);
             Log.d("*********************", jsonArray.toString());
-
             Task miTask = new Task(jsonArray);
-            JSONArray resp = miTask.execute().get();
+            JSONArray s = miTask.execute().get();
 
             //Asignar ultima fecha de actualizacion fechaSync
-            Calendar calendar= Calendar.getInstance();
-            Date rightNow = calendar.getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String strDate = sdf.format(rightNow.getTime());
-            miManager.setUserData(a[0],"fechaSync",strDate);
-        }}
-      catch (Exception e)
-      {
-          e.printStackTrace();
-      }
+            if(s!=null) {
+                for (int i =0;i<s.length();i++)
+                {
+                    switch (s.getJSONObject(i).getString("tipoAccion")) {
+                        case "fechaActualizacion":
+                            Calendar calendar = Calendar.getInstance();
+                            Date rightNow = calendar.getTime();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String strDate = sdf.format(rightNow.getTime());
+                            miManager.setUserData(a[0], "fechaSync", strDate);
+                            miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fecha"));
+                        break;
+                        case "ultima_fecha":
+                            Log.d("---------------------", "Insertando Actualizacion");
+                            DAOCarga miCarga = new DAOCarga(context);
+                            JSONObject objeto = s.getJSONObject(i);
+                            objeto.remove("tipoAccion");
+                            JSONArray array = new JSONArray();
+                            array.put(objeto);
+                            miCarga.trunck(array);
+                            break;
+                    }
+                }
+
+            }
+        }catch (Exception e)
+        {
+            Log.d("*********************", "Error Sync");
+            e.printStackTrace();
+        }
+
     }
     class Task extends AsyncTask<String, String, JSONArray> {
         JSONArray miJsonArray;
@@ -86,18 +104,29 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         {
             this.miJsonArray=miJsonArray;
         }
+
         protected JSONArray doInBackground(String... urls) {
             JSONArray resp = null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("jsonIn", miJsonArray.toString()));
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse SetServerString =Client.execute(httpPost);
-                resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
+               // HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
+
+                HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
+                String str = "jsonIn="+miJsonArray.toString();
+                StringEntity strEntity = new StringEntity(str);
+                httpPost.setEntity(strEntity);
+                httpPost.setHeader("Content-type","application/x-www-form-urlencoded");
+                httpPost.setHeader("Accept-Language","es-ES,es;q=0.8");
+                httpPost.setHeader("Accept-Encoding","gzip, deflate");
+                httpPost.setHeader("Accept", "*/*");
+                HttpResponse SetServerString = Client.execute(httpPost);
+                String regreso =EntityUtils.toString(SetServerString.getEntity());
+                Log.d("++++++++++++++++",regreso);
+                resp= new JSONArray(regreso);
             } catch (Exception e) {
+            e.printStackTrace();
             }
+
             return resp;
         }
         protected void onPostExecute(String feed) {

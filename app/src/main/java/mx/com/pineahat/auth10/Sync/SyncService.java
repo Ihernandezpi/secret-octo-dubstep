@@ -13,8 +13,10 @@ import android.os.IBinder;
  */
 public class SyncService extends Service {
     public static final String AUTHORITY = "mx.com.pineahat.auth10";
-    public static final long SECONDS_PER_MINUTE = 1L;
-    public static final long SYNC_INTERVAL_IN_MINUTES = 5L;
+    /*public static final long SECONDS_PER_MINUTE = 1L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 30L;*/
+    public static final long SECONDS_PER_MINUTE = 60L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
     public static final long SYNC_INTERVAL =SYNC_INTERVAL_IN_MINUTES *SECONDS_PER_MINUTE;
     private static SyncAdapter sSyncAdapter = null;
     private static final Object sSyncAdapterLock = new Object();

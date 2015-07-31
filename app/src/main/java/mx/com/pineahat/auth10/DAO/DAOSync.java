@@ -24,7 +24,7 @@ public class DAOSync {
         this.context = context;
     }
 
-    public JSONArray getActividades (String date)
+    public JSONArray getActividades (String date, String dateS)
     {
         JSONArray miArray = new JSONArray();
         Conexion miConexion = new Conexion(context);
@@ -35,38 +35,34 @@ public class DAOSync {
 
             //infoDispositivo.put("idDispo", Build.SERIAL);
             //infoDispositivo.put("ultimaFecha",date);
-            infoDispositivo.put("tipoAccion", "dispositivo");
-            infoDispositivo.put("ultimaFecha",date);
-
-            miArray.put(infoDispositivo);
-
             String query ="select * from actividades where datetime(fechaCreacion) > datetime('"+date+"');";
             Cursor resp = bd.rawQuery(query,null);
             if(resp.moveToFirst())
             {
                 do{
-                    if(resp.getString(7).equals("Activo") || resp.getString(7).equals("Papelera")) {
+                    if(resp.getString(7).equals("Activo") || resp.getString(7).equals("Papelera") || resp.getString(7).equals("Terminado")) {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("tipoAccion","actualizar");
-                        jsonObject.put("idActividades",resp.getString(0));
-                        jsonObject.put("idAsignacion",resp.getString(1));
-                        jsonObject.put("nombre",resp.getString(2));
-                        jsonObject.put("descripcion",resp.getString(3));
-                        jsonObject.put("fechaCreacion",resp.getString(4));
-                        jsonObject.put("fechaRealizacion",resp.getString(5));
-                        jsonObject.put("fechaActualizacion",resp.getString(6));
-                        jsonObject.put("estado",resp.getString(7));
-                        jsonObject.put("tipo",resp.getString(8));
-                        jsonObject.put("color",resp.getString(9));
-                        miArray.put(jsonObject);
-                    }else if (resp.getString(7).equals("Terminado"))
-                    {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("tipoAccion","eliminar");
-                        jsonObject.put("idActividades",resp.getString(0));
+                        jsonObject.put("tipoAccion", "actualizar");
+                        jsonObject.put("idActividades", resp.getString(0));
+                        jsonObject.put("idAsignacion", resp.getString(1));
+                        jsonObject.put("nombre", resp.getString(2));
+                        jsonObject.put("descripcion", resp.getString(3));
+                        jsonObject.put("fechaCreacion", resp.getString(4));
+                        jsonObject.put("fechaRealizacion", resp.getString(5));
+                        jsonObject.put("fechaActualizacion", resp.getString(6));
+                        jsonObject.put("estado", resp.getString(7));
+                        jsonObject.put("tipo", resp.getString(8));
+                        jsonObject.put("color", resp.getString(9));
                         miArray.put(jsonObject);
                     }
                 }while (resp.moveToNext());
+            }
+            else
+            {
+                infoDispositivo.put("tipoAccion", "dispositivo");
+                infoDispositivo.put("ultimaFecha",dateS);
+
+                miArray.put(infoDispositivo);
             }
         }
         catch (Exception e)

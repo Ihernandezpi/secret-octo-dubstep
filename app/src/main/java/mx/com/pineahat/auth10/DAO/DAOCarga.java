@@ -30,43 +30,44 @@ public class DAOCarga {
                 String table = object.getString("tabla");
                 JSONArray nombres = object.names();
                 StringBuffer query = new StringBuffer();
-                query.append("insert or replace into "+table+" ( ");
-                for (int x = 0;x<nombres.length();x++)
+                int contador =0;
+                query.append("insert or replace into " + table + " ( ");
+                String [] nom = new String [nombres.length()-1];
+                for (int x = 0;x<nombres.length();x++ )
                 {
-                    if(x!=0) {
-                        int a = nombres.length() - x;
-                        if (a != 1)
-                            query.append(", ");
-                    }
 
                     if(!nombres.getString(x).equals("tabla")) {
-                        query.append("\"" + nombres.getString(x) + "\"");
-
+                        nom[contador] = nombres.getString(x);
+                        contador++;
                     }
-
+                }
+                for (int x = 0;x<nom.length;x++)
+                {
+                    if(x!=0)
+                    {
+                        query.append(", ");
+                    }
+                    query.append("\"" + nom[x] + "\"");
                 }
                 query.append(") values (");
-                for (int x = 0;x<nombres.length();x++)
-                {
-                    if(x!=0) {
-                        int a = nombres.length() - x;
-                        if (a != 1)
-                            query.append(", ");
-                    }
-                    if(!nombres.getString(x).equals("tabla")) {
-                        query.append("\"" + object.getString(nombres.getString(x)) + "\"");
 
+                for (int x = 0;x<nom.length;x++)
+                {
+                    if(x!=0)
+                    {
+                        query.append(", ");
                     }
+                    query.append("\"" + object.getString(nom[x]) + "\"");
 
                 }
                 query.append(");");
                 bd.execSQL(query.toString());
-                Log.d("****************",query.toString());
+                Log.d("****************", query.toString());
             }
 
         }catch (Exception e)
         {
-
+            e.printStackTrace();
         }
         finally {
             con.close();

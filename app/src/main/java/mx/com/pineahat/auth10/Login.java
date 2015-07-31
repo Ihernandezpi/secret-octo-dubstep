@@ -33,6 +33,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -112,7 +113,7 @@ public class Login extends AppCompatActivity {
                         }
                         else
                         {
-                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contrase�a",Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
                         }
                     } else {
                         keepSession = false;
@@ -135,7 +136,7 @@ public class Login extends AppCompatActivity {
                         }
                         else
                         {
-                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contrase�a",Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
                         }
 
                     }
@@ -202,6 +203,7 @@ public class Login extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String strDate = sdf.format(rightNow.getTime());
             miBundle.putString("fechaSync",strDate);
+            miBundle.putString("fechaSyncS",strDate);
 
             accountManager.addAccountExplicitly(account, contra, miBundle);
 
@@ -225,7 +227,8 @@ public class Login extends AppCompatActivity {
             JSONArray resp=null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
+                //HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
+                HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/inicio");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("usuario", this.usuario));
                 nameValuePairs.add(new BasicNameValuePair("contra", this.contra));
@@ -257,7 +260,8 @@ public class Login extends AppCompatActivity {
                 JSONArray miArray = new JSONArray();
                 miArray.put(jsonIn);
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
+                //HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
+                HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("jsonIn", miArray.toString()));
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
