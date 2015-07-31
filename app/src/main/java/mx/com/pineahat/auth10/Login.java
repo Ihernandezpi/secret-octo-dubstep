@@ -203,7 +203,7 @@ public class Login extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String strDate = sdf.format(rightNow.getTime());
             miBundle.putString("fechaSync",strDate);
-            miBundle.putString("fechaSyncS",strDate);
+            miBundle.putString("fechaSyncS", strDate);
 
             accountManager.addAccountExplicitly(account, contra, miBundle);
 
@@ -227,8 +227,8 @@ public class Login extends AppCompatActivity {
             JSONArray resp=null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-                //HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
-                HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/inicio");
+                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
+                //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/inicio");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("usuario", this.usuario));
                 nameValuePairs.add(new BasicNameValuePair("contra", this.contra));
@@ -260,8 +260,8 @@ public class Login extends AppCompatActivity {
                 JSONArray miArray = new JSONArray();
                 miArray.put(jsonIn);
                 HttpClient Client = new DefaultHttpClient();
-                //HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
-                HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
+                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
+                //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("jsonIn", miArray.toString()));
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));

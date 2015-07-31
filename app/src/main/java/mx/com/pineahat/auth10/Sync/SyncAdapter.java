@@ -109,12 +109,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             JSONArray resp = null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-               // HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
+               HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
 
-                HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
-                String str = "jsonIn="+miJsonArray.toString();
-                StringEntity strEntity = new StringEntity(str);
-                httpPost.setEntity(strEntity);
+                //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
+                //String str = "jsonIn="+miJsonArray.toString();
+                //StringEntity strEntity = new StringEntity(str);
+                //httpPost.setEntity(strEntity);
+                List<NameValuePair> entityParams = new ArrayList<NameValuePair>();
+                entityParams.add(new BasicNameValuePair("jsonIn", miJsonArray.toString()));
+                httpPost.setEntity(new UrlEncodedFormEntity(entityParams, "utf-8"));
                 httpPost.setHeader("Content-type","application/x-www-form-urlencoded");
                 httpPost.setHeader("Accept-Language","es-ES,es;q=0.8");
                 httpPost.setHeader("Accept-Encoding","gzip, deflate");
