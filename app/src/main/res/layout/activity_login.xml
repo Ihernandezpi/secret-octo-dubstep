@@ -5,23 +5,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Login"
     >
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/cordinatorLogin"></android.support.design.widget.CoordinatorLayout>
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
         android:orientation="vertical">
-
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/scrollView"
             android:layout_gravity="center"
             android:layout_alignParentTop="true"
@@ -45,7 +35,6 @@
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/autha"
                     android:layout_marginTop="30px"
-
                     android:layout_weight="0.08" />
 
                 <TextView
@@ -107,7 +96,6 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/textVie"
                     android:layout_weight="0.08" />
-
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -119,6 +107,12 @@
                     android:background="@color/background"
                     android:textColor="@color/blanco"
                     android:drawableRight="@mipmap/ic_action_next_item"
+                    />
+                <ProgressBar
+                    android:id="@+id/progress"
+                     android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
                     />
 
                 <TextView
@@ -173,4 +167,11 @@
             android:drawableRight="@drawable/pineahat" />
 
     </LinearLayout>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/cordinatorLogin">
+    </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

@@ -31,7 +31,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private String mNavTitles[]; // String Array to store the passed titles Value from MainActivity.java
     private int mIcons[];       // Int Array to store the passed icons resource value from MainActivity.java
-
+    private String id;
     private String name;        //String Resource for header View Name
     private int profile;        //int Resource for header view profile picture
     private String email;       //String Resource for header view email
@@ -81,7 +81,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
 
-    MyAdapter(String Titles[],String idGrupo[],int Icons[],String Name,String Email, int Profile, Context passedContext){ // MyAdapter Constructor with titles and icons parameter
+    MyAdapter(String Titles[],String idGrupo[],int Icons[],String Name,String Email, int Profile, Context passedContext,String id){ // MyAdapter Constructor with titles and icons parameter
         // titles, icons, name, email, profile pic are passed from the main activity as we
         mNavTitles = Titles;                //have seen earlier
         mIcons = Icons;
@@ -89,6 +89,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         email = Email;
         profile = Profile;                     //here we assign those passed values to the values we declared here
         midGrupo =idGrupo;
+        this.id=id;
         //in adapter
 
         this.context=passedContext;
@@ -184,10 +185,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
         else{
 
-            new LoadImage().execute("http://pineahat.com.mx/image/PinaHat100.png");
+            new LoadImage(holder.profile).execute("http://pineahat.com.mx/image/"+id+".png");
             holder.profile.setImageResource(profile);           // Similarly we set the resources for header view
             holder.Name.setText(name);
             holder.email.setText(email);
+
         }
     }
 
@@ -213,6 +215,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     private class LoadImage extends AsyncTask<String, String, Bitmap> {
+        ImageView miImageView;
+        public LoadImage(ImageView miImageView)
+        {
+            this.miImageView=miImageView;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -229,17 +236,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             return bitmap;
         }
 
+        @Override
         protected void onPostExecute(Bitmap image) {
-
             if (image != null) {
 
-                ViewHolder.profile.setImageBitmap(image);
-                ViewHolder.profile.refreshDrawableState();
+                //ViewHolder.profile.setImageBitmap(image);
+                //ViewHolder.profile.refreshDrawableState();
+                this.miImageView.setImageBitmap(image);
+
 
             } else {
 
             }
+            super.onPostExecute(bitmap);
         }
-
     }
 }

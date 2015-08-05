@@ -118,10 +118,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 List<NameValuePair> entityParams = new ArrayList<NameValuePair>();
                 entityParams.add(new BasicNameValuePair("jsonIn", miJsonArray.toString()));
                 httpPost.setEntity(new UrlEncodedFormEntity(entityParams, "utf-8"));
-                httpPost.setHeader("Content-type","application/x-www-form-urlencoded");
-                httpPost.setHeader("Accept-Language","es-ES,es;q=0.8");
-                httpPost.setHeader("Accept-Encoding","gzip, deflate");
-                httpPost.setHeader("Accept", "*/*");
+                //httpPost.setHeader("Content-type","application/x-www-form-urlencoded");
+                //httpPost.setHeader("Accept-Language","es-ES,es;q=0.8");
+                //httpPost.setHeader("Accept-Encoding","gzip, deflate");
+                //httpPost.setHeader("Accept", "**/*//*");
                 HttpResponse SetServerString = Client.execute(httpPost);
                 String regreso =EntityUtils.toString(SetServerString.getEntity());
                 Log.d("++++++++++++++++",regreso);

@@ -1,5 +1,5 @@
 package mx.com.pineahat.auth10;
-
+import android.*;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
@@ -38,7 +38,7 @@ import java.net.URL;
 import mx.com.pineahat.auth10.DAO.DAOCarga;
 import mx.com.pineahat.auth10.DAO.DAOSync;
 import mx.com.pineahat.auth10.DAO.PrincipalDAO;
-
+import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
 public class Principal extends ActionBarActivity
@@ -59,10 +59,10 @@ public class Principal extends ActionBarActivity
 
     //Similary we Create a String Resource for the name and email in the header view
     //And we also create a int resource for profile pricture in the header view
-
+    String ID;
     String NAME;
     String EMAIL;
-    int PROFILE=R.drawable.fany;
+    int PROFILE= R.drawable.user;
 
     //Declaring Toolbar object
     private Toolbar toolbar;
@@ -103,6 +103,7 @@ public class Principal extends ActionBarActivity
         try
         {
             JSONArray jsonArray = new JSONArray(myData);
+            ID=jsonArray.getJSONObject(0).getString("idPersona");
             NAME=jsonArray.getJSONObject(0).getString("nombre")+" " +jsonArray.getJSONObject(0).getString("apellidoP");
             EMAIL=jsonArray.getJSONObject(0).getString("apellidoM");
             PrincipalDAO principalDAO = new PrincipalDAO();
@@ -142,7 +143,7 @@ public class Principal extends ActionBarActivity
                 mRecyclerView=(RecyclerView) findViewById(R.id.RecyclerView);
 
                 mRecyclerView.setHasFixedSize(true);
-                mAdapter=new MyAdapter(TITLES,IDGRUPO,ICONS,NAME,EMAIL,PROFILE,this);
+                mAdapter=new MyAdapter(TITLES,IDGRUPO,ICONS,NAME,EMAIL,PROFILE,this,ID);
 
                 mRecyclerView.setAdapter(mAdapter);
                 mCircleImageView=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.cicleView);
@@ -224,6 +225,9 @@ public class Principal extends ActionBarActivity
                                     if(arAccounts.length>=1) {
                                         miAccountManager.removeAccount(arAccounts[0],null,null);
                                     }
+                                    //Limpiar base de datos
+                                    Conexion miConexion = new Conexion(getApplicationContext());
+                                    miConexion.limpiarBD();
                                     Intent intent2 = new Intent(getApplicationContext(), Login.class);
                                     startActivity(intent2);
                                     finish();

@@ -13,14 +13,16 @@
         card_view:cardElevation="2dp"
         android:layout_marginTop="8sp"
         android:layout_marginBottom="@dimen/navigation_padding_bottom"
+        android:padding="0px"
         >
         <LinearLayout
             android:id="@+id/linearColor"
             android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:weightSum="1"
-            >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:clickable="false"
+            android:focusable="false">
 
             <LinearLayout
                 android:orientation="horizontal"

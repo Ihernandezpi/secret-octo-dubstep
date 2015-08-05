@@ -3,6 +3,8 @@ package mx.com.pineahat.auth10;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -13,13 +15,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +61,7 @@ public class Login extends AppCompatActivity {
     Conexion conexion;
     CheckBox miCheckBox;
     View coordinatorLayoutView;
+    ProgressBar miProgressBar;
 
 
     @Override
@@ -64,6 +70,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         accountManager = AccountManager.get(getApplicationContext());
         coordinatorLayoutView = findViewById(R.id.cordinatorLogin);
+        miProgressBar = (ProgressBar) findViewById(R.id.progress);
         Account[] cuentas = accountManager.getAccountsByType("mx.com.pineahat.auth10");
         if(cuentas.length>0)
         {
@@ -72,12 +79,13 @@ public class Login extends AppCompatActivity {
             finish();
         }
         conexion= new Conexion(getApplicationContext());
-        SQLiteDatabase bd = conexion.getBD();
+        final SQLiteDatabase bd = conexion.getBD();
         bd.close();
         txtUsuario = (EditText)findViewById(R.id.ediTextUser);
         txtPass = (EditText)findViewById(R.id.editTextPass);
         miCheckBox=(CheckBox)findViewById(R.id.checkBoxNoCerrar);
-        Button miButton =(Button)findViewById(R.id.buttonIniciar);
+        final Button miButton =(Button)findViewById(R.id.buttonIniciar);
+        final ViewGroup miVertical = (ViewGroup) findViewById(R.id.verticalLayoutLogin);
         TextView txtOlvideContra = (TextView)findViewById(R.id.textViewOlvide);
         txtOlvideContra.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,64 +96,23 @@ public class Login extends AppCompatActivity {
         miButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String usuario=txtUsuario.getText().toString();
+                 String usuario=txtUsuario.getText().toString();
                 String contra=txtPass.getText().toString();
                 if(!usuario.equals("") && !contra.equals("")) {
                     if (miCheckBox.isChecked()) {
                         keepSession = true;
-                        JSONArray resp = iniciarSesion(usuario, contra);
-                        if (resp!=null) {
-                            try {
-                                JSONObject jsonObject = resp.getJSONObject(0);
-                                String idProfe = jsonObject.getString("idProfesor");
-                                TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
-                                JSONArray a = miTaskTrunck.execute().get();
-                            }
-                            catch (Exception e)
-                            {
-
-                            }
-                            boolean respuesta = crearUsuario(usuario, contra, resp);
-                            Intent intent = new Intent(v.getContext(), Principal.class);
-                            startActivity(intent);
-                            finish();
-
-                        }
-                        else
-                        {
-                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
-                        }
-                    } else {
+                        iniciarSesion(usuario, contra);
+                    } else
+                    {
                         keepSession = false;
-                        JSONArray resp = iniciarSesion(usuario, contra);
-                        if (resp!=null) {
-                            try {
-                                JSONObject jsonObject = resp.getJSONObject(0);
-                                String idProfe = jsonObject.getString("idProfesor");
-                                TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
-                                miTaskTrunck.execute();
-                            }
-                            catch (Exception e)
-                            {
-
-                            }
-                            boolean respuesta = crearUsuario(usuario, contra, resp);
-                            Intent intent = new Intent(v.getContext(), Principal.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else
-                        {
-                            Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
-                        }
-
+                        iniciarSesion(usuario, contra);
                     }
                 }
                 else
                 {
                     Snackbar.make(coordinatorLayoutView,"Campos vacios",Snackbar.LENGTH_SHORT).show();
                 }
-
+                //miProgressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -156,7 +123,7 @@ public class Login extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             Task miTask = new Task(usuario,contra);
             try {
-                resp = miTask.execute().get();
+                miTask.execute();
             }catch (Exception e)
             {
             }
@@ -215,7 +182,7 @@ public class Login extends AppCompatActivity {
         }
         return flag;
     }
-    class Task extends AsyncTask<String, String,JSONArray> {
+    class Task extends AsyncTask<String, String,JSONArray>{
         String usuario;
         String contra;
         public Task(String usuario, String contra)
@@ -223,6 +190,13 @@ public class Login extends AppCompatActivity {
             this.usuario=usuario;
             this.contra=contra;
         }
+
+        @Override
+        protected void onPreExecute() {
+            correrProgress();
+            super.onPreExecute();
+        }
+
         protected JSONArray doInBackground(String... urls) {
             JSONArray resp=null;
             try {
@@ -235,13 +209,32 @@ public class Login extends AppCompatActivity {
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpResponse SetServerString =Client.execute(httpPost);
                 resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
+            if (resp.length()!=0) {
+                try {
+                    JSONObject jsonObject = resp.getJSONObject(0);
+                    String idProfe = jsonObject.getString("idProfesor");
+                    TaskTrunck miTaskTrunck = new TaskTrunck(idProfe);
+                    miTaskTrunck.execute();
+                }
+                catch (Exception e)
+                {
 
+                }
+                boolean respuesta = crearUsuario(usuario, contra, resp);
+            }
+            else
+            {
+                Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
+            }
             } catch (Exception e) {
             }
-            return resp;
+            return null;
         }
-        protected void onPostExecute(String feed) {
 
+        @Override
+        protected void onPostExecute(JSONArray array) {
+            detenerProgress();
+            super.onPostExecute(array);
         }
     }
     class TaskTrunck extends AsyncTask<String, String, JSONArray> {
@@ -253,7 +246,6 @@ public class Login extends AppCompatActivity {
         protected JSONArray doInBackground(String... urls) {
             JSONArray resp=null;
             JSONObject jsonIn = new JSONObject();
-
             try {
                 jsonIn.put("tipoAccion","inicio");
                 jsonIn.put("idProfesor",this.idProfe);
@@ -278,8 +270,23 @@ public class Login extends AppCompatActivity {
             }
             return resp;
         }
-        protected void onPostExecute(String feed) {
 
+        @Override
+        protected void onPostExecute(JSONArray array) {
+            detenerProgress();
+            Intent intent = new Intent(getApplicationContext(), Principal.class);
+            startActivity(intent);
+            finish();
+            super.onPostExecute(array);
         }
     }
+    public void correrProgress()
+    {
+        miProgressBar.setVisibility(View.VISIBLE);
+    }
+    public void detenerProgress()
+    {
+        miProgressBar.setVisibility(View.GONE);
+    }
+
 }

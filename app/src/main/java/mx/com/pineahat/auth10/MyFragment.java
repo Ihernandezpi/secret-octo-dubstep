@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mx.com.pineahat.auth10.DAO.DAOCardViewItem;
 
@@ -280,7 +283,7 @@ public class MyFragment extends Fragment{
 
     @Override
     public void onResume() {
-        refresh();
+        callAsynchronousTask();
         super.onResume();
     }
 
@@ -288,6 +291,27 @@ public class MyFragment extends Fragment{
     public void onStart() {
         refresh();
         super.onStart();
+    }
+    public void callAsynchronousTask() {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            refresh();
+                        } catch (Exception e)
+                        {
+
+                        }
+                        Log.d("adjaslkd","Se refresca");
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 15000); //execute in every 50000 ms
     }
 
 }

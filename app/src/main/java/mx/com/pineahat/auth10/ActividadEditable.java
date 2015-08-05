@@ -193,10 +193,11 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 linearLayout.setBackgroundColor(color);
                 titulo.setText(miJsonObject.getString("nombre"));
                 descripcion.setText(miJsonObject.getString("descripcion"));
-                if(!miJsonObject.getString("fechaRealizacion").equals(""))
+                if(!miJsonObject.getString("fechaRealizacion").equals("")  && !miJsonObject.getString("fechaRealizacion").equals("0000-00-00 00:00:00"))
                 {
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Date miDate= format.parse(miJsonObject.getString("fechaRealizacion"));
+                    Log.d("......................",miJsonObject.getString("fechaRealizacion"));
                     DateFormat formatd = new SimpleDateFormat("dd");
                     this.dayOfMonth=Integer.parseInt(formatd.format(miDate));
                     DateFormat formatm = new SimpleDateFormat("MM");

@@ -66,7 +66,10 @@ public class Conexion extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		
 	}
-
+	public void limpiarBD()
+	{
+		borrarBd();
+	}
 	
 	
 }
