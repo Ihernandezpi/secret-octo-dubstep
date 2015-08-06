@@ -9,9 +9,9 @@
     <string name="contraseña">Contraseña</string>
     <string name="login">Login</string>
     <string name="bienvenido">Bienvenido</string>
-    <string name="olvidecontra">Olvide mi contraseña?</string>
-    <string name="powerby">Power by</string>
-    <string name="infoAUTH10">Aplicación docente de la Universidad Tecnológica de Huejotzingo</string>
+    <string name="olvidecontra">Olvide mi contraseña</string>
+    <string name="powerby">Powered by</string>
+    <string name="infoAUTH10">Aplicación Docente de la Universidad Tecnológica de Huejotzingo</string>
     <string name="open">Menú</string>
     <string name="close">Actividades</string>
     <string name="title_activity_item_card_view">itemCardView</string>
