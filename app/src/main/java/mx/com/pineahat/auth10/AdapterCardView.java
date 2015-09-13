@@ -122,7 +122,7 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
             String fecha = mDataset.getJSONObject(position).getString("fechaCreacion");
             DateFormat miDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = miDateFormat.parse(fecha);
-            DateFormat miFormat = new SimpleDateFormat("dd-MMMM-yyyy \n hh:mm a");
+            DateFormat miFormat = new SimpleDateFormat("cccdd LLL, hh:mm a");
             String fechaF =miFormat.format(date);
              ((TextView) holder.mTextView.findViewById(R.id.txtFecha)).setText(fechaF);
         }
