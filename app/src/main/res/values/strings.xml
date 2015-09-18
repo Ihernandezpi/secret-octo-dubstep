@@ -29,5 +29,7 @@
     <string name="color_picker_default_title">Select a Color</string>
     <string name="dialog_title">Color de Actividad</string>
     <string name="dia">Dia</string>
+    <string name="title_activity_principal_crear_equipo"></string>
+    <string name="nombreText">Nombre:</string>
 </resources>
 

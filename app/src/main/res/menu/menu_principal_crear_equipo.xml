@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo">
+
+    <item
+        android:id="@+id/action_add_team"
+        android:orderInCategory="300"
+        android:title="Guardar"
+        app:showAsAction="ifRoom"
+        > </item>
+</menu>

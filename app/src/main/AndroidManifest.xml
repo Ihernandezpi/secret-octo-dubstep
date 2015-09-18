@@ -8,10 +8,10 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -52,26 +52,35 @@
         <activity
             android:name=".ActividadEditable"
             android:label="@string/title_activity_actividad_editable"
-            android:theme="@style/AppTheme2"
-            android:parentActivityName=".Principal">
+            android:parentActivityName=".Principal"
+            android:theme="@style/AppTheme2" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Principal"
-                />
+                android:value=".Principal" />
         </activity>
+
         <service
             android:name=".Sync.SyncService"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <provider android:authorities="mx.com.pineahat.auth10"
+
+        <provider
             android:name=".Sync.Provider"
-            android:label="@string/provider_name"
-            android:exported="true"/>
+            android:authorities="mx.com.pineahat.auth10"
+            android:exported="true"
+            android:label="@string/provider_name" />
+
+        <activity
+            android:name=".Equipos.PrincipalCrearEquipo"
+            android:label="@string/title_activity_principal_crear_equipo" >
+        </activity>
     </application>
 
 </manifest>

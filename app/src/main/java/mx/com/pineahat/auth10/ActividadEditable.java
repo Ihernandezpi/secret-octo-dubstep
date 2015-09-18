@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import mx.com.pineahat.auth10.ColorPickerSwatch.OnColorSelectedListener;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
+import mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -350,7 +351,21 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         }
         if(id==R.id.action_add_team)
         {
-                    Toast.makeText(getApplicationContext()," Add TEAM", Toast.LENGTH_SHORT).show();
+            //Este es para nuevo
+            if (key == null) {
+                key = miDaoActividades.insertActividades(idAsignacion);
+            }
+            Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
+            intent.putExtra("tipo","nuevo");
+            intent.putExtra("idActividad",key);
+            startActivity(intent);
+            /**
+             * Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
+             intent.putExtra("tipo","modificar");
+             intent.putExtra("idEquipo","10");
+             intent.putExtra("idActividad",key);
+             startActivity(intent);
+             */
         }
         if(id==R.id.action_palette_color)
         {
