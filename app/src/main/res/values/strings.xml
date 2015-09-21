@@ -31,5 +31,6 @@
     <string name="dia">Dia</string>
     <string name="title_activity_principal_crear_equipo"></string>
     <string name="nombreText">Nombre:</string>
+    <string name="title_activity_principal_calificaciones">Calificaciones</string>
 </resources>
 

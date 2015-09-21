@@ -81,6 +81,10 @@
             android:name=".Equipos.PrincipalCrearEquipo"
             android:label="@string/title_activity_principal_crear_equipo" >
         </activity>
+        <activity
+            android:name=".Calificaciones.PrincipalCalificaciones"
+            android:label="@string/title_activity_principal_calificaciones" >
+        </activity>
     </application>
 
 </manifest>

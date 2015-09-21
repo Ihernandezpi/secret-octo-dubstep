@@ -26,6 +26,8 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import mx.com.pineahat.auth10.Calificaciones.PrincipalCalificaciones;
 import mx.com.pineahat.auth10.ColorPickerSwatch.OnColorSelectedListener;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 import mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo;
@@ -346,7 +348,9 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_calificar) {
+            Intent intent = new Intent(getBaseContext(), PrincipalCalificaciones.class);
+            startActivity(intent);
             return true;
         }
         if(id==R.id.action_add_team)

@@ -4,6 +4,12 @@
     tools:context="mx.com.pineahat.auth10.ActividadEditable">
 
     <item
+        android:id="@+id/action_calificar"
+        android:orderInCategory="300"
+        android:title="Calificar"
+        app:showAsAction="ifRoom"
+        ></item>
+    <item
         android:id="@+id/action_add_team"
         android:orderInCategory="200"
         android:title="Team"
