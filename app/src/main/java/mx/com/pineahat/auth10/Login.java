@@ -201,7 +201,8 @@ public class Login extends AppCompatActivity {
             JSONArray resp=null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
+                //HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
+                HttpPost httpPost = new HttpPost("http://humanwt.com.mx/WSA/TI9/inicio");
                 //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/inicio");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("usuario", this.usuario));
@@ -252,7 +253,7 @@ public class Login extends AppCompatActivity {
                 JSONArray miArray = new JSONArray();
                 miArray.put(jsonIn);
                 HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
+                HttpPost httpPost = new HttpPost("http://humanwt.com.mx/WSA/TI9/actividades");
                 //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("jsonIn", miArray.toString()));

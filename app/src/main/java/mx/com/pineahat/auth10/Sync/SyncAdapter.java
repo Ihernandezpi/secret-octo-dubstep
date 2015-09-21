@@ -109,7 +109,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             JSONArray resp = null;
             try {
                 HttpClient Client = new DefaultHttpClient();
-               HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/actividades");
+               HttpPost httpPost = new HttpPost("http://humanwt.com.mx/WSA/TI9/actividades");
 
                 //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
                 //String str = "jsonIn="+miJsonArray.toString();
