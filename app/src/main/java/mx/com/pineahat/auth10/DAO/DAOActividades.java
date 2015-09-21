@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Connection;
@@ -130,5 +131,36 @@ public class DAOActividades {
             con.close();
         }
 
+    }
+
+    // Stephani Equipos
+    public JSONArray equiposTI(String idAsignacion)
+    {
+        JSONArray listaEquipos= null;
+        Conexion conexion = new Conexion(context);
+        SQLiteDatabase db= conexion.getBD();
+        String query="SELECT equiposti.idEquiposti, equiposti.nombreEquipo FROM asignacion, grupo, equiposti WHERE asignacion.idGrupo = grupo.idGrupo AND grupo.idGrupo=equiposti.idGrupo  AND asignacion.idAsignacion="+idAsignacion+";";
+        Cursor cursor= db.rawQuery(query,null);
+        if(cursor.moveToFirst())
+        {
+            listaEquipos = new JSONArray();
+            do{
+                JSONObject Equipo = new JSONObject();
+                try
+                {
+                    Equipo.put("idEquiposti",cursor.getString(0));
+                    Equipo.put("nombreEquipo",cursor.getString(1));
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            while(cursor.moveToNext());
+
+        }
+        conexion.close();
+        db.close();
+        return listaEquipos;
     }
 }

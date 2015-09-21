@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -24,22 +26,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import mx.com.pineahat.auth10.ColorPickerSwatch.OnColorSelectedListener;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 import mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo;
+import mx.com.pineahat.auth10.utilerias.ListCheckboxDialog;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -54,6 +60,8 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
     private EditText descripcion;
     private Toolbar toolbar;
     private TextView tRecordar;
+    private TextView tAgregarEquipo;
+    private TextView tEquiposTi;
     private TextView  fecha;
     private TextView  hora;
     Integer color = Color.parseColor("#bdbdbd");
@@ -63,6 +71,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
     ActionBarDrawerToggle mDrawerToggle;
     private DAOActividades miDaoActividades;
     private LinearLayout linearLayout;
+    private ScrollView scrollView;
     private String colorSelect="";
     private DatePickerDialog datePickerDialog;
     private int year=0;
@@ -75,6 +84,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
     private DatePickerDialog dpd;
     private String j;
     String idAsignacion;
+    JSONArray jsonArrayEquipos;
 
 
     @Override
@@ -88,8 +98,11 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         j = intent.getStringExtra("info");
         idAsignacion= intent.getStringExtra("idAsignacion");
         linearLayout=(LinearLayout) findViewById(R.id.layoutEditable);
+        scrollView=(ScrollView) findViewById(R.id.scrollView1);
         toolbar =(Toolbar) findViewById(R.id.tool_bar);
         tRecordar= (TextView) findViewById(R.id.txtRecordarme);
+        tAgregarEquipo= (TextView) findViewById(R.id.txtAgregarEquipo);
+        tEquiposTi=(TextView) findViewById(R.id.txtEquipoTI);
         toolbar.setBackgroundColor(color);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -118,6 +131,8 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         });
 
        fecha= (TextView)vista.findViewById(R.id.textFecha);
+
+
         fecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +190,31 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 );
             }
         });
+        tAgregarEquipo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Agregar Equipo", Toast.LENGTH_SHORT).show();
+            }
+        });
+        tEquiposTi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ListCheckboxDialog().show(getSupportFragmentManager(), "Dialog");
+
+               // Toast.makeText(getApplicationContext(), "Equipos TI", Toast.LENGTH_SHORT).show();
+                //Stephani
+                jsonArrayEquipos= miDaoActividades.equiposTI(idAsignacion);
+
+
+
+
+
+
+
+
+            }
+        });
+
         if (j==null)
         {
             //Nuevo
@@ -192,6 +232,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 colorSelect =miJsonObject.getString("color");
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
                 linearLayout.setBackgroundColor(color);
+                scrollView.setBackgroundColor(color);
                 titulo.setText(miJsonObject.getString("nombre"));
                 descripcion.setText(miJsonObject.getString("descripcion"));
                 if(!miJsonObject.getString("fechaRealizacion").equals("")  && !miJsonObject.getString("fechaRealizacion").equals("0000-00-00 00:00:00"))
@@ -243,6 +284,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#eceff1"));
+                    scrollView.setBackgroundColor(Color.parseColor("#eceff1"));
                     colorSelect="#eceff1";
 
                 } else if (color == Color.parseColor("#ec407a")) //rosa
@@ -250,6 +292,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#ec407a"));
+                    scrollView.setBackgroundColor(Color.parseColor("#ec407a"));
                     colorSelect="#ec407a";
 
                 } else if (color == Color.parseColor("#42a5f5")) //azul
@@ -257,6 +300,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#42a5f5"));
+                    scrollView.setBackgroundColor(Color.parseColor("#42a5f5"));
                     colorSelect="#42a5f5";
 
                 } else if (color == Color.parseColor("#ffeb3b")) //amarillo
@@ -264,6 +308,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(Color.parseColor("#ffc107")));
                     linearLayout.setBackgroundColor(Color.parseColor("#ffeb3b"));
+                    scrollView.setBackgroundColor(Color.parseColor("#ffeb3b"));
                     colorSelect="#ffeb3b";
 
                 } else if (color == Color.parseColor("#7cb342")) //verdeolivo
@@ -271,6 +316,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#7cb342"));
+                    scrollView.setBackgroundColor(Color.parseColor("#7cb342"));
                     colorSelect="#7cb342";
 
                 } else if (color == Color.parseColor("#69f0ae")) //por default coral
@@ -278,6 +324,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#69f0ae"));
+                    scrollView.setBackgroundColor(Color.parseColor("#69f0ae"));
                     colorSelect="#69f0ae";
 
                 } else if (color == Color.parseColor("#9c27b0")) //por default
@@ -285,6 +332,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#e1bee7"));
+                    scrollView.setBackgroundColor(Color.parseColor("#e1bee7"));
                     colorSelect="#e1bee7";
 
                 } else if (color == Color.parseColor("#9e9e9e")) //por default
@@ -292,6 +340,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                     getSupportActionBar().setBackgroundDrawable(new
                             ColorDrawable(color));
                     linearLayout.setBackgroundColor(Color.parseColor("#9e9e9e"));
+                    scrollView.setBackgroundColor(Color.parseColor("#9e9e9e"));
                     colorSelect="#9e9e9e";
 
                 }
@@ -411,3 +460,5 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         super.onPause();
     }
 }
+
+
