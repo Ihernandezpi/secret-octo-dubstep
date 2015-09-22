@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import org.json.JSONArray;
 
+import mx.com.pineahat.auth10.DAO.DAOCalificaciones;
 import mx.com.pineahat.auth10.Equipos.IntegrantesEquipoAdapter;
 import mx.com.pineahat.auth10.R;
 
@@ -24,13 +25,14 @@ public class PrincipalCalificaciones extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mlayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mlayoutManager);
-        JSONArray miJsonArray = new JSONArray();
-        miJsonArray.put("");
-        miJsonArray.put("");
-        miJsonArray.put("");
-        miJsonArray.put("");
+        //Tengo que recibir el idi de la actividad
+        DAOCalificaciones misCalificaciones = new DAOCalificaciones(this);
+        String idActividad = getIntent().getStringExtra("idActividad");
+
+        JSONArray miJsonArray =misCalificaciones.getIntegrantes(idActividad);
         CalificacionesAdapter miCalificacionesAdapter = new CalificacionesAdapter(miJsonArray);
         mRecyclerView.setAdapter(miCalificacionesAdapter);
+
     }
 
     @Override

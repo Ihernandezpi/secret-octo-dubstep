@@ -398,7 +398,11 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_calificar) {
+            if (key == null) {
+                key = miDaoActividades.insertActividades(idAsignacion);
+            }
             Intent intent = new Intent(getBaseContext(), PrincipalCalificaciones.class);
+            intent.putExtra("idActividad",key);
             startActivity(intent);
             return true;
         }
