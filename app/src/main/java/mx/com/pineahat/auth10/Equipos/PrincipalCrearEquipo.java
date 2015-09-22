@@ -1,10 +1,12 @@
 package mx.com.pineahat.auth10.Equipos;
 
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,11 +29,17 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
     private ArrayList<Integrantes> misIntegrantes;
     private String idActividad;
     private String idEquipo=null;
+    private Toolbar toolbar;
+    Integer color = Color.parseColor("#009688");
     private IntegrantesEquipoAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal_crear_equipo);
+        toolbar =(Toolbar) findViewById(R.id.tool_bar);
+        toolbar.setBackgroundColor(color);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mRecyclerView = (RecyclerView) findViewById(R.id.RecyclerIntegrantes);
         mRecyclerView.setHasFixedSize(true);
         mlayoutManager = new LinearLayoutManager(this);
@@ -82,6 +90,10 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
             DAOEquipos daoEquipos = new DAOEquipos(this);
             daoEquipos.actualizarIntegrantes(misIntegrantes,this.idEquipo);
             return true;
+        }
+        if(id==android.R.id.home)
+        {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
