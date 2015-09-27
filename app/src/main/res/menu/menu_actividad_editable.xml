@@ -8,13 +8,7 @@
         android:orderInCategory="300"
         android:title="Calificar"
         app:showAsAction="ifRoom"
-        ></item>
-    <item
-        android:id="@+id/action_add_team"
-        android:orderInCategory="200"
-        android:title="Team"
-        android:icon="@mipmap/ic_action_add_team"
-        app:showAsAction="ifRoom"
+        android:icon="@mipmap/ic_action_calificacion"
         ></item>
     <item
         android:id="@+id/action_palette_color"
@@ -22,6 +16,7 @@
         android:title="Color"
         android:icon="@mipmap/ic_action_palette"
         app:showAsAction="ifRoom"
+
         ></item>
 
 

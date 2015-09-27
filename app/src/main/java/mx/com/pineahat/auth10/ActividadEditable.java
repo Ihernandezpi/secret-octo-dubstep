@@ -195,7 +195,20 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         tAgregarEquipo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Agregar Equipo", Toast.LENGTH_SHORT).show();
+                if (key == null) {
+                    key = miDaoActividades.insertActividades(idAsignacion);
+                }
+                Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
+                intent.putExtra("tipo","nuevo");
+                intent.putExtra("idActividad",key);
+                startActivity(intent);
+                /**
+                 * Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
+                 intent.putExtra("tipo","modificar");
+                 intent.putExtra("idEquipo","10");
+                 intent.putExtra("idActividad",key);
+                 startActivity(intent);
+                 */
             }
         });
         tEquiposTi.setOnClickListener(new View.OnClickListener() {
@@ -409,20 +422,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         if(id==R.id.action_add_team)
         {
             //Este es para nuevo
-            if (key == null) {
-                key = miDaoActividades.insertActividades(idAsignacion);
-            }
-            Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
-            intent.putExtra("tipo","nuevo");
-            intent.putExtra("idActividad",key);
-            startActivity(intent);
-            /**
-             * Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
-             intent.putExtra("tipo","modificar");
-             intent.putExtra("idEquipo","10");
-             intent.putExtra("idActividad",key);
-             startActivity(intent);
-             */
+
         }
         if(id==R.id.action_palette_color)
         {
