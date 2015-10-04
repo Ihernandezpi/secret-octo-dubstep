@@ -134,26 +134,54 @@ public class DAOActividades {
     }
 
     // Stephani Equipos
-    public JSONArray equiposTI(String idAsignacion)
+
+    public JSONArray equiposTI(String key,String idAsignacion)
     {
         JSONArray listaEquipos= null;
         Conexion conexion = new Conexion(context);
         SQLiteDatabase db= conexion.getBD();
-        String query="SELECT equiposti.idEquiposti, equiposti.nombreEquipo FROM asignacion, grupo, equiposti WHERE asignacion.idGrupo = grupo.idGrupo AND grupo.idGrupo=equiposti.idGrupo  AND asignacion.idAsignacion="+idAsignacion+";";
+        String query;
+        if(key==null)
+        {
+            query="select ti.idEquiposti,ti.nombreEquipo,'Inactivo' as estado, NULL as idEquiposActividades from asignacion as asig \n" +
+                    "inner join grupo as g on(g.idGrupo=asig.idGrupo)\n" +
+                    "INNER JOIN equiposti as ti on(g.idGrupo=ti.idGrupo)\n" +
+                    "where asig.idAsignacion='"+idAsignacion+"';";
+
+
+        }
+        else
+        {
+            query="SELECT eqti.idEquiposti, eqti.nombreEquipo, eqact.estado,eqact.idEquiposActividades\n" +
+                    "FROM equiposActividades AS eqact\n" +
+                    "INNER JOIN actividades AS act ON (act.idActividades=eqact.idActividades)\n" +
+                    "INNER JOIN equiposti as eqti ON (eqti.idEquiposti=eqact.idEquipoTI)\n" +
+                    "where act.idActividades='"+key+"';";
+        }
         Cursor cursor= db.rawQuery(query,null);
         if(cursor.moveToFirst())
         {
             listaEquipos = new JSONArray();
             do{
-                JSONObject Equipo = new JSONObject();
+                JSONObject equipo = new JSONObject();
                 try
                 {
-                    Equipo.put("idEquiposti",cursor.getString(0));
-                    Equipo.put("nombreEquipo",cursor.getString(1));
+                    equipo.put("idEquiposti",cursor.getString(0));
+                    equipo.put("nombreEquipo",cursor.getString(1));
+                    equipo.put("estado",cursor.getString(2));
+                    if(equipo.get("estado").equals("Activo"))
+                        equipo.put("checked", true);
+                    else
+                        equipo.put("checked", false);
+                    if(cursor.isNull(3))
+                        equipo.put("idEquiposActividades","null");
+                    else
+                        equipo.put("idEquiposActividades",cursor.getString(3));
+                    listaEquipos.put(equipo);
+
                 }
                 catch (Exception e)
                 {
-
                 }
             }
             while(cursor.moveToNext());
