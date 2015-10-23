@@ -65,7 +65,9 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
     private DAOActividades daoActividades;
     private DAOEquipos daoEquipos;
     private Actividad actividad= new Actividad();//Clase Actividad
+    private LinearLayout linearLayoutP;//lenar que  aloja todo
     private Toolbar toolbar; //Toolbar
+    private ScrollView scrollView;// Scroll que aloja el layout
     private LinearLayout  linearLayout; //Layout de la Actividad
     private TextView etxtTitulo; //EditText titulo de la actividad
     private TextView etxtDescripcion; ////EditText descripcion de la actividad
@@ -92,12 +94,16 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         actividad.setIdAsignacion(datosActividad.getStringExtra("idAsignacion"));
         //Views de la actividad
         toolbar = (Toolbar) findViewById(R.id.tool_bar); //ToolBar
+        linearLayoutP= (LinearLayout) findViewById(R.id.layoutActividadP);
         linearLayout= (LinearLayout) findViewById(R.id.layoutActividad); //LinearLayout
+        scrollView=(ScrollView) findViewById(R.id.scrollViewActividad);//ScrollLayout
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(actividad.getColor()));//Colores Actividad
-        linearLayout.setBackgroundColor(actividad.getColor());
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(actividad.getColor())));//Colores Actividad
+        linearLayoutP.setBackgroundColor(Color.parseColor(actividad.getColor()));
+        scrollView.setBackgroundColor(Color.parseColor(actividad.getColor()));
+        linearLayout.setBackgroundColor(Color.parseColor(actividad.getColor()));
         etxtTitulo= (TextView) findViewById(R.id.etxtTitulo);
         etxtTitulo.addTextChangedListener(new TextWatcher() {
             @Override
@@ -213,8 +219,10 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             @Override
             public void onColorSelected(int color) {
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));//Asignando el color al Toolbar
+                linearLayoutP.setBackgroundColor(color);
+                scrollView.setBackgroundColor(color);
                 linearLayout.setBackgroundColor(color);
-                actividad.setColor(color);// Asignando la propiedad color a la clase Actividad
+                actividad.setColor("#" + Integer.toHexString(color).substring(2));// Asignando la propiedad color a la clase Actividad
 
 
             }

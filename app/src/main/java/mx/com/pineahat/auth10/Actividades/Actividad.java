@@ -12,7 +12,7 @@ public class Actividad {
     private String idActividad;
     private String titulo="";
     private String descripcion="";
-    private int color =-2039584;
+    private String color ="#e0e0e0";
     private int year=0;
     private int monthOfYear=0;
     private int dayOfMonth=0;
@@ -68,27 +68,10 @@ public class Actividad {
 
 
 
-    public Actividad() {
-    }
 
     private boolean changed=false;
 
-    public Actividad(String actividadInformacion, String idAsignacion, String idActividad, String titulo, String descripcion, int color, int year, int monthOfYear, int dayOfMonth, String fecha, String hora, int hourOfDay, int minute, boolean changed) {
-        this.actividadInformacion = actividadInformacion;
-        this.idAsignacion = idAsignacion;
-        this.idActividad = idActividad;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.color = color;
-        this.year = year;
-        this.monthOfYear = monthOfYear;
-        this.dayOfMonth = dayOfMonth;
-        this.fecha = fecha;
-        this.hora = hora;
-        this.hourOfDay = hourOfDay;
-        this.minute = minute;
-        this.changed = changed;
-    }
+
 
     public int getMinute() {
         return minute;
@@ -156,7 +139,7 @@ public class Actividad {
                 JSONObject miJsonObject = new JSONObject(actividadInformacion);
                 this.titulo = miJsonObject.getString("nombre");
                 this.idActividad = miJsonObject.getString("idActividades");
-                this.color = Integer.parseInt(miJsonObject.getString("color"));
+                this.color = miJsonObject.getString("color");
                 this.estado = miJsonObject.getString("estado");
                 this.tipo = miJsonObject.getString("tipo");
                 this.descripcion = miJsonObject.getString("descripcion");
@@ -192,11 +175,11 @@ public class Actividad {
         this.idAsignacion = idAsignacion;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         changed=true;
         this.color = color;
     }
