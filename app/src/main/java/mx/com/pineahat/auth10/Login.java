@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.List;
 
 import mx.com.pineahat.auth10.DAO.DAOCarga;
+import mx.com.pineahat.auth10.URL.HttpConnectDownload;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
@@ -62,7 +63,7 @@ public class Login extends AppCompatActivity {
     CheckBox miCheckBox;
     View coordinatorLayoutView;
     ProgressBar miProgressBar;
-
+    HttpConnectDownload connectDownload = new HttpConnectDownload();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,17 +201,13 @@ public class Login extends AppCompatActivity {
         protected JSONArray doInBackground(String... urls) {
             JSONArray resp=null;
             try {
-                HttpClient Client = new DefaultHttpClient();
-                //HttpPost httpPost = new HttpPost("http://pineahat.com.mx/WSA/TI9/inicio");
-                HttpPost httpPost = new HttpPost("http://humanwt.com.mx/WSA/TI9/inicio");
-                //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/inicio");
+
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("usuario", this.usuario));
                 nameValuePairs.add(new BasicNameValuePair("contra", this.contra));
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse SetServerString =Client.execute(httpPost);
-                resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
-            if (resp.length()!=0) {
+                String res = connectDownload.webServiceConnection(getResources().getString(R.string.inicioURL),nameValuePairs);
+                resp= new JSONArray(res);
+                if (resp.length()!=0) {
                 try {
                     JSONObject jsonObject = resp.getJSONObject(0);
                     String idProfe = jsonObject.getString("idProfesor");
@@ -222,13 +219,14 @@ public class Login extends AppCompatActivity {
 
                 }
                 boolean respuesta = crearUsuario(usuario, contra, resp);
-            }
-            else
-            {
-                Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
-            }
-            } catch (Exception e) {
-            }
+                }
+                else
+                {
+                    Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
+                }
+                } catch (Exception e) {
+                e.printStackTrace();
+                }
             return null;
         }
 
@@ -252,14 +250,11 @@ public class Login extends AppCompatActivity {
                 jsonIn.put("idProfesor",this.idProfe);
                 JSONArray miArray = new JSONArray();
                 miArray.put(jsonIn);
-                HttpClient Client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("http://humanwt.com.mx/WSA/TI9/actividades");
-                //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("jsonIn", miArray.toString()));
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse SetServerString =Client.execute(httpPost);
-                resp= new JSONArray(EntityUtils.toString(SetServerString.getEntity()));
+                nameValuePairs.add(new BasicNameValuePair("json_in", miArray.toString()));
+                String res = connectDownload.webServiceConnection(getResources().getString(R.string.syncURL),nameValuePairs);
+                resp= new JSONArray(res);
+
                 try {
                     DAOCarga carga= new DAOCarga(getBaseContext());
                     carga.trunck(resp);
@@ -268,6 +263,7 @@ public class Login extends AppCompatActivity {
 
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             return resp;
         }

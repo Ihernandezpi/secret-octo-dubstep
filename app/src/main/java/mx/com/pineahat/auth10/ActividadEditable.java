@@ -1,13 +1,10 @@
 package mx.com.pineahat.auth10;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,11 +18,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RelativeLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +32,9 @@ import android.widget.Toast;
 import mx.com.pineahat.auth10.Calificaciones.PrincipalCalificaciones;
 import mx.com.pineahat.auth10.ColorPickerSwatch.OnColorSelectedListener;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
+import mx.com.pineahat.auth10.DAO.DAOEquipos;
 import mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo;
-import mx.com.pineahat.auth10.utilerias.ListCheckboxDialog;
+
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -50,7 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 
 public class ActividadEditable extends ActionBarActivity implements TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener{
@@ -86,16 +86,46 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
     private DatePickerDialog dpd;
     private String j;
     String idAsignacion;
-    JSONArray jsonArrayEquipos;
+    JSONArray jsonArrayEquipos =new JSONArray();
+    ListCheckboxDialog a;
+    DAOEquipos midaoEquipos;
+    private ListView listaEquipos;
+    ListAdapterEquipos myListAdapterEquipos=null;
 
+    ArrayList<Equipo> equipos=new ArrayList<Equipo>();
+    int number_coun=1;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        equipos=new ArrayList<Equipo>();
+        equipos=midaoEquipos.equipoArrayList(key);
+        myListAdapterEquipos= new ListAdapterEquipos(ActividadEditable.this,R.layout.item_equipos,equipos);
+        listaEquipos.setAdapter(myListAdapterEquipos);
+        try {
+            Bundle resp = a.getArguments();
+            key=resp.getString("key");
+            jsonArrayEquipos= (JSONArray) resp.get("JSONArrayEquipo");
+        }catch (Exception e)
+        {}
+
+        // metodo para reconstruir los equipos
+        equipos=new ArrayList<Equipo>();
+        equipos=midaoEquipos.equipoArrayList(key);
+        myListAdapterEquipos= new ListAdapterEquipos(ActividadEditable.this,R.layout.item_equipos,equipos);
+        listaEquipos.setAdapter(myListAdapterEquipos);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_editable);
+        a= ListCheckboxDialog.newInstance(this);
         titulo=(EditText)findViewById(R.id.etxtTitulo);
         descripcion=(EditText)findViewById(R.id.etxtDescripcion);
         miDaoActividades = new DAOActividades(getApplicationContext());
+        midaoEquipos=new DAOEquipos(getApplicationContext());
         Intent intent=getIntent();
         j = intent.getStringExtra("info");
         idAsignacion= intent.getStringExtra("idAsignacion");
@@ -115,6 +145,10 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
         final int index=parent.indexOfChild(Recordar);
         final View vista = inflater.inflate(R.layout.editable_fecha, null);
         ImageView close = (ImageView) vista.findViewById(R.id.editablefechaclose);
+
+        listaEquipos= (ListView) findViewById(R.id.listViewEquipos);
+
+
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +166,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
             }
         });
 
-       fecha= (TextView)vista.findViewById(R.id.textFecha);
+        fecha= (TextView)vista.findViewById(R.id.textFecha);
 
 
         fecha.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +175,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 dpd.show(getFragmentManager(), "Datepickerdialog");
             }
         });
-         hora=(TextView)vista.findViewById(R.id.textHora);
+        hora=(TextView)vista.findViewById(R.id.textHora);
         hora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,26 +243,12 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                  intent.putExtra("idActividad",key);
                  startActivity(intent);
                  */
-            }
-        });
-        tEquiposTi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //new ListCheckboxDialog().show(getSupportFragmentManager(), "Dialog");
-
-               // Toast.makeText(getApplicationContext(), "Equipos TI", Toast.LENGTH_SHORT).show();
-                //Stephani
-                jsonArrayEquipos= miDaoActividades.equiposTI(idAsignacion);
-
-
-
-
-
-
-
+                Toast.makeText(getApplicationContext(), "Agregar mx.com.pineahat.auth10.Equipo", Toast.LENGTH_SHORT).show();
 
             }
         });
+
+
 
         if (j==null)
         {
@@ -281,6 +301,36 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 e.printStackTrace();
             }
         }
+
+        jsonArrayEquipos= miDaoActividades.equiposTI(key,idAsignacion);
+        //agregar Items a la lista
+        equipos=midaoEquipos.equipoArrayList(key);
+
+        myListAdapterEquipos= new ListAdapterEquipos(ActividadEditable.this,R.layout.item_equipos,equipos);
+        //mylistJsonArrayEquipos= new ListJsonArrayEquipos(ActividadEditable.this,jsonArrayEquipos);
+        listaEquipos.setAdapter(myListAdapterEquipos);
+
+        tEquiposTi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jsonArrayEquipos= miDaoActividades.equiposTI(key,idAsignacion);
+                Bundle parametros = new Bundle();
+                parametros.putString("JSONArrayEquipos", jsonArrayEquipos.toString());
+                parametros.putString("key", key);
+                parametros.putString("idAsignacion", idAsignacion);
+                a.setArguments(parametros);
+                a.show(getSupportFragmentManager(), "Dialog");
+
+                // Cada vez que se clickea se reconstruyetodo
+                // metodo para reconstruir los equipos
+                equipos=new ArrayList<Equipo>();
+                equipos=midaoEquipos.equipoArrayList(key);
+                myListAdapterEquipos= new ListAdapterEquipos(ActividadEditable.this,R.layout.item_equipos,equipos);
+                listaEquipos.setAdapter(myListAdapterEquipos);
+
+            }
+        });
+
         colorPickerDialog.initialize(R.string.dialog_title, new int[]{
                 Color.parseColor("#bdbdbd"),
                 Color.parseColor("#ec407a"),
@@ -419,11 +469,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
             startActivity(intent);
             return true;
         }
-        if(id==R.id.action_add_team)
-        {
-            //Este es para nuevo
 
-        }
         if(id==R.id.action_palette_color)
         {
             colorPickerDialog.show(getSupportFragmentManager(), "colorpicker");
@@ -464,8 +510,48 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
             DAOActividades miDaoActividades = new DAOActividades(getApplicationContext());
             miDaoActividades.actualizar(key, titulo.getText().toString(), descripcion.getText().toString(), colorSelect, this.year, this.monthOfYear, this.dayOfMonth, this.hourOfDay, this.minute, flagClosed);
         }
-
         super.onPause();
+    }
+
+    public void avisar() {
+        onResume();
+    }
+
+    public class ListAdapterEquipos extends ArrayAdapter<Equipo>
+    {
+        ArrayList<Equipo> equipos;
+        private TextView textViewEquipos;
+        DAOEquipos daoEquipos;
+
+        public ListAdapterEquipos(Context context,int textViewResourceId, ArrayList<Equipo> objects) {
+            super(context,  textViewResourceId, objects);
+            this.equipos=objects;
+            daoEquipos= new DAOEquipos(context);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view=null;
+            LayoutInflater inflater=getLayoutInflater();
+            view=inflater.inflate(R.layout.item_equipos,parent,false);
+            TextView textViewEquipos= (TextView) view.findViewById(R.id.textEquipo);
+            ImageView imageViewClose=(ImageView) view.findViewById(R.id.equipoClose);
+
+            imageViewClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(daoEquipos.eliminarEquipo(equipos.get(position)))
+                        equipos.remove(position);
+
+                    myListAdapterEquipos.notifyDataSetChanged();
+                    Toast.makeText(ActividadEditable.this, "Item Delete", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            textViewEquipos.setText(equipos.get(position).getNombre().toString());
+            return view;
+
+        }
     }
 }
 

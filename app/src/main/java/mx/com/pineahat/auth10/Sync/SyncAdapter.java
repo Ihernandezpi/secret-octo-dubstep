@@ -34,6 +34,8 @@ import java.util.List;
 
 import mx.com.pineahat.auth10.DAO.DAOCarga;
 import mx.com.pineahat.auth10.DAO.DAOSync;
+import mx.com.pineahat.auth10.R;
+import mx.com.pineahat.auth10.URL.HttpConnectDownload;
 
 /**
  * Created by ${Ignacio} on 12/07/2015.
@@ -41,6 +43,7 @@ import mx.com.pineahat.auth10.DAO.DAOSync;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     ContentResolver mContentResolver;
     Context context;
+    HttpConnectDownload connectDownload = new HttpConnectDownload();
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mContentResolver = context.getContentResolver();
@@ -108,24 +111,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         protected JSONArray doInBackground(String... urls) {
             JSONArray resp = null;
             try {
-                HttpClient Client = new DefaultHttpClient();
-               HttpPost httpPost = new HttpPost("http://humanwt.com.mx/WSA/TI9/actividades");
 
-                //HttpPost httpPost = new HttpPost("http://192.168.0.4:8080/WSA/TI9/actividades");
-                //String str = "jsonIn="+miJsonArray.toString();
-                //StringEntity strEntity = new StringEntity(str);
-                //httpPost.setEntity(strEntity);
                 List<NameValuePair> entityParams = new ArrayList<NameValuePair>();
-                entityParams.add(new BasicNameValuePair("jsonIn", miJsonArray.toString()));
-                httpPost.setEntity(new UrlEncodedFormEntity(entityParams, "utf-8"));
-                //httpPost.setHeader("Content-type","application/x-www-form-urlencoded");
-                //httpPost.setHeader("Accept-Language","es-ES,es;q=0.8");
-                //httpPost.setHeader("Accept-Encoding","gzip, deflate");
-                //httpPost.setHeader("Accept", "**/*//*");
-                HttpResponse SetServerString = Client.execute(httpPost);
-                String regreso =EntityUtils.toString(SetServerString.getEntity());
-                Log.d("++++++++++++++++",regreso);
-                resp= new JSONArray(regreso);
+                entityParams.add(new BasicNameValuePair("json_in", miJsonArray.toString()));
+                String res = connectDownload.webServiceConnection(SyncAdapter.super.getContext().getResources().getString(R.string.syncURL), entityParams);
+                JSONArray regreso= new JSONArray(res);
+                Log.d("++++++++++++++++",regreso.toString());
+                resp=regreso;
             } catch (Exception e) {
             e.printStackTrace();
             }

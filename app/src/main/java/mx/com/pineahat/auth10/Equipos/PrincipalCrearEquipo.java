@@ -81,18 +81,15 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         mRecyclerView.setLayoutManager(mlayoutManager);
-        if (id == R.id.action_add_team) {
+        if(id==android.R.id.home)
+        {
             String nombre = mAdapter.getNombre();
             if(this.idEquipo==null)
             {
                 this.idEquipo=crearEquipo(this.idActividad,nombre);
             }
             DAOEquipos daoEquipos = new DAOEquipos(this);
-            daoEquipos.actualizarIntegrantes(misIntegrantes,this.idEquipo);
-            return true;
-        }
-        if(id==android.R.id.home)
-        {
+            daoEquipos.actualizarIntegrantes(misIntegrantes,this.idEquipo,nombre);
             finish();
         }
 
@@ -104,5 +101,25 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         DAOEquipos miDaoEquipos = new DAOEquipos(this);
         String idEquipo = miDaoEquipos.generarEquipo(idActividad,nombre);
         return idEquipo;
+    }
+    @Override
+    protected void onDestroy() {
+       procesar();
+        super.onDestroy();
+
+    }
+    private boolean procesar()
+    {
+        boolean resp=false;
+        String nombre = mAdapter.getNombre();
+        if(!nombre.equals("") || misIntegrantes.size()!=0) {
+                    if (this.idEquipo == null) {
+                        this.idEquipo = crearEquipo(this.idActividad, nombre);
+                    }
+                    DAOEquipos daoEquipos = new DAOEquipos(this);
+                    daoEquipos.actualizarIntegrantes(misIntegrantes, this.idEquipo, nombre);
+                    resp = true;
+        }
+        return resp;
     }
 }

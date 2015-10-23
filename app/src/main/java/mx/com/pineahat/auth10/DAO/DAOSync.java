@@ -19,22 +19,27 @@ import mx.com.pineahat.auth10.utilerias.Conexion;
  */
 public class DAOSync {
     private Context context;
-    public DAOSync(Context context)
-    {
+    private String date, dateS;
+
+    public DAOSync(Context context) {
         this.context = context;
     }
 
+    /**
+     * Trae todas las actividades que se deben subir aal servidor
+     * @param date fecha del telefono de ultima actualización
+     * @param dateS Fecha del server de ultima actualización
+     * @return JSONAray con todas las actividades.
+     */
     public JSONArray getActividades (String date, String dateS)
     {
+         this.date = date;
+         this.dateS = dateS;
         JSONArray miArray = new JSONArray();
         Conexion miConexion = new Conexion(context);
         SQLiteDatabase bd = miConexion.getBD();
         try
         {
-            JSONObject infoDispositivo = new JSONObject();
-
-            //infoDispositivo.put("idDispo", Build.SERIAL);
-            //infoDispositivo.put("ultimaFecha",date);
             String query ="select * from actividades where datetime(fechaCreacion) > datetime('"+date+"');";
             Cursor resp = bd.rawQuery(query,null);
             if(resp.moveToFirst())
@@ -42,6 +47,7 @@ public class DAOSync {
                 do{
                     if(resp.getString(7).equals("Activo") || resp.getString(7).equals("Papelera") || resp.getString(7).equals("Terminado")) {
                         JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("nombreTabla","actividades");
                         jsonObject.put("tipoAccion", "actualizar");
                         jsonObject.put("idActividades", resp.getString(0));
                         jsonObject.put("idAsignacion", resp.getString(1));
@@ -57,13 +63,7 @@ public class DAOSync {
                     }
                 }while (resp.moveToNext());
             }
-            else
-            {
-                infoDispositivo.put("tipoAccion", "dispositivo");
-                infoDispositivo.put("ultimaFecha",dateS);
 
-                miArray.put(infoDispositivo);
-            }
         }
         catch (Exception e)
         {
@@ -73,76 +73,94 @@ public class DAOSync {
             bd.close();
             miConexion.close();
         }
-        return  miArray;
+        return  getEquiposActividades(miArray);
     }
 
-    public boolean insertarInfo(JSONArray array)
+    private JSONArray getEquiposActividades (JSONArray actividades)
     {
-        boolean resp = false;
-        try {
-            for (int i = 1 ;i<=array.length();i++) {
-                JSONObject jsonObject = array.getJSONObject(i);
-                if (jsonObject.getString("tipo").equals("actualizar")) {
-
-                    actualizar(jsonObject);
-
-                } else if (jsonObject.getString("tipo").equals("eliminar")) {
-
-                    eliminar(jsonObject.getString("idActividades"));
-
-                }
-            }
-        }catch (Exception e)
-        {
-
-        }
-        return resp;
-    }
-    private boolean ifExist(String id)
-    {
-        boolean resp = false;
-
-        return resp;
-
-    }
-    private void eliminar(String id)
-    {
-        Conexion conexion = new Conexion(context);
-        SQLiteDatabase bd = conexion.getBD();
-        try
-        {
-            String query="update actividades set estado='Eliminado' where idActividades = "+id+";";
-            bd.rawQuery(query,null);
-
-        }
-        catch (Exception e)
-        {
-
-        }
-        finally {
-            bd.close();
-            conexion.close();
-        }
-    }
-    private void actualizar(JSONObject jsonObject)
-    {
-        //Revisar si existe
-        Conexion con = new Conexion(context);
+        String query="select * from equiposActividades where datetime(fechaModi) > datetime('"+this.date+"');";
+        Conexion con = new Conexion(this.context);
         SQLiteDatabase bd = con.getBD();
         try
         {
-            if(ifExist(jsonObject.getString("idActividades")))
+
+            Cursor miCursor = bd.rawQuery(query,null);
+            if(miCursor.moveToFirst())
             {
-                String query ="update";
+                do {
+                    JSONObject equipos = new JSONObject();
+                    equipos.put("nombreTabla","equiposActividades");
+                    equipos.put("tipoAccion", "actualizar");
+                    equipos.put("idEquiposActividades",miCursor.getString(0));
+                    equipos.put("idActividades",miCursor.getString(1));
+                    equipos.put("nombre",miCursor.getString(2));
+                    equipos.put("fechaModi",miCursor.getString(3));
+                    equipos.put("estado",miCursor.getString(4));
+                    equipos.put("idEquipoTI",miCursor.getString(5));
+                    actividades.put(equipos);
+
+                }while (miCursor.moveToNext());
             }
-            else
-            {
-                String query ="insert into";
-            }
-        }catch (Exception e)
+
+        }catch (Exception e )
+        {
+            Log.d("Agregar equipos: ",e.getMessage());
+        }
+        finally {
+            bd.close();
+            con.close();
+        }
+        return getIntegrantesEquipos(actividades);
+    }
+
+    private JSONArray getIntegrantesEquipos(JSONArray equiposActividades)
+    {
+        String query="select * from integrantes where datetime(fechaModi) > datetime('"+this.date+"');";
+        Conexion con = new Conexion(this.context);
+        SQLiteDatabase bd = con.getBD();
+        try
         {
 
+            Cursor miCursor = bd.rawQuery(query,null);
+            if(miCursor.moveToFirst())
+            {
+                do {
+                    JSONObject integrantes = new JSONObject();
+                    integrantes.put("nombreTabla","integrantes");
+                    integrantes.put("tipoAccion", "actualizar");
+                    integrantes.put("idIntegrantes",miCursor.getString(0));
+                    integrantes.put("idEquiposActividades",miCursor.getString(1));
+                    integrantes.put("idAlumno",miCursor.getString(2));
+                    integrantes.put("calificacion",miCursor.getString(3));
+                    integrantes.put("fechaModi",miCursor.getString(4));
+                    integrantes.put("estado",miCursor.getString(5));
+                    equiposActividades.put(integrantes);
+
+                }while (miCursor.moveToNext());
+            }
+
+        }catch (Exception e )
+        {
+            Log.d("Agregar equipos: ",e.getMessage());
+        }
+        finally {
+            bd.close();
+            con.close();
         }
 
+        return putJsonDispositivo(equiposActividades);
+    }
+    private JSONArray putJsonDispositivo (JSONArray paquete)
+    {
+        try {
+            JSONObject infoDispositivo = new JSONObject();
+            infoDispositivo.put("tipoAccion", "dispositivo");
+            infoDispositivo.put("ultimaFecha", dateS);
+            paquete.put(infoDispositivo);
+        }catch (Exception e)
+        {
+            Log.d("TIpo Acción dispo",e.getMessage());
+        }
+        return paquete;
     }
 }

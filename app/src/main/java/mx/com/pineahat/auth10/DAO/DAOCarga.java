@@ -27,7 +27,7 @@ public class DAOCarga {
             for (int i=0;i<array.length();i++)
             {
                 JSONObject object = array.getJSONObject(i);
-                String table = object.getString("tabla");
+                String table = object.getString("nombreTabla");
                 JSONArray nombres = object.names();
                 StringBuffer query = new StringBuffer();
                 int contador =0;
@@ -36,7 +36,7 @@ public class DAOCarga {
                 for (int x = 0;x<nombres.length();x++ )
                 {
 
-                    if(!nombres.getString(x).equals("tabla")) {
+                    if(!nombres.getString(x).equals("nombreTabla")) {
                         nom[contador] = nombres.getString(x);
                         contador++;
                     }

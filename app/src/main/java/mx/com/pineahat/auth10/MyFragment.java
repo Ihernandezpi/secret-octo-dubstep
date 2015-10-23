@@ -306,7 +306,6 @@ public class MyFragment extends Fragment{
                         {
 
                         }
-                        Log.d("adjaslkd","Se refresca");
                     }
                 });
             }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:baselineAligned="false">
+
+
+    <TextView
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/EquipoTI"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/textEquipo"
+        android:gravity="center"
+        android:drawableLeft="@mipmap/ic_action_group"
+        android:textAlignment="gravity" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/equipoClose"
+        android:paddingLeft="8sp"
+        android:src="@mipmap/ic_action_close"
+        android:layout_marginLeft="10dp"
+        android:padding="8dp"
+        android:layout_weight="0.33"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

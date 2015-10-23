@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="inicioURL" type="string">http://pineahat.com.mx/WSA/slim/inicio</item>
+    <item name="syncURL" type="string">http://pineahat.com.mx/WSA/slim/sync</item>
+
+</resources>
