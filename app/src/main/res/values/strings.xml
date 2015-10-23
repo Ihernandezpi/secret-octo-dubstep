@@ -36,6 +36,7 @@
 
     <string name="agregarEquipo">Agregar Equipo</string>
     <string name="EquipoTI">Equipos TI</string>
+        <string name="title_activity_actividades">Actividades</string>
 
 </resources>
 

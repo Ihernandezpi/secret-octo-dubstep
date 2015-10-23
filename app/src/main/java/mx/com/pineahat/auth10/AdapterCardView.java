@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import mx.com.pineahat.auth10.Actividades.Actividades;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 
 
@@ -76,7 +77,8 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
             public void onClick(View v) {
                 try {
                     JSONObject miJson = mDataset.getJSONObject(position);
-                    Intent intent = new Intent(v.getContext(), ActividadEditable.class);
+                    Intent intent = new Intent(v.getContext(), Actividades.class);
+                   // Intent intent = new Intent(v.getContext(), ActividadEditable.class);
                     intent.putExtra("info", miJson.toString());
                     intent.putExtra("idAsignacion",miJson.getString("idAsignacion"));
                     v.getContext().startActivity(intent);
@@ -116,7 +118,14 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
 
         try
         {
-            ((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
+            try{
+                ((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
+            }
+            catch (Exception e)
+            {
+                ((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Integer.parseInt(mDataset.getJSONObject(position).getString("color")));
+            }
+            //((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
             ((TextView) holder.mTextView.findViewById(R.id.infoText)).setText(mDataset.getJSONObject(position).getString("nombre"));
             ((TextView) holder.mTextView.findViewById(R.id.descripcion)).setText(mDataset.getJSONObject(position).getString("descripcion"));
             String fecha = mDataset.getJSONObject(position).getString("fechaCreacion");

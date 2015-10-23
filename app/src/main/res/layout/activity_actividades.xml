@@ -1,0 +1,88 @@
+<android.support.v4.widget.DrawerLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/DrawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="7dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar_actividad">
+        </include>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:id="@+id/layoutActividad">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etxtTitulo"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:hint="@string/titulo"
+                android:background="@android:color/transparent"
+                style="@style/Base.TextAppearance.AppCompat.SearchResult.Title"
+
+                android:layout_marginTop="26dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="20dp"
+                android:textSize="20sp"
+                android:singleLine="false"
+                android:textStyle="bold"
+                android:capitalize="sentences" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etxtDescripcion"
+                android:layout_below="@+id/etxtTitulo"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:hint="@string/descripcion"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:background="@android:color/transparent"
+                android:layout_marginBottom="15dp"
+
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="20dp"
+                android:textSize="18sp"
+                android:capitalize="sentences" />
+
+
+            <android.support.v4.view.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="#35222421"
+                android:layout_below="@id/etxtDescripcion"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:nestedScrollingEnabled="false"
+                android:baselineAlignBottom="false"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/ic_action_recordar"
+                android:gravity="center_vertical"
+                android:textStyle="italic"
+                android:layout_marginLeft="8dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/recordarme"
+                android:id="@+id/txtRecordarme"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.DrawerLayout>

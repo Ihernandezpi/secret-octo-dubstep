@@ -1,0 +1,58 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="mx.com.pineahat.auth10.Actividades.Actividades">
+
+    <item
+        android:id="@+id/action_AgregarImagen"
+        android:orderInCategory="200"
+        android:title="Agregar Imagen"
+        app:showAsAction="never"
+        ></item>
+    <item
+        android:id="@+id/action_AgregarArchivo"
+        android:orderInCategory="200"
+        android:title="Agregar Archivo"
+        app:showAsAction="never"
+        ></item>
+    <item
+        android:id="@+id/action_HacerCopia"
+        android:orderInCategory="200"
+        android:title="Hacer una copia"
+        app:showAsAction="never"
+        ></item>
+
+    <item
+        android:id="@+id/action_Enviar"
+        android:orderInCategory="200"
+        android:title="Enviar"
+        app:showAsAction="never"
+        ></item>
+    <item
+        android:id="@+id/action_Eliminar"
+        android:orderInCategory="200"
+        android:title="Eliminar"
+        app:showAsAction="never"
+        ></item>
+    <item
+        android:id="@+id/action_calificar"
+        android:orderInCategory="100"
+        android:title="Calificar"
+        android:icon="@mipmap/ic_action_calificar"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/action_palette_color"
+        android:orderInCategory="100"
+        android:title="Color"
+        android:icon="@mipmap/ic_action_color"
+        app:showAsAction="always"
+        ></item>
+    <item
+        android:id="@+id/action_add_team"
+        android:orderInCategory="100"
+        android:title="Equipo"
+        android:icon="@mipmap/ic_action_addteam"
+        app:showAsAction="always"
+        ></item>
+</menu>

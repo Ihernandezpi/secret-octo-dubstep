@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import mx.com.pineahat.auth10.Actividades.Actividades;
 import mx.com.pineahat.auth10.DAO.DAOCardViewItem;
 
 /**
@@ -66,9 +67,12 @@ public class MyFragment extends Fragment{
             miFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ActividadEditable.class);
+                    Intent intent = new Intent(v.getContext(), Actividades.class);
                     intent.putExtra("idAsignacion", mText);
                     startActivity(intent);
+                   /* Intent intent = new Intent(v.getContext(), ActividadEditable.class);
+                    intent.putExtra("idAsignacion", mText);
+                    startActivity(intent);*/
                 }
             });
         }

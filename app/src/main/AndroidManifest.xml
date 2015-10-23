@@ -80,13 +80,18 @@
         <activity
             android:name=".Equipos.PrincipalCrearEquipo"
             android:label="Equipo"
-            android:theme="@style/AppTheme2">
+            android:theme="@style/AppTheme2" >
         </activity>
         <activity
             android:name=".Calificaciones.PrincipalCalificaciones"
             android:label="@string/title_activity_principal_calificaciones"
-            android:theme="@style/AppTheme2"
-            >
+            android:theme="@style/AppTheme2" >
+        </activity>
+        <activity
+            android:name=".Actividades.Actividades"
+            android:label="@string/title_activity_actividades"
+            android:parentActivityName=".Principal"
+            android:theme="@style/AppTheme2">
         </activity>
     </application>
 
