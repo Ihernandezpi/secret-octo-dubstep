@@ -207,13 +207,13 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
 
         colorPickerDialog.initialize(R.string.dialog_title, new int[]{  //Inicializando la paleta de colores
                 Color.parseColor("#e0e0e0"),//Color por Default
-                Color.parseColor("#ffb74d"),
-                Color.parseColor("#fff176"),
-                Color.parseColor("#ccff90"),
-                Color.parseColor("#f8bbd0"),
-                Color.parseColor("#bbdefb"),
-                Color.parseColor("#b9f6ca"),
-                Color.parseColor("#bdbdbd")}, Color.parseColor("#e0e0e0"), 4, 2);
+                Color.parseColor("#ff9800"),
+                Color.parseColor("#ffeb3b"),
+                Color.parseColor("#cddc39"),
+                Color.parseColor("#ff80ab"),
+                Color.parseColor("#42a5f5"),
+                Color.parseColor("#00e676"),
+                Color.parseColor("#90a4ae")}, Color.parseColor("#e0e0e0"), 4, 2);
 
         colorPickerDialog.setOnColorSelectedListener(new OnColorSelectedListener() { //Asignando color a la Actividad
             @Override
