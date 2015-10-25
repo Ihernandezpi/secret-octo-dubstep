@@ -21,7 +21,7 @@ public class PrincipalCalificaciones extends ActionBarActivity {
     private LinearLayoutManager mlayoutManager;
     private IntegrantesEquipoAdapter mAdapter;
     private Toolbar toolbar;
-    Integer color = Color.parseColor("#009688");
+    Integer color = Color.parseColor("#3F51B5");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -30,7 +30,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
     private String idActividad;
     private String idEquipo=null;
     private Toolbar toolbar;
-    Integer color = Color.parseColor("#009688");
+    Integer color = Color.parseColor("#3F51B5");
     private IntegrantesEquipoAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
