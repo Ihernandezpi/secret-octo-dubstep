@@ -154,11 +154,11 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 parentRecordar.addView(vista, index);
                 //Inicializar TimePickerDialo y DatePickerDialog
                 Calendar dateNow= Calendar.getInstance();
-                actividad.setYear(dateNow.YEAR);
-                actividad.setMonthOfYear(dateNow.MONTH);
-                actividad.setDayOfMonth(dateNow.DAY_OF_MONTH);
-                actividad.setHourOfDay(dateNow.HOUR_OF_DAY);
-                actividad.setMinute(dateNow.MINUTE);
+                actividad.setYear(dateNow.get(Calendar.YEAR));
+                actividad.setMonthOfYear(dateNow.get(Calendar.MONTH)+1);
+                actividad.setDayOfMonth(dateNow.get(Calendar.DAY_OF_MONTH));
+                actividad.setHourOfDay(dateNow.get(Calendar.HOUR_OF_DAY));
+                actividad.setMinute( dateNow.get(Calendar.MINUTE));
                 datePickerDialog=DatePickerDialog.newInstance(
                         Actividades.this,
                         dateNow.get(Calendar.YEAR),
@@ -183,6 +183,12 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 parentRecordar.addView(Recordar, index);
                 textFecha.setText("Dia");
                 textHora.setText("Hora");
+                actividad.setYear(0);
+                actividad.setMonthOfYear(0);
+                actividad.setDayOfMonth(0);
+                actividad.setHourOfDay(0);
+                actividad.setMinute(0);
+                actividad.setChanged(true);
             }
         });
         //TextView Remplazables Dia y hora
@@ -247,7 +253,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                     actividad.setYear(Integer.parseInt(formaty.format(miDate)));
                     actividad.setHourOfDay(miDate.getHours());
                     actividad.setMinute(miDate.getMinutes());
-                    datePickerDialog=DatePickerDialog.newInstance(Actividades.this,actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth());
+                    datePickerDialog=DatePickerDialog.newInstance(Actividades.this,actividad.getYear(),actividad.getMonthOfYear()-1,actividad.getDayOfMonth());
                     timePickerDialog= TimePickerDialog.newInstance(Actividades.this,actividad.getHourOfDay(),actividad.getMinute(),false);
                     parentRecordar.removeView(Recordar);
                     parentRecordar.addView(vista,index);
@@ -258,13 +264,14 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                     String f =time.format(miDate);
                     String decha = fec.format(miDate);
                     textFecha.setText(decha);
+                    actividad.setChanged(false);
 
                 }
             }
         }
         catch (Exception e)
         {
-
+            actividad.setChanged(false);
         }
     }
     @Override
@@ -334,11 +341,16 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMont) {
         Calendar miCalendar = Calendar.getInstance();
         actividad.setDayOfMonth(dayOfMont);
-        actividad.setMonthOfYear(monthOfYear);
+        actividad.setMonthOfYear(monthOfYear + 1);
         actividad.setYear(year);
+        actividad.setChanged(true);
+        actividad.setHourOfDay(miCalendar.get(Calendar.HOUR_OF_DAY));
+        actividad.setMinute(miCalendar.get(Calendar.MINUTE));
         miCalendar.set(actividad.getYear(), actividad.getMonthOfYear(), actividad.getDayOfMonth());
         DateFormat time= new SimpleDateFormat("yyyy-MM-dd");
-        textFecha.setText(time.format(miCalendar.getTime()));
+      //  textFecha.setText(time.format(miCalendar.getTime()));
+        textFecha.setText(""+actividad.getYear()+"-"+ actividad.getMonthOfYear()+"-"+actividad.getDayOfMonth());
+        textHora.setText(""+actividad.getHourOfDay()+":"+actividad.getMinute());
 
     }
 
@@ -347,8 +359,10 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         Calendar miCalendar = Calendar.getInstance();
         actividad.setHourOfDay(hourOfDay);
         actividad.setMinute(minute);
+        actividad.setChanged(true);
         miCalendar.set(0, 0, 0, actividad.getHourOfDay(), actividad.getMinute());
         DateFormat time=new SimpleDateFormat("HH:mm");
         textHora.setText(time.format(miCalendar.getTime()));
+        textFecha.setText(""+actividad.getYear()+"-"+ actividad.getMonthOfYear()+"-"+actividad.getDayOfMonth());
     }
 }

@@ -78,7 +78,7 @@ public class Actividad {
     }
 
     public void setMinute(int minute) {
-        changed=true;
+       // changed=true;
         this.minute = minute;
     }
 
@@ -87,7 +87,7 @@ public class Actividad {
     }
 
     public void setHourOfDay(int hourOfDay) {
-        changed=true;
+        //changed=true;
         this.hourOfDay = hourOfDay;
     }
 
@@ -97,7 +97,7 @@ public class Actividad {
     }
 
     public void setMonthOfYear(int monthOfYear) {
-        changed=true;
+       // changed=true;
         this.monthOfYear = monthOfYear;
     }
 
@@ -106,7 +106,7 @@ public class Actividad {
     }
 
     public void setYear(int year) {
-        changed=true;
+    //    changed=true;
         this.year = year;
     }
 
@@ -115,7 +115,7 @@ public class Actividad {
     }
 
     public void setDayOfMonth(int dayOfMonth) {
-        changed=true;
+        //changed=true;
         this.dayOfMonth = dayOfMonth;
     }
 

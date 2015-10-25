@@ -89,7 +89,7 @@ public class DAOActividades {
         String realizacion ="";
         if (year!=0 & monthOfYear!=0 & dayOfMonth!=0&hourOfDay!=0&minute!=0&flag!=true)
         {
-            miCalendar.set(year,monthOfYear,dayOfMonth,hourOfDay,minute,0);
+            miCalendar.set(year,monthOfYear-1,dayOfMonth,hourOfDay,minute,0);
             DateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String h =time.format(miCalendar.getTime());
             realizacion=miDateFormat.format(miCalendar.getTime());
