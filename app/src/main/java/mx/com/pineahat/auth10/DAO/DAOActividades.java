@@ -157,6 +157,15 @@ public class DAOActividades {
                     "INNER JOIN actividades AS act ON (act.idActividades=eqact.idActividades)\n" +
                     "INNER JOIN equiposti as eqti ON (eqti.idEquiposti=eqact.idEquipoTI)\n" +
                     "where act.idActividades='"+key+"';";
+
+            Cursor cursor= db.rawQuery(query,null);
+            if(key!=null && !cursor.moveToFirst() )
+            {
+                query="select ti.idEquiposti,ti.nombreEquipo,'Inactivo' as estado, NULL as idEquiposActividades from asignacion as asig \n" +
+                        "inner join grupo as g on(g.idGrupo=asig.idGrupo)\n" +
+                        "INNER JOIN equiposti as ti on(g.idGrupo=ti.idGrupo)\n" +
+                        "where asig.idAsignacion='"+idAsignacion+"';";
+            }
         }
         Cursor cursor= db.rawQuery(query,null);
         if(cursor.moveToFirst())
