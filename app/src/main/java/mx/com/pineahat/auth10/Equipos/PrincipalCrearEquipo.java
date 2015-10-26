@@ -16,6 +16,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import mx.com.pineahat.auth10.DAO.DAOEquipos;
@@ -48,6 +49,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         DAOEquipos miDaoEquipos = new DAOEquipos(this);
         misIntegrantes = new ArrayList<Integrantes>();
         this.idActividad = getIntent().getStringExtra("idActividad");
+
         if(tipo.equals("nuevo")) {
 
             this.idActividad = getIntent().getStringExtra("idActividad");
@@ -64,7 +66,13 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         }
         else
         {
-            String idEquipo = getIntent().getStringExtra("tipo");
+            String idEquipo = getIntent().getStringExtra("idEquipo");
+            JSONArray miJsonArray = miDaoEquipos.getIntegrantesEquipo(idEquipo);
+            String nombreEquipo= miDaoEquipos.getNombre(idEquipo);
+            if(miJsonArray!=null) {
+                mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo);
+                mRecyclerView.setAdapter(mAdapter);
+            }
         }
 
     }

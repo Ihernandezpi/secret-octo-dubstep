@@ -38,7 +38,6 @@ public class DAOEquipos {
     public JSONArray traerAlumnos(String idActividad)
     {
         JSONArray miLista = null;
-
         Conexion conexion = new Conexion(context);
         SQLiteDatabase bd = conexion.getBD();
         String query="select alum.idAlumno,p.nombre,p.apellidoP,p.apellidoM,alum.matricula from alumnos as alum INNER JOIN persona as p on(p.idPersona=alum.idPersona) where alum.idGrupo=(select asig.idGrupo from actividades as ac INNER JOIN asignacion as asig on (asig.idAsignacion=ac.idAsignacion) WHERE ac.idActividades='"+idActividad+"');";
@@ -289,38 +288,7 @@ public class DAOEquipos {
         return miJsonArray;
 
     }
-    public JSONArray getIntegrantes(String idActividad)
-    {
-        JSONArray miJsonArray = null;
-        Conexion conexion = new Conexion(context);
-        SQLiteDatabase bd = conexion.getBD();
-        String query ="select * from equiposActividades where idActividades='"+idActividad+"' and estado='Activo';";
-        try
-        {
-            Cursor resp=bd.rawQuery(query,null);
-            if(resp.moveToFirst())
-            {
-                miJsonArray= new JSONArray();
-                do {
-                    JSONObject equipo = new JSONObject();
-                    equipo.put("idEquiposActividades",resp.getString(0));
-                    equipo.put("idActividades",resp.getString(1));
-                    equipo.put("nombre",resp.getString(2));
-                    equipo.put("fechaModi",resp.getString(3));
-                    equipo.put("estado",resp.getString(4));
-                    miJsonArray.put(equipo);
-                }
-                while(resp.moveToNext());
-            }
-        }
-        catch (Exception e)
-        {
 
-        }
-        bd.close();
-        conexion.close();
-        return miJsonArray;
-    }
 
     public  boolean eliminarEquipo(Equipo equipoObject)
     {
@@ -430,4 +398,62 @@ public class DAOEquipos {
         }
     }
 
+    public JSONArray getIntegrantesEquipo(String idEquipo) {
+        JSONArray miJsonArray = null;
+        String query ="select inte.idAlumno,p.nombre,p.apellidoP,p.apellidoM, inte.estado from integrantes as inte inner join alumnos as alum on(inte.idAlumno=alum.idAlumno)INNER JOIN persona as p on(p.idPersona=alum.idPersona)where inte.idEquiposActividades='"+idEquipo+"';";
+        Conexion con = new Conexion(context);
+        SQLiteDatabase bd = con.getBD();
+        try
+        {
+            Cursor resp = bd.rawQuery(query,null);
+            if(resp.moveToFirst())
+            {
+                miJsonArray= new JSONArray();
+                do {
+                    JSONObject miJsonObject = new JSONObject();
+                    miJsonObject.put("idAlumno",0);
+                    miJsonObject.put("nombre",1);
+                    miJsonObject.put("apellidoP",2);
+                    miJsonObject.put("apellidoM",3);
+                    miJsonObject.put("estado",4);
+                    miJsonArray.put(miJsonObject);
+
+                }while (resp.moveToNext());
+            }
+
+        }catch (Exception e )
+        {
+
+        }
+
+        return miJsonArray;
+    }
+
+    public String getNombre (String idEquipo)
+    {
+        String nombre = "";
+        String query ="select nombre from equiposActividades where idEquiposActividades='"+idEquipo+"';";
+        Conexion con = new Conexion(context);
+        SQLiteDatabase bd= con.getBD();
+
+        try
+        {
+            Cursor resp  =bd.rawQuery(query,null);
+            if(resp.moveToFirst())
+            {
+                nombre=resp.getString(0);
+            }
+
+        }catch (Exception e)
+        {
+
+        }
+        finally {
+            bd.close();
+            con.close();
+        }
+
+
+        return nombre;
+    }
 }

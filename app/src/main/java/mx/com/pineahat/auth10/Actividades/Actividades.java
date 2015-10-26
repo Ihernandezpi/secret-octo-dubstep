@@ -373,6 +373,10 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if(id==android.R.id.home)
+        {
+            finish();
+        }
         if (id == R.id.action_settings) {
             return true;
         }
@@ -459,7 +463,16 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             textViewEquipos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(Actividades.this, "Item "+equipos.get(position).getNombre(), Toast.LENGTH_SHORT).show();
+
+                    //Toast.makeText(Actividades.this, "Item "+equipos.get(position).getNombre(), Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
+                    intent.putExtra("tipo","modificar");
+                    intent.putExtra("idActividad",actividad.getIdActividad());
+                    intent.putExtra("idEquipo",equipos.get(position).getIdEquiposActividades());
+                    startActivity(intent);
+
+
                 }
             });
             imageViewClose.setOnClickListener(new View.OnClickListener() {

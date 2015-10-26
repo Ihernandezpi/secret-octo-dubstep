@@ -41,6 +41,7 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
     private ArrayList<Integrantes> misIntegrantes;
     public int SUMA = 1;
     private EditText nomrbeRquipo;
+    private String nomEquipo ="";
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View mTextView;
@@ -52,6 +53,11 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
     public IntegrantesEquipoAdapter(JSONArray myDataset,ArrayList<Integrantes> misIntegrantes) {
         this.mDataset = myDataset;
         this.misIntegrantes= misIntegrantes;
+    }
+    public IntegrantesEquipoAdapter(JSONArray myDataset,ArrayList<Integrantes> misIntegrantes,String nomEquipo) {
+        this.mDataset = myDataset;
+        this.misIntegrantes= misIntegrantes;
+        this.nomEquipo=nomEquipo;
     }
 
     @Override
@@ -75,6 +81,10 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
         if(position==0)
         {
             this.nomrbeRquipo =(EditText) holder.mTextView.findViewById(R.id.txtNombreEquipo);
+            if(!nomEquipo.equals(""))
+            {
+                this.nomrbeRquipo.setText(nomEquipo);
+            }
         }
         else {
             try {
@@ -86,8 +96,7 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
                 if(!alumno.getString("estado").equals("fuera"))
                 {
                     miCheckBox.setChecked(true);
-                    //Agregar a la lista
-
+                    addIntegrante(alumno.getString("idAlumno").toString());
                 }
                 miCheckBox.setOnClickListener(new View.OnClickListener() {
                     @Override
