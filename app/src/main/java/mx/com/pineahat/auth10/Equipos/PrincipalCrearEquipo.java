@@ -83,13 +83,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mlayoutManager);
         if(id==android.R.id.home)
         {
-            String nombre = mAdapter.getNombre();
-            if(this.idEquipo==null)
-            {
-                this.idEquipo=crearEquipo(this.idActividad,nombre);
-            }
-            DAOEquipos daoEquipos = new DAOEquipos(this);
-            daoEquipos.actualizarIntegrantes(misIntegrantes,this.idEquipo,nombre);
+            procesar();
             finish();
         }
 
