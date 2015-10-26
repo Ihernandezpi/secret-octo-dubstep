@@ -62,21 +62,19 @@
                 android:textSize="18sp"
                 android:capitalize="sentences" />
 
-
             <android.support.v4.view.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="0.2dp"
                 android:background="#35222421"
-                android:layout_below="@id/etxtDescripcion"
+                android:layout_below="@id/listViewEquipos"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:nestedScrollingEnabled="false"
                 android:baselineAlignBottom="false"
                 android:visibility="visible" />
-
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:drawableLeft="@mipmap/ic_action_recordar"
                 android:gravity="center_vertical"
                 android:textStyle="italic"
@@ -84,11 +82,31 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/recordarme"
                 android:id="@+id/txtRecordarme"
-                android:padding="10dp" />
+                android:padding="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/EquipoTI"
+                android:id="@+id/txtEquipoTI"
+                android:padding="8dp"
+                android:layout_marginLeft="8dp"
+                android:drawableLeft="@mipmap/ic_action_add_team_ti"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textStyle="italic" />
 
 
         </LinearLayout>
         </ScrollView>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewEquipos"
+            android:scrollbars="none"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
     </LinearLayout>
 
 

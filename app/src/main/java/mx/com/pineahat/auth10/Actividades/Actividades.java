@@ -38,6 +38,7 @@ import mx.com.pineahat.auth10.ColorPickerDialog;
 import mx.com.pineahat.auth10.ColorPickerSwatch.OnColorSelectedListener;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 import mx.com.pineahat.auth10.DAO.DAOEquipos;
+import mx.com.pineahat.auth10.Equipo;
 import mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo;
 
 
@@ -57,6 +58,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import mx.com.pineahat.auth10.ListCheckboxDialog;
 import mx.com.pineahat.auth10.R;
 //  "Al Cesar lo que es del Cesar"
 public class Actividades extends ActionBarActivity implements TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener {
@@ -78,14 +80,49 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
     //Dialogs de Fecha y Hora
     private  TimePickerDialog timePickerDialog;// TimePicker para Hora
     private DatePickerDialog datePickerDialog; //TimePicker para fecha
-
     private boolean flagClosed=false;
-
     final ColorPickerDialog colorPickerDialog = new ColorPickerDialog(); //Color
+    //Equipos
+    JSONArray jsonArrayEquipos =new JSONArray();
+    private TextView tEquiposTi;
+    ListCheckBoxDialog listCheckboxDialogEquipos;
+    DAOEquipos midaoEquipos;
+    private ListView listaEquipos;
+    ListAdapterEquipos myListAdapterEquipos=null;
+    ArrayList<Equipo> equipos=new ArrayList<Equipo>();
+
+
+
+    public void avisar() {
+        onResume();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        equipos=new ArrayList<Equipo>();
+        equipos=daoEquipos.equipoArrayList(actividad.getIdActividad());
+        myListAdapterEquipos= new ListAdapterEquipos(Actividades.this,R.layout.item_equipos,equipos);
+        listaEquipos.setAdapter(myListAdapterEquipos);
+        setListViewHeightBasedOnChildren(listaEquipos);
+        try {
+            Bundle resp = listCheckboxDialogEquipos.getArguments();
+            actividad.setIdActividad(resp.getString("key"));
+            jsonArrayEquipos= (JSONArray) resp.get("JSONArrayEquipo");
+        }catch (Exception e)
+        {}
+
+        // metodo para reconstruir los equipos
+        equipos=new ArrayList<Equipo>();
+        equipos=daoEquipos.equipoArrayList(actividad.getIdActividad());
+        myListAdapterEquipos= new ListAdapterEquipos(Actividades.this,R.layout.item_equipos,equipos);
+        listaEquipos.setAdapter(myListAdapterEquipos);
+        setListViewHeightBasedOnChildren(listaEquipos);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividades);
+
         //DAO
         daoActividades= new DAOActividades(getApplicationContext());
         daoEquipos = new DAOEquipos(getApplicationContext());
@@ -273,6 +310,41 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         {
             actividad.setChanged(false);
         }
+        //Equipos
+        listCheckboxDialogEquipos=ListCheckBoxDialog.newInstance(this);
+        tEquiposTi=(TextView) findViewById(R.id.txtEquipoTI);
+        listaEquipos= (ListView) findViewById(R.id.listViewEquipos);
+        jsonArrayEquipos=daoActividades.equiposTI(actividad.getIdActividad(), actividad.getIdAsignacion());
+        equipos=daoEquipos.equipoArrayList(actividad.getIdActividad());
+        myListAdapterEquipos= new ListAdapterEquipos(Actividades.this,R.layout.item_equipos,equipos);
+        listaEquipos.setAdapter(myListAdapterEquipos);
+        setListViewHeightBasedOnChildren(listaEquipos);
+        // Si no hay equipos de TI deshabilita el TEXTVIEW
+        if(jsonArrayEquipos.length()==0)
+        {
+            tEquiposTi.setVisibility(View.INVISIBLE);
+        }
+        tEquiposTi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Toast.makeText(getApplicationContext(), "Item Delete", Toast.LENGTH_SHORT).show();
+                jsonArrayEquipos = daoActividades.equiposTI(actividad.getIdActividad(), actividad.getIdAsignacion());
+                Bundle parametros = new Bundle();
+                parametros.putString("JSONArrayEquipos", jsonArrayEquipos.toString());
+                parametros.putString("key", actividad.getIdActividad());
+                parametros.putString("idAsignacion", actividad.getIdAsignacion());
+                listCheckboxDialogEquipos.setArguments(parametros);
+                listCheckboxDialogEquipos.show(getSupportFragmentManager(), "Dialog");
+                // metodo para reconstruir los equipos
+                equipos = new ArrayList<Equipo>();
+                equipos = daoEquipos.equipoArrayList(actividad.getIdActividad());
+                myListAdapterEquipos = new ListAdapterEquipos(Actividades.this, R.layout.item_equipos, equipos);
+                listaEquipos.setAdapter(myListAdapterEquipos);
+                setListViewHeightBasedOnChildren(listaEquipos);
+
+            }
+        });
+        listaEquipos.setScrollContainer(false);
     }
     @Override
     protected void onPause() {
@@ -363,6 +435,68 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         miCalendar.set(0, 0, 0, actividad.getHourOfDay(), actividad.getMinute());
         DateFormat time=new SimpleDateFormat("HH:mm");
         textHora.setText(time.format(miCalendar.getTime()));
-        textFecha.setText(""+actividad.getYear()+"-"+ actividad.getMonthOfYear()+"-"+actividad.getDayOfMonth());
+        textFecha.setText("" + actividad.getYear() + "-" + actividad.getMonthOfYear() + "-" + actividad.getDayOfMonth());
+    }
+    public class ListAdapterEquipos extends ArrayAdapter<Equipo>
+    {
+        ArrayList<Equipo> equipos;
+        private TextView textViewEquipos;
+        DAOEquipos daoEquipos;
+
+        public ListAdapterEquipos(Context context,int textViewResourceId, ArrayList<Equipo> objects) {
+            super(context,  textViewResourceId, objects);
+            this.equipos=objects;
+            daoEquipos= new DAOEquipos(context);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view=null;
+            LayoutInflater inflater=getLayoutInflater();
+            view=inflater.inflate(R.layout.item_equipos,parent,false);
+            TextView textViewEquipos= (TextView) view.findViewById(R.id.textEquipo);
+            ImageView imageViewClose=(ImageView) view.findViewById(R.id.equipoClose);
+            textViewEquipos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(Actividades.this, "Item "+equipos.get(position).getNombre(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            imageViewClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(daoEquipos.eliminarEquipo(equipos.get(position)))
+                        equipos.remove(position);
+
+                    myListAdapterEquipos.notifyDataSetChanged();
+                    Toast.makeText(Actividades.this, "Item Delete", Toast.LENGTH_SHORT).show();
+                   avisar();
+
+                }
+            });
+
+            textViewEquipos.setText(equipos.get(position).getNombre().toString());
+            return view;
+
+        }
+    }
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }
