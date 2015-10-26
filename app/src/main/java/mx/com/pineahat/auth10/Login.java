@@ -21,10 +21,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,15 +66,38 @@ public class Login extends AppCompatActivity {
     CheckBox miCheckBox;
     View coordinatorLayoutView;
     ProgressBar miProgressBar;
+    Button miButton;
+    ViewGroup miVertical;
+    TextView txtOlvideContra;
+    TextView espacio1;
+    TextView espacio2;
+    TextView espacio3;
+    TextView espacio4;
+    TextView espacio5;
+    TextView espacio6;
+    TextView espacio7;
+    TextView txtCargando;
+
     HttpConnectDownload connectDownload = new HttpConnectDownload();
+    int tamanoLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        espacio1=(TextView)findViewById(R.id.espacio1);
+        espacio2=(TextView)findViewById(R.id.espacio2);
+        espacio3=(TextView)findViewById(R.id.espacio3);
+        espacio4=(TextView)findViewById(R.id.espacio4);
+        espacio5=(TextView)findViewById(R.id.espacio5);
+        espacio6=(TextView)findViewById(R.id.espacio6);
+        espacio7=(TextView)findViewById(R.id.espacio7);
+        txtCargando=(TextView)findViewById(R.id.txtCargando);
+
         accountManager = AccountManager.get(getApplicationContext());
         coordinatorLayoutView = findViewById(R.id.cordinatorLogin);
-        miProgressBar = (ProgressBar) findViewById(R.id.progress);
+        miProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         Account[] cuentas = accountManager.getAccountsByType("mx.com.pineahat.auth10");
         if(cuentas.length>0)
         {
@@ -85,9 +111,10 @@ public class Login extends AppCompatActivity {
         txtUsuario = (EditText)findViewById(R.id.ediTextUser);
         txtPass = (EditText)findViewById(R.id.editTextPass);
         miCheckBox=(CheckBox)findViewById(R.id.checkBoxNoCerrar);
-        final Button miButton =(Button)findViewById(R.id.buttonIniciar);
-        final ViewGroup miVertical = (ViewGroup) findViewById(R.id.verticalLayoutLogin);
-        TextView txtOlvideContra = (TextView)findViewById(R.id.textViewOlvide);
+        miButton =(Button)findViewById(R.id.buttonIniciar);
+        miVertical = (ViewGroup) findViewById(R.id.verticalLayoutLogin);
+        tamanoLayout=miVertical.getHeight();
+        txtOlvideContra = (TextView)findViewById(R.id.textViewOlvide);
         txtOlvideContra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,6 +249,7 @@ public class Login extends AppCompatActivity {
                 }
                 else
                 {
+                    detenerProgress();
                     Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
                 }
                 } catch (Exception e) {
@@ -232,7 +260,7 @@ public class Login extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(JSONArray array) {
-            detenerProgress();
+
             super.onPostExecute(array);
         }
     }
@@ -270,7 +298,6 @@ public class Login extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(JSONArray array) {
-            detenerProgress();
             Intent intent = new Intent(getApplicationContext(), Principal.class);
             startActivity(intent);
             finish();
@@ -279,11 +306,90 @@ public class Login extends AppCompatActivity {
     }
     public void correrProgress()
     {
+        collapse(txtUsuario);
+        collapse(txtPass);
+        collapse(miCheckBox);
+        collapse(miButton);
+        collapse(miButton);
+        collapse(txtOlvideContra);
+        collapse(espacio1);
+        collapse(espacio2);
+        collapse(espacio3);
+        collapse(espacio4);
+        collapse(espacio5);
         miProgressBar.setVisibility(View.VISIBLE);
+        txtCargando.setVisibility(View.VISIBLE);
+        espacio6.setVisibility(View.VISIBLE);
+        espacio7.setVisibility(View.VISIBLE);
     }
     public void detenerProgress()
     {
         miProgressBar.setVisibility(View.GONE);
+        txtCargando.setVisibility(View.GONE);
+        espacio6.setVisibility(View.GONE);
+        espacio7.setVisibility(View.GONE);
+        expand(txtUsuario, 10);
+        expand(txtPass,10);
+        expand(miCheckBox, 10);
+        expand(miButton, 10);
+        expand(espacio1,10);
+        expand(espacio1,10);
+        expand(espacio1,10);
+        expand(espacio1,10);
+        expand(espacio1, 10);
+
     }
+
+    public static void expand(final View v, final int height) {
+        v.measure(height, RelativeLayout.LayoutParams.MATCH_PARENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1 ? height : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+        // 1dp/ms
+        a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+
+        v.startAnimation(a);
+
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if(interpolatedTime == 1)
+                    v.setVisibility(View.GONE);
+                else{
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+        // 1dp/ms
+        //a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration(10);
+        v.startAnimation(a);
+    }
+
+
 
 }

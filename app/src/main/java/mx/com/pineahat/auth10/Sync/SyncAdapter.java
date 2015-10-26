@@ -79,7 +79,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String strDate = sdf.format(rightNow.getTime());
                             miManager.setUserData(a[0], "fechaSync", strDate);
-                            miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fecha"));
+                            miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fechaServidor"));
                         break;
                         case "ultima_fecha":
                             Log.d("---------------------", "Insertando Actualizacion");
