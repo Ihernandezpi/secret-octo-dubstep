@@ -438,11 +438,13 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(Actividades.this);
             builder.setTitle("Borrar actividad permanentemente?");
             builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    daoActividades.eliminar(jsonObject);
+                    if(actividad.getIdActividad()!=null) {
+                        daoActividades.eliminar(jsonObject);
+                    }
                     dialog.dismiss();
                     finish();
                     Toast.makeText(Actividades.this, "Actividad Eliminada", Toast.LENGTH_SHORT).show();
