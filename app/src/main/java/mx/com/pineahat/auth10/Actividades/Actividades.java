@@ -409,6 +409,37 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             intent.putExtra("idActividad",actividad.getIdActividad());
             startActivity(intent);
         }
+        if(id==R.id.action_HacerCopia)
+        {
+            Actividad copiaActividad= new Actividad();
+            if(actividad.getIdActividad()==null)
+            {
+                // crea la actividad en la que se esta trabajando
+                actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
+                //Crea la actividad copiada
+                //copiaActividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
+                //Copia los datos de la actividad Actual a la actividad copiada
+                //daoActividades.actualizar(copiaActividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
+            }
+            copiaActividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
+            daoActividades.actualizar(actividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
+            daoActividades.actualizar(copiaActividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
+            Toast.makeText(Actividades.this, "Copia creada", Toast.LENGTH_SHORT).show();
+        }
+        if(id==R.id.action_Eliminar)
+        {
+
+            JSONObject jsonObject= new JSONObject();
+            try {
+                jsonObject.put("idActividades",actividad.getIdActividad());
+                daoActividades.eliminar(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            finish();
+            Toast.makeText(Actividades.this, "Actividad Eliminada", Toast.LENGTH_SHORT).show();
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -423,7 +454,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         actividad.setHourOfDay(miCalendar.get(Calendar.HOUR_OF_DAY));
         actividad.setMinute(miCalendar.get(Calendar.MINUTE));
         miCalendar.set(actividad.getYear(), actividad.getMonthOfYear(), actividad.getDayOfMonth());
-        DateFormat time= new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat time = new SimpleDateFormat("yyyy-MM-dd");
       //  textFecha.setText(time.format(miCalendar.getTime()));
         textFecha.setText(""+actividad.getYear()+"-"+ actividad.getMonthOfYear()+"-"+actividad.getDayOfMonth());
         textHora.setText(""+actividad.getHourOfDay()+":"+actividad.getMinute());
