@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,7 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
     public int SUMA = 1;
     private EditText nomrbeRquipo;
     private String nomEquipo ="";
+    private boolean flag=false;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View mTextView;
@@ -85,6 +88,23 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
             {
                 this.nomrbeRquipo.setText(nomEquipo);
             }
+            this.nomrbeRquipo.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    flag=true;
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
         }
         else {
             try {
@@ -101,6 +121,7 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
                 miCheckBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                       flag=true;
                         String idAlumno="";
                         try {
                             idAlumno = mDataset.getJSONObject(position - SUMA).getString("idAlumno");
@@ -109,12 +130,14 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
                         }
                         if(miCheckBox.isChecked())
                         {
+                            flag=true;
                                 Log.d("============","Se agregó "+idAlumno);
                                 addIntegrante(idAlumno);
 
                         }
                         else
                         {
+                            flag=true;
                                 Log.d("============","Se Eliminó "+idAlumno);
                                 deleteIntegrante(idAlumno);
                         }
@@ -168,6 +191,11 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
     public String getNombre ()
     {
         return nomrbeRquipo.getText().toString();
+    }
+
+    public boolean getFlag ()
+    {
+        return this.flag;
     }
 
 }
