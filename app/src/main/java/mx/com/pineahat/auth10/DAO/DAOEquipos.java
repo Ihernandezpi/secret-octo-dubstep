@@ -400,7 +400,7 @@ public class DAOEquipos {
 
     public JSONArray getIntegrantesEquipo(String idEquipo) {
         JSONArray miJsonArray = null;
-        String query ="select inte.idAlumno,p.nombre,p.apellidoP,p.apellidoM, inte.estado from integrantes as inte inner join alumnos as alum on(inte.idAlumno=alum.idAlumno)INNER JOIN persona as p on(p.idPersona=alum.idPersona)where inte.idEquiposActividades='"+idEquipo+"';";
+        String query ="SELECT DISTINCT(alumnos.idAlumno),p.nombre,p.apellidoP,p.apellidoM, integrantes.estado FROM alumnos INNER JOIN persona as p on (p.idPersona= alumnos.idPersona) left join integrantes on (alumnos.idAlumno=integrantes.idAlumno) where alumnos.idGrupo=(select asignacion.idGrupo from equiposActividades INNER JOIN actividades on (actividades.idActividades=equiposActividades.idActividades) INNER JOIN asignacion on asignacion.idAsignacion=actividades.idAsignacion where equiposActividades.idEquiposActividades='"+idEquipo+"') and integrantes.idEquiposActividades='"+idEquipo+"';";
         Conexion con = new Conexion(context);
         SQLiteDatabase bd = con.getBD();
         try
@@ -411,11 +411,14 @@ public class DAOEquipos {
                 miJsonArray= new JSONArray();
                 do {
                     JSONObject miJsonObject = new JSONObject();
-                    miJsonObject.put("idAlumno",0);
-                    miJsonObject.put("nombre",1);
-                    miJsonObject.put("apellidoP",2);
-                    miJsonObject.put("apellidoM",3);
-                    miJsonObject.put("estado",4);
+                    miJsonObject.put("idAlumno",resp.getString(0));
+                    miJsonObject.put("nombre",resp.getString(1));
+                    miJsonObject.put("apellidoP",resp.getString(2));
+                    miJsonObject.put("apellidoM",resp.getString(3));
+                    if(resp.isNull(4))
+                        miJsonObject.put("estado","fuera");
+                        else
+                    miJsonObject.put("estado",resp.getString(4));
                     miJsonArray.put(miJsonObject);
 
                 }while (resp.moveToNext());

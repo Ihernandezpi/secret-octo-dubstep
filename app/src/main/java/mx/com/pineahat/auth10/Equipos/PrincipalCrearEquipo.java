@@ -66,12 +66,21 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         }
         else
         {
-            String idEquipo = getIntent().getStringExtra("idEquipo");
+            this.idEquipo = getIntent().getStringExtra("idEquipo");
             JSONArray miJsonArray = miDaoEquipos.getIntegrantesEquipo(idEquipo);
             String nombreEquipo= miDaoEquipos.getNombre(idEquipo);
             if(miJsonArray!=null) {
                 mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo);
                 mRecyclerView.setAdapter(mAdapter);
+            }
+            else
+            {
+                this.idActividad = getIntent().getStringExtra("idActividad");
+                miJsonArray = miDaoEquipos.traerAlumnos(idActividad);
+                if(miJsonArray!=null) {
+                    mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
             }
         }
 
@@ -110,18 +119,24 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         super.onDestroy();
 
     }
-    private boolean procesar()
-    {
-        boolean resp=false;
-        String nombre = mAdapter.getNombre();
-        if(!nombre.equals("") || misIntegrantes.size()!=0) {
+    private void procesar() {
+
+        if (mAdapter.getFlag()) {
+            try {
+                String nombre = mAdapter.getNombre();
+                if (!nombre.equals("") || misIntegrantes.size() != 0) {
                     if (this.idEquipo == null) {
                         this.idEquipo = crearEquipo(this.idActividad, nombre);
                     }
                     DAOEquipos daoEquipos = new DAOEquipos(this);
                     daoEquipos.actualizarIntegrantes(misIntegrantes, this.idEquipo, nombre);
-                    resp = true;
+                    }
+            } catch (Exception e) {
+
+            }
         }
-        return resp;
+
     }
+
+
 }

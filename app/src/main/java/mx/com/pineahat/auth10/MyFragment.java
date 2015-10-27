@@ -276,12 +276,25 @@ public class MyFragment extends Fragment{
             mData = miDaoCardViewItem.getPapelera();
 
         if (mData != null) {
+
+            int position =0;
+            try
+            {
+                position=((LinearLayoutManager)miRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+            }catch (Exception e)
+            {
+
+            }
             miRecyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
             miRecyclerView.setLayoutManager(mLayoutManager);
             miAdapterCardView = null;
             miAdapterCardView = new AdapterCardView(mData,this);
             miRecyclerView.setAdapter(miAdapterCardView);
+            miRecyclerView.getLayoutManager().scrollToPosition(position);
+
+
         }
     }
 
