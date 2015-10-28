@@ -14,8 +14,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -83,21 +84,25 @@
 
         <activity
             android:name=".Equipos.PrincipalCrearEquipo"
-            android:label="Equipo"
             android:configChanges="screenSize|orientation"
+            android:label="Equipo"
             android:theme="@style/AppTheme2" >
         </activity>
         <activity
             android:name=".Calificaciones.PrincipalCalificaciones"
-            android:label="@string/title_activity_principal_calificaciones"
             android:configChanges="screenSize|orientation"
+            android:label="@string/title_activity_principal_calificaciones"
             android:theme="@style/AppTheme2" >
         </activity>
         <activity
             android:name=".Actividades.Actividades"
-            android:label="@string/title_activity_actividades"
             android:configChanges="screenSize|orientation"
-            android:theme="@style/AppTheme2">
+            android:label="@string/title_activity_actividades"
+            android:theme="@style/AppTheme2" >
+        </activity>
+        <activity android:name=".Splash.Splash"
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/Mytheme" >
         </activity>
     </application>
 

@@ -77,6 +77,7 @@ public class Login extends AppCompatActivity {
     TextView espacio6;
     TextView espacio7;
     TextView txtCargando;
+    private int t1,t2,t3,t4,t5,t6,t7,u,c,ch,b,ol;
 
     HttpConnectDownload connectDownload = new HttpConnectDownload();
     int tamanoLayout;
@@ -87,12 +88,19 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         espacio1=(TextView)findViewById(R.id.espacio1);
+        t1=espacio1.getHeight();
         espacio2=(TextView)findViewById(R.id.espacio2);
+        t2=espacio2.getHeight();
         espacio3=(TextView)findViewById(R.id.espacio3);
+        t3=espacio3.getHeight();
         espacio4=(TextView)findViewById(R.id.espacio4);
+        t4=espacio4.getHeight();
         espacio5=(TextView)findViewById(R.id.espacio5);
+        t5=espacio5.getHeight();
         espacio6=(TextView)findViewById(R.id.espacio6);
+        t6=espacio6.getHeight();
         espacio7=(TextView)findViewById(R.id.espacio7);
+        t7=espacio7.getHeight();
         txtCargando=(TextView)findViewById(R.id.txtCargando);
 
         accountManager = AccountManager.get(getApplicationContext());
@@ -115,6 +123,12 @@ public class Login extends AppCompatActivity {
         miVertical = (ViewGroup) findViewById(R.id.verticalLayoutLogin);
         tamanoLayout=miVertical.getHeight();
         txtOlvideContra = (TextView)findViewById(R.id.textViewOlvide);
+        u=txtUsuario.getHeight();
+        u=txtPass.getHeight();
+        ch=miCheckBox.getHeight();
+        b=miButton.getHeight();
+        ol=txtOlvideContra.getHeight();
+
         txtOlvideContra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,9 +163,15 @@ public class Login extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            Task miTask = new Task(usuario,contra);
+            final Task miTask = new Task(usuario,contra);
             try {
-                miTask.execute();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        miTask.execute();
+                    }
+                });
+
             }catch (Exception e)
             {
             }
@@ -246,20 +266,26 @@ public class Login extends AppCompatActivity {
 
                 }
                 boolean respuesta = crearUsuario(usuario, contra, resp);
+                } else {
+                    Snackbar.make(coordinatorLayoutView, "Error en el usuario o contraseña", Snackbar.LENGTH_LONG).show();
+                    synchronized (this) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                detenerProgress();
+                            }
+                        });
+                    }
+
                 }
-                else
-                {
-                    detenerProgress();
-                    Snackbar.make(coordinatorLayoutView,"Error en el usuario o contraseña",Snackbar.LENGTH_SHORT).show();
-                }
-                } catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 }
             return null;
         }
 
         @Override
-        protected void onPostExecute(JSONArray array) {
+        protected void onPostExecute (JSONArray array) {
 
             super.onPostExecute(array);
         }
@@ -304,8 +330,7 @@ public class Login extends AppCompatActivity {
             super.onPostExecute(array);
         }
     }
-    public void correrProgress()
-    {
+    public void correrProgress() {
         collapse(txtUsuario);
         collapse(txtPass);
         collapse(miCheckBox);
@@ -328,15 +353,15 @@ public class Login extends AppCompatActivity {
         txtCargando.setVisibility(View.GONE);
         espacio6.setVisibility(View.GONE);
         espacio7.setVisibility(View.GONE);
-        expand(txtUsuario, 10);
-        expand(txtPass,10);
-        expand(miCheckBox, 10);
-        expand(miButton, 10);
-        expand(espacio1,10);
-        expand(espacio1,10);
-        expand(espacio1,10);
-        expand(espacio1,10);
-        expand(espacio1, 10);
+        expand(txtUsuario, u);
+        expand(txtPass,c);
+        expand(miCheckBox, ch);
+        expand(miButton, b);
+        expand(espacio1, t1);
+        expand(espacio2,t2);
+        expand(espacio3,t3);
+        expand(espacio4,t4);
+        expand(espacio5, t5);
 
     }
 
@@ -389,6 +414,7 @@ public class Login extends AppCompatActivity {
         a.setDuration(10);
         v.startAnimation(a);
     }
+
 
 
 

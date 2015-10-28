@@ -11,7 +11,7 @@
     <string name="bienvenido">Bienvenido</string>
     <string name="olvidecontra">Olvide mi contraseña</string>
     <string name="powerby">EliteUTH</string>
-    <string name="infoAUTH10">Atomatización de Procesos Académicos</string>
+    <string name="infoAUTH10">Automatización de Procesos Académicos</string>
     <string name="open">Menú</string>
     <string name="close">Actividades</string>
     <string name="title_activity_item_card_view">itemCardView</string>
@@ -37,6 +37,8 @@
     <string name="agregarEquipo">Agregar Equipo</string>
     <string name="EquipoTI">Equipos TI</string>
         <string name="title_activity_actividades">Actividades</string>
+    <string name="title_activity_splashsinconfiguracion">Verificación de datos</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
 

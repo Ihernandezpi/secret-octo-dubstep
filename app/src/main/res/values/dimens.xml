@@ -6,4 +6,5 @@
     <dimen name="color_swatch_small">48.0dip</dimen>
     <dimen name="color_swatch_margins_large">8.0dip</dimen>
     <dimen name="color_swatch_margins_small">4.0dip</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

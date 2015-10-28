@@ -38,6 +38,7 @@ import java.net.URL;
 import mx.com.pineahat.auth10.DAO.DAOCarga;
 import mx.com.pineahat.auth10.DAO.DAOSync;
 import mx.com.pineahat.auth10.DAO.PrincipalDAO;
+import mx.com.pineahat.auth10.Splash.Splash;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
@@ -283,6 +284,12 @@ public class Principal extends ActionBarActivity
                 Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
                 mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
 
+            }
+            else
+            {
+                Intent myIntent = new Intent(getBaseContext(), Splash.class);
+                startActivity(myIntent);
+                finish();
             }
 
         }catch(Exception e)
