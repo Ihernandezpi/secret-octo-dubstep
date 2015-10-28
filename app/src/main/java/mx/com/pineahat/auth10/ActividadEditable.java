@@ -321,6 +321,7 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 a.setArguments(parametros);
                 a.show(getSupportFragmentManager(), "Dialog");
 
+
                 // Cada vez que se clickea se reconstruyetodo
                 // metodo para reconstruir los equipos
                 equipos=new ArrayList<Equipo>();

@@ -1,5 +1,6 @@
 package mx.com.pineahat.auth10.Actividades;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -101,16 +103,42 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
     JSONArray jsonArrayEquipos =new JSONArray();
     private TextView tEquiposTi;
     ListCheckBoxDialog listCheckboxDialogEquipos;
+    ListCheckBoxDialogGrupos listCheckBoxDialogGrupos;
     DAOEquipos midaoEquipos;
     private ListView listaEquipos;
     ListAdapterEquipos myListAdapterEquipos=null;
     ArrayList<Equipo> equipos=new ArrayList<Equipo>();
+    //Grupos
+    JSONArray jsonArrayGrupos= new JSONArray();
 
 
+    public void copias()
+    {
+        try {
+            Bundle resp = listCheckBoxDialogGrupos.getArguments();
+            jsonArrayGrupos= new JSONArray(resp.get("grupos").toString());
+            for(int i=0; i<jsonArrayGrupos.length(); i++)
+            {
+                JSONObject jsonObject= new JSONObject();
+                jsonObject=jsonArrayGrupos.getJSONObject(i);
+                if(jsonObject.getBoolean("checked"))
+                {
+                    Actividad copiaActividad= new Actividad();
+                    copiaActividad.setIdActividad(daoActividades.insertActividades(jsonObject.getString("idAsignacion")));
+                    daoActividades.actualizar(actividad.getIdActividad(), actividad.getTitulo(), actividad.getDescripcion(), actividad.getColor() + "", actividad.getYear(), actividad.getMonthOfYear(), actividad.getDayOfMonth(), actividad.getHourOfDay(), actividad.getMinute(), flagClosed);
+                    daoActividades.actualizar(copiaActividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
+                }
+            }
 
+            Toast.makeText(Actividades.this, "Copia creada", Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {}
+    }
     public void avisar() {
         onResume();
     }
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onResume() {
         super.onResume();
@@ -122,7 +150,8 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         try {
             Bundle resp = listCheckboxDialogEquipos.getArguments();
             actividad.setIdActividad(resp.getString("key"));
-            jsonArrayEquipos= (JSONArray) resp.get("JSONArrayEquipo");
+            //jsonArrayEquipos= (JSONArray) resp.get("JSONArrayEquipo");
+            jsonArrayEquipos= new JSONArray(resp.get("JSONArrayEquipo"));
         }catch (Exception e)
         {}
 
@@ -336,7 +365,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         // Si no hay equipos de TI deshabilita el TEXTVIEW
         if(jsonArrayEquipos.length()==0)
         {
-            tEquiposTi.setVisibility(View.INVISIBLE);
+            tEquiposTi.setVisibility(View.GONE);
         }
         tEquiposTi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -358,7 +387,10 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
 
             }
         });
+        //Grupos
+        listCheckBoxDialogGrupos=ListCheckBoxDialogGrupos.newInstance(this);
         listaEquipos.setScrollContainer(false);
+
     }
     @Override
     protected void onPause() {
@@ -370,7 +402,9 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             }
             daoActividades.actualizar(actividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
         }
+        setListViewHeightBasedOnChildren(listaEquipos);
         super.onPause();
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -428,20 +462,19 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         }
         if(id==R.id.action_HacerCopia)
         {
-            Actividad copiaActividad= new Actividad();
+            // Toast.makeText(getApplicationContext(), "Item Delete", Toast.LENGTH_SHORT).show();
             if(actividad.getIdActividad()==null)
-            {
-                // crea la actividad en la que se esta trabajando
                 actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
-                //Crea la actividad copiada
-                //copiaActividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
-                //Copia los datos de la actividad Actual a la actividad copiada
-                //daoActividades.actualizar(copiaActividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
-            }
-            copiaActividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
-            daoActividades.actualizar(actividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
-            daoActividades.actualizar(copiaActividad.getIdActividad(), actividad.getTitulo(), actividad.getDescripcion(), actividad.getColor() + "", actividad.getYear(), actividad.getMonthOfYear(), actividad.getDayOfMonth(), actividad.getHourOfDay(), actividad.getMinute(), flagClosed);
-            Toast.makeText(Actividades.this, "Copia creada", Toast.LENGTH_SHORT).show();
+
+            jsonArrayGrupos = daoActividades.grupos(actividad.getIdAsignacion());
+            Bundle parametros = new Bundle();
+            parametros.putString("JSONArrayGrupos", jsonArrayGrupos.toString());
+            //parametros.putString("Actividad");
+            //parametros.putString("key", actividad.getIdActividad());
+            //parametros.putString("idAsignacion", actividad.getIdAsignacion());
+                listCheckBoxDialogGrupos.setArguments(parametros);
+                listCheckBoxDialogGrupos.show(getSupportFragmentManager(), "Dialog");
+
         }
         if(id==R.id.action_Eliminar)
         {
@@ -532,10 +565,10 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         textHora.setText(time.format(miCalendar.getTime()));
         textFecha.setText("" + actividad.getYear() + "-" + actividad.getMonthOfYear() + "-" + actividad.getDayOfMonth());
     }
+
     public class ListAdapterEquipos extends ArrayAdapter<Equipo>
     {
         ArrayList<Equipo> equipos;
-        private TextView textViewEquipos;
         DAOEquipos daoEquipos;
 
         public ListAdapterEquipos(Context context,int textViewResourceId, ArrayList<Equipo> objects) {

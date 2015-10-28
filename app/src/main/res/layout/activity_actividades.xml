@@ -96,17 +96,17 @@
                 android:gravity="center_vertical"
                 android:textStyle="italic" />
 
-
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listViewEquipos"
+                android:scrollbars="none"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
         </LinearLayout>
         </ScrollView>
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listViewEquipos"
-            android:scrollbars="none"
-            android:divider="@null"
-            android:dividerHeight="0dp" />
+
     </LinearLayout>
 
 

@@ -151,11 +151,11 @@ public class DAOActividades {
 
         }
         else
-        {
-            query="SELECT eqti.idEquiposti, eqti.nombreEquipo, eqact.estado,eqact.idEquiposActividades\n" +
-                    "FROM equiposActividades AS eqact\n" +
-                    "INNER JOIN actividades AS act ON (act.idActividades=eqact.idActividades)\n" +
-                    "INNER JOIN equiposti as eqti ON (eqti.idEquiposti=eqact.idEquipoTI)\n" +
+                    {
+                            query="SELECT eqti.idEquiposti, eqti.nombreEquipo, eqact.estado,eqact.idEquiposActividades\n" +
+                                    "FROM equiposActividades AS eqact\n" +
+                                    "INNER JOIN actividades AS act ON (act.idActividades=eqact.idActividades)\n" +
+                                    "INNER JOIN equiposti as eqti ON (eqti.idEquiposti=eqact.idEquipoTI)\n" +
                     "where act.idActividades='"+key+"';";
 
             Cursor cursor= db.rawQuery(query,null);
@@ -199,5 +199,57 @@ public class DAOActividades {
         conexion.close();
         db.close();
         return listaEquipos;
+    }
+    //27/09/2015
+    public JSONArray grupos (String idAsignacion)
+    {
+        String idProfesor;
+        String query="select idProfesor from asignacion where idAsignacion='"+idAsignacion+"'";
+        Conexion conexion = new Conexion(context);
+        SQLiteDatabase db= conexion.getBD();
+        Cursor cursor= db.rawQuery(query, null);
+        //Recuperar el Id del profesor
+        if(cursor.moveToFirst())
+        {
+            idProfesor=cursor.getString(0);
+        }
+        else
+        {
+            idProfesor="";
+        }
+        //Recuperar los grupos
+        JSONArray grupos = new JSONArray();
+         query="SELECT asignacion.idAsignacion, grupo.grado,grupo.grupo, materia.materia\n" +
+                "FROM asignacion\n" +
+                "INNER JOIN grupo ON asignacion.idGrupo=grupo.idGrupo\n" +
+                "INNER JOIN materia ON materia.idMateria =asignacion.idMateria\n" +
+                "WHERE asignacion.idProfesor='"+idProfesor+"'";
+
+        cursor= db.rawQuery(query, null);
+        if(cursor.moveToFirst())
+        {
+            do{
+                JSONObject grupo = new JSONObject();
+                try
+                {
+                    grupo.put("idAsignacion", cursor.getString(0));
+                    grupo.put("grado", cursor.getString(1));
+                    grupo.put("grupo", cursor.getString(2));
+                    grupo.put("materia", cursor.getString(3));
+                    grupo.put("checked",false);
+                    grupos.put(grupo);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            while(cursor.moveToNext());
+
+        }
+        conexion.close();
+        db.close();
+
+        return  grupos;
     }
 }
