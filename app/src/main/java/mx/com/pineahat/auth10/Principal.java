@@ -42,7 +42,9 @@ import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
 public class Principal extends ActionBarActivity
-{   Button load_img;
+{
+
+    Button load_img;
     ImageView img;
     Bitmap bitmap;
     ProgressDialog pDialog;
@@ -91,6 +93,7 @@ public class Principal extends ActionBarActivity
         setContentView(R.layout.activity_principal);
 
 
+
         /*Assing the toolbar object to the view
         and setting the ActionBar to our Tool_bar
          */
@@ -124,7 +127,7 @@ public class Principal extends ActionBarActivity
                     IDGRUPO[i]=miJsonObject.get("idAsignacion").toString();
                 }
                 TITLES[jsonarrayP.length()]="Papelera";
-                ICONS[jsonarrayP.length()]=R.mipmap.ic_action;
+                ICONS[jsonarrayP.length()]=R.mipmap.ic_papelera;
                 IDGRUPO[jsonarrayP.length()]=" IDCONFIG";
 
                 TITLES[jsonarrayP.length()+1]="Ayuda y Comentarios";

@@ -2,6 +2,11 @@ package mx.com.pineahat.auth10.Actividades;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -52,6 +57,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.BufferUnderflowException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,6 +73,7 @@ import java.util.Date;
 import java.util.List;
 
 import mx.com.pineahat.auth10.ListCheckboxDialog;
+import mx.com.pineahat.auth10.Principal;
 import mx.com.pineahat.auth10.R;
 //  "Al Cesar lo que es del Cesar"
 public class Actividades extends ActionBarActivity implements TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener {
@@ -124,7 +137,6 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividades);
-
         //DAO
         daoActividades= new DAOActividades(getApplicationContext());
         daoEquipos = new DAOEquipos(getApplicationContext());
@@ -394,9 +406,11 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
 
             }
+
             Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
             intent.putExtra("tipo","nuevo");
             intent.putExtra("idActividad",actividad.getIdActividad());
+            PrincipalCrearEquipo.actividades=Actividades.this;
             startActivity(intent);
             return  true;
         }
@@ -407,6 +421,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
 
             }
+
             Intent intent = new Intent(getBaseContext(), PrincipalCalificaciones.class);
             intent.putExtra("idActividad",actividad.getIdActividad());
             startActivity(intent);
@@ -425,7 +440,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             }
             copiaActividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
             daoActividades.actualizar(actividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
-            daoActividades.actualizar(copiaActividad.getIdActividad(),actividad.getTitulo(),actividad.getDescripcion(),actividad.getColor()+"",actividad.getYear(),actividad.getMonthOfYear(),actividad.getDayOfMonth(),actividad.getHourOfDay(),actividad.getMinute(),flagClosed);
+            daoActividades.actualizar(copiaActividad.getIdActividad(), actividad.getTitulo(), actividad.getDescripcion(), actividad.getColor() + "", actividad.getYear(), actividad.getMonthOfYear(), actividad.getDayOfMonth(), actividad.getHourOfDay(), actividad.getMinute(), flagClosed);
             Toast.makeText(Actividades.this, "Copia creada", Toast.LENGTH_SHORT).show();
         }
         if(id==R.id.action_Eliminar)
@@ -442,7 +457,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             builder.setTitle("Borrar actividad permanentemente?");
             builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    if(actividad.getIdActividad()!=null) {
+                    if (actividad.getIdActividad() != null) {
                         daoActividades.eliminar(jsonObject);
                     }
                     dialog.dismiss();
@@ -457,13 +472,37 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             });
             AlertDialog dialog = builder.create();
             dialog.show();
-
-
-
         }
+
+        if(id==R.id.action_AgregarImagen)
+        {
+            dispatchTakePictureIntent();
+        }
+        if(id==R.id.action_AgregarArchivo)
+        {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("file/*");
+            startActivityForResult(intent, PICKFILE_RESULT_CODE);
+        }
+
+        if(id==R.id.action_Enviar)
+        {
+            String envio= "Título de la actividad: \n"+actividad.getTitulo()+"\n"+"Descripción: \n"+actividad.getDescripcion();
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+            intent.putExtra(Intent.EXTRA_TEXT, envio);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(Intent.createChooser(intent,  "Compartir en" ));
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMont) {
@@ -515,16 +554,14 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             textViewEquipos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     //Toast.makeText(Actividades.this, "Item "+equipos.get(position).getNombre(), Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(getBaseContext(), PrincipalCrearEquipo.class);
                     intent.putExtra("tipo","modificar");
                     intent.putExtra("idActividad",actividad.getIdActividad());
-                    intent.putExtra("idEquipo",equipos.get(position).getIdEquiposActividades());
+                    intent.putExtra("idEquipo", equipos.get(position).getIdEquiposActividades());
+                    PrincipalCrearEquipo.actividades=Actividades.this;
                     startActivity(intent);
-
-
                 }
             });
             imageViewClose.setOnClickListener(new View.OnClickListener() {
@@ -564,4 +601,120 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
+    //TOmar foto
+    final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName;
+
+        if(actividad.getIdActividad()==null)
+        {
+            actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
+
+
+        }
+        imageFileName = actividad.getIdActividad();
+
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName,".jpg",storageDir
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            File imgFile = new  File(mCurrentPhotoPath);
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                //ImageView myImage = (ImageView) findViewById(R.id.imageviewTest);
+                //myImage.setImageBitmap(myBitmap);
+            }
+        }
+        if (requestCode == PICKFILE_RESULT_CODE && resultCode == RESULT_OK) {
+            String FilePath = data.getData().getPath();
+            File miFile = new File(FilePath);
+            double bytes = miFile.length();
+            double kilobytes = (bytes / 1024);
+            double megabytes = (kilobytes / 1024);
+            if(megabytes<=2)
+            {
+                if(actividad.getIdActividad()==null)
+                {
+                    actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
+                }
+                String nombre = actividad.getIdActividad();
+                try {
+                    FileOutputStream out = new FileOutputStream("data/data/"+ getBaseContext().getPackageName() + "/"+nombre+"."+getExtension(miFile));
+                    InputStream in = new FileInputStream(miFile);
+                    byte[] buffer = new byte[1024];
+                    int readBytes = 0;
+
+                    while ((readBytes = in.read(buffer)) != -1)
+                        out.write(buffer, 0, readBytes);
+
+                    in.close();
+                    out.close();
+                } catch (IOException e) {
+                }
+            }
+            else
+            {
+                Toast.makeText(getBaseContext(),"El Archivo sobrepasa el maximo",Toast.LENGTH_LONG).show();
+            }
+
+            }
+    }
+    final int  PICKFILE_RESULT_CODE=10;
+
+    private String getExtension(File miFile)
+    {
+        String extension="";
+        String temp="";
+        for(int i = miFile.getName().length();i>=0;i--)
+        {
+            if(!(miFile.getName().charAt(i-1)+"").equals(".")) {
+                temp += miFile.getName().charAt(i-1);
+            }
+            else
+            {
+                i=-1;
+            }
+        }
+        for(int i = temp.length();i>0;i--)
+        {
+            extension+=temp.charAt(i-1);
+        }
+
+        return extension;
+    }
+
 }

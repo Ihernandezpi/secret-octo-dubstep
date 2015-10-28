@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import mx.com.pineahat.auth10.Actividades.Actividades;
 import mx.com.pineahat.auth10.DAO.DAOEquipos;
 import mx.com.pineahat.auth10.MyAdapter;
 import mx.com.pineahat.auth10.R;
@@ -113,13 +114,16 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         String idEquipo = miDaoEquipos.generarEquipo(idActividad,nombre);
         return idEquipo;
     }
+    public static Actividades actividades;
     @Override
     protected void onDestroy() {
-       procesar();
+        procesar();
+        actividades.avisar();
         super.onDestroy();
 
     }
     private void procesar() {
+
 
         if (mAdapter.getFlag()) {
             try {
@@ -137,6 +141,8 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
         }
 
     }
+
+
 
 
 }
