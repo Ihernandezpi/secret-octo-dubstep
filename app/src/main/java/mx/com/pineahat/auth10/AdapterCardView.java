@@ -94,7 +94,7 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
                     final JSONObject miJson = mDataset.getJSONObject(position);
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     final DAOActividades miDaoActividades = new DAOActividades(v.getContext());
-                    builder.setTitle("Borrar actividad permanentemente?");
+                    builder.setTitle(R.string.Borrar_actividad_permanentemente);
                     builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             miDaoActividades.eliminar(miJson);

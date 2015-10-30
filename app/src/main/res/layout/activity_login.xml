@@ -160,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Cargando..."
+                    android:text="@string/Cargando"
                     android:id="@+id/txtCargando"
                     android:layout_gravity="center"
                     android:visibility="gone" />

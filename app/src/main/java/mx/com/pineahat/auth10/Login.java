@@ -152,7 +152,7 @@ public class Login extends AppCompatActivity {
                 }
                 else
                 {
-                    Snackbar.make(coordinatorLayoutView,"Campos vacios",Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(coordinatorLayoutView,getString(R.string.Campos_vacios),Snackbar.LENGTH_SHORT).show();
                 }
                 //miProgressBar.setVisibility(View.INVISIBLE);
             }
@@ -177,7 +177,7 @@ public class Login extends AppCompatActivity {
             }
 
         } else {
-            Snackbar.make(coordinatorLayoutView,"No hay internet",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(coordinatorLayoutView,getString(R.string.No_hay_internet),Snackbar.LENGTH_SHORT).show();
         }
 
         return resp;
@@ -267,7 +267,7 @@ public class Login extends AppCompatActivity {
                 }
                 boolean respuesta = crearUsuario(usuario, contra, resp);
                 } else {
-                    Snackbar.make(coordinatorLayoutView, "Error en el usuario o contraseña", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayoutView,getString(R.string.Error_en_el_usuario_o_contraseña), Snackbar.LENGTH_LONG).show();
                     synchronized (this) {
                         runOnUiThread(new Runnable() {
                             @Override

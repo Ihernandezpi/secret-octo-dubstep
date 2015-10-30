@@ -136,7 +136,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 }
             }
 
-            Toast.makeText(Actividades.this, "Copia creada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Actividades.this, getString(R.string.Copia_creada), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {}
@@ -273,8 +273,8 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 flagClosed= true;
                 parentRecordar.removeView(vista);
                 parentRecordar.addView(Recordar, index);
-                textFecha.setText("Dia");
-                textHora.setText("Hora");
+                textFecha.setText(getString(R.string.dia));
+                textHora.setText(getString(R.string.hora));
                 actividad.setYear(0);
                 actividad.setMonthOfYear(0);
                 actividad.setDayOfMonth(0);
@@ -504,7 +504,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 e.printStackTrace();
             }
             AlertDialog.Builder builder = new AlertDialog.Builder(Actividades.this);
-            builder.setTitle("Borrar actividad permanentemente?");
+            builder.setTitle(getString(R.string.Borrar_actividad_permanentemente));
             builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     if (actividad.getIdActividad() != null) {
@@ -512,7 +512,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                     }
                     dialog.dismiss();
                     finish();
-                    Toast.makeText(Actividades.this, "Actividad Eliminada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Actividades.this, getString(R.string.Actividad_elminada), Toast.LENGTH_SHORT).show();
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -550,14 +550,14 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
 
         if(id==R.id.action_Enviar)
         {
-            String envio= "Título de la actividad: \n"+actividad.getTitulo()+"\n"+"Descripción: \n"+actividad.getDescripcion();
+            String envio= getString(R.string.Título_de_la_actividad)+" \n"+actividad.getTitulo()+"\n"+getString(R.string.descripcion)+":             "+actividad.getDescripcion();
 
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, "");
             intent.putExtra(Intent.EXTRA_TEXT, envio);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            this.startActivity(Intent.createChooser(intent,  "Compartir en" ));
+            this.startActivity(Intent.createChooser(intent,  getString(R.string.Compartir_en) ));
         }
 
 

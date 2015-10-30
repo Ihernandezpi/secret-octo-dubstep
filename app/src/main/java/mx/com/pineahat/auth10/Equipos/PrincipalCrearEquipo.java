@@ -62,7 +62,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
             else
             {
                 //No hay Alumnos
-                Toast.makeText(this,"No hay alumnos",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getString(R.string.No_hay_alumnos),Toast.LENGTH_SHORT).show();
             }
         }
         else

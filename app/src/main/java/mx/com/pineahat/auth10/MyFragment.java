@@ -169,7 +169,7 @@ public class MyFragment extends Fragment{
 
     private void moverPapelera(View coordinatorLayoutView,final DAOCardViewItem miDaoCardViewItem,final String finalId, int position, View v)
     {
-        Snackbar.make(coordinatorLayoutView, "Movido a papelera", Snackbar.LENGTH_LONG).setActionTextColor(getResources().getColor(R.color.ripple)).setAction("Regresar", new View.OnClickListener() {
+        Snackbar.make(coordinatorLayoutView, getString(R.string.Movido_a_Actividades), Snackbar.LENGTH_LONG).setActionTextColor(getResources().getColor(R.color.ripple)).setAction(getString(R.string.Reguresar), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -219,7 +219,7 @@ public class MyFragment extends Fragment{
     }
     private void moverActividades(View coordinatorLayoutView,final DAOCardViewItem miDaoCardViewItem,final String finalId, final int position, View v)
     {
-        Snackbar.make(coordinatorLayoutView, "Movido a Actividades", Snackbar.LENGTH_LONG).setActionTextColor(getResources().getColor(R.color.ripple)).setAction("Regresar", new View.OnClickListener() {
+        Snackbar.make(coordinatorLayoutView, getString(R.string.Movido_a_Papelera), Snackbar.LENGTH_LONG).setActionTextColor(getResources().getColor(R.color.ripple)).setAction(getString(R.string.Reguresar), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {

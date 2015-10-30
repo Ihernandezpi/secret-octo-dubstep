@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:ems="10"
-                    android:hint="Calificación"
+                    android:hint="@string/Calificacion"
                     android:id="@+id/txtCalificacion"
                     android:gravity="center"
                     />
