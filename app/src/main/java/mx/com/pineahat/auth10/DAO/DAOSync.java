@@ -104,7 +104,7 @@ public class DAOSync {
 
         }catch (Exception e )
         {
-            Log.d("Agregar equipos: ",e.getMessage());
+            Log.d("Agregar equipos: ", e.getMessage());
         }
         finally {
             bd.close();
@@ -156,6 +156,18 @@ public class DAOSync {
             JSONObject infoDispositivo = new JSONObject();
             infoDispositivo.put("tipoAccion", "dispositivo");
             infoDispositivo.put("ultimaFecha", dateS);
+            paquete.put(infoDispositivo);
+        }catch (Exception e)
+        {
+            Log.d("TIpo Acción dispo",e.getMessage());
+        }
+        return fechaSync(paquete);
+    }
+    private JSONArray fechaSync (JSONArray paquete)
+    {
+        try {
+            JSONObject infoDispositivo = new JSONObject();
+            infoDispositivo.put("tipoAccion", "fechaSync");
             paquete.put(infoDispositivo);
         }catch (Exception e)
         {
