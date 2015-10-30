@@ -400,7 +400,7 @@ public class DAOEquipos {
 
     public JSONArray getIntegrantesEquipo(String idEquipo) {
         JSONArray miJsonArray = null;
-        String query ="SELECT DISTINCT(alumnos.idAlumno),p.nombre,p.apellidoP,p.apellidoM, integrantes.estado FROM alumnos INNER JOIN persona as p on (p.idPersona= alumnos.idPersona) left join integrantes on (alumnos.idAlumno=integrantes.idAlumno) where alumnos.idGrupo=(select asignacion.idGrupo from equiposActividades INNER JOIN actividades on (actividades.idActividades=equiposActividades.idActividades) INNER JOIN asignacion on asignacion.idAsignacion=actividades.idAsignacion where equiposActividades.idEquiposActividades='"+idEquipo+"') and integrantes.idEquiposActividades='"+idEquipo+"';";
+        String query ="SELECT alumnos.idAlumno, p.nombre,p.apellidoP,p.apellidoM, integrantes.estado FROM alumnos inner JOIN persona as p on (p.idPersona = alumnos.idPersona) inner JOIN integrantes on (integrantes.idAlumno = alumnos.idAlumno) where integrantes.idEquiposActividades='"+idEquipo+"' and alumnos.idGrupo=(select asignacion.idGrupo from equiposActividades INNER JOIN actividades on (actividades.idActividades=equiposActividades.idActividades) INNER JOIN asignacion on (asignacion.idAsignacion=actividades.idAsignacion)where equiposActividades.idEquiposActividades='"+idEquipo+"');";
         Conexion con = new Conexion(context);
         SQLiteDatabase bd = con.getBD();
         try
@@ -415,12 +415,8 @@ public class DAOEquipos {
                     miJsonObject.put("nombre",resp.getString(1));
                     miJsonObject.put("apellidoP",resp.getString(2));
                     miJsonObject.put("apellidoM",resp.getString(3));
-                    if(resp.isNull(4))
-                        miJsonObject.put("estado","fuera");
-                        else
                     miJsonObject.put("estado",resp.getString(4));
                     miJsonArray.put(miJsonObject);
-
                 }while (resp.moveToNext());
             }
 
@@ -429,7 +425,24 @@ public class DAOEquipos {
 
         }
 
-        return miJsonArray;
+        return obtenerLista(miJsonArray,traerAlumnosIntegrantes(idEquipo));
+    }
+
+    private JSONArray obtenerLista(JSONArray integrantes, JSONArray alumnos) {
+        if(integrantes!=null) {
+            for (int i = 0; i < alumnos.length(); i++)
+                for (int x = 0; x < integrantes.length(); x++) {
+                    try {
+                        if (alumnos.getJSONObject(i).getString("idAlumno").equals(integrantes.getJSONObject(x).getString("idAlumno"))) {
+                            alumnos.getJSONObject(i).put("estado", "Activo");
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+        }
+
+        return alumnos;
     }
 
     public String getNombre (String idEquipo)
@@ -458,5 +471,36 @@ public class DAOEquipos {
 
 
         return nombre;
+    }
+    private JSONArray traerAlumnosIntegrantes(String idEquipo)
+    {
+        JSONArray miJsonArray = null;
+        String query ="SELECT DISTINCT(alumnos.idAlumno), p.nombre,p.apellidoP,p.apellidoM FROM alumnos inner JOIN persona as p on (p.idPersona = alumnos.idPersona) where alumnos.idGrupo=(select asignacion.idGrupo from equiposActividades INNER JOIN actividades on (actividades.idActividades=equiposActividades.idActividades) INNER JOIN asignacion on (asignacion.idAsignacion=actividades.idAsignacion) where equiposActividades.idEquiposActividades='"+idEquipo+"');";
+        Conexion con = new Conexion(context);
+        SQLiteDatabase bd = con.getBD();
+        try
+        {
+            Cursor resp = bd.rawQuery(query,null);
+            if(resp.moveToFirst())
+            {
+                miJsonArray= new JSONArray();
+                do {
+                    JSONObject miJsonObject = new JSONObject();
+                    miJsonObject.put("idAlumno",resp.getString(0));
+                    miJsonObject.put("nombre",resp.getString(1));
+                    miJsonObject.put("apellidoP",resp.getString(2));
+                    miJsonObject.put("apellidoM",resp.getString(3));
+                    miJsonObject.put("estado","fuera");
+                    miJsonArray.put(miJsonObject);
+
+                }while (resp.moveToNext());
+            }
+
+        }catch (Exception e )
+        {
+
+        }
+
+        return miJsonArray;
     }
 }

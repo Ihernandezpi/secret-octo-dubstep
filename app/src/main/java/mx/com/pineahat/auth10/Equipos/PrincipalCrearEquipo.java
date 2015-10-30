@@ -123,10 +123,9 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
 
     }
     private void procesar() {
-
-
+        try {
         if (mAdapter.getFlag()) {
-            try {
+
                 String nombre = mAdapter.getNombre();
                 if (!nombre.equals("") || misIntegrantes.size() != 0) {
                     if (this.idEquipo == null) {
@@ -135,9 +134,10 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
                     DAOEquipos daoEquipos = new DAOEquipos(this);
                     daoEquipos.actualizarIntegrantes(misIntegrantes, this.idEquipo, nombre);
                     }
-            } catch (Exception e) {
 
-            }
+        }
+        } catch (Exception e) {
+
         }
 
     }
