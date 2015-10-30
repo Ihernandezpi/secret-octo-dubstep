@@ -192,7 +192,7 @@ public class DAOEquipos {
 
                 if(mijsonObject.getBoolean("checked")==true)
                 {
-                    String query ="INSERT OR REPLACE INTO equiposActividades VALUES ('"+primaryKey+"','"+key+"', '"+mijsonObject.get("nombreEquipo").toString()+"', '"+strDate+"', 'Activo', "+mijsonObject.get("idEquiposti").toString()+");";
+                    String query ="INSERT OR REPLACE INTO equiposActividades VALUES ('"+primaryKey+"','"+key+"', '"+mijsonObject.get("nombreEquipo").toString()+"', '"+strDate+"', 'Activo', "+mijsonObject.get("idEquiposti").toString()+", '"+strDate+"');";
                     bd.execSQL(query);
                     // cada vez que un equipo se agregue de ti tambien se agregaran sus integranteso se mofifican sus integrantes
                     try
@@ -211,7 +211,7 @@ public class DAOEquipos {
                             for(int j=0; j<alumnos.length();j++)
                             {
                                 JSONObject integrante= alumnos.getJSONObject(j);
-                                query="insert into integrantes values ('"+generatePrimaryKeyIntegrante()+"','"+primaryKey+"','"+integrante.get("idAlumno")+"','10','"+strDate+"','Activo')";
+                                query="insert into integrantes values ('"+generatePrimaryKeyIntegrante()+"','"+primaryKey+"','"+integrante.get("idAlumno")+"','','"+strDate+"','Activo', '"+strDate+"')";
                                 bd.execSQL(query);
 
                             }}
@@ -221,7 +221,7 @@ public class DAOEquipos {
                             for(int j=0; j<integrantes.length();j++)
                             {
                                 JSONObject integrante= integrantes.getJSONObject(j);
-                                query="insert or replace into integrantes values ('"+integrante.get("idIntegrantes").toString()+"','"+integrante.get("idEquiposActividades").toString()+"','"+integrante.get("idAlumno").toString()+"','"+integrante.get("calificacion").toString()+"','"+strDate+"','Activo')";
+                                query="insert or replace into integrantes values ('"+integrante.get("idIntegrantes").toString()+"','"+integrante.get("idEquiposActividades").toString()+"','"+integrante.get("idAlumno").toString()+"','"+integrante.get("calificacion").toString()+"','"+strDate+"','Activo', '"+strDate+"')";
                                 bd.execSQL(query);
 
                             }
@@ -237,7 +237,7 @@ public class DAOEquipos {
                 }
                 else
                 {
-                    String query ="INSERT OR REPLACE INTO equiposActividades VALUES ('"+primaryKey+"','"+key+"', '"+mijsonObject.get("nombreEquipo").toString()+"', '"+strDate+"', 'Inactivo', "+mijsonObject.get("idEquiposti").toString()+");";
+                    String query ="INSERT OR REPLACE INTO equiposActividades VALUES ('"+primaryKey+"','"+key+"', '"+mijsonObject.get("nombreEquipo").toString()+"', '"+strDate+"', 'Inactivo', "+mijsonObject.get("idEquiposti").toString()+", '"+strDate+"');";
                     bd.execSQL(query);
                     // se tiene que insertar por cada equipo los integrantes de cada equipos en la tabla integrantes en este caso su estado es Inactivo
 

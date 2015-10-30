@@ -92,6 +92,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
     private Toolbar toolbar; //Toolbar
     private ScrollView scrollView;// Scroll que aloja el layout
     private LinearLayout  linearLayout; //Layout de la Actividad
+    private TextView textViewGrupo;//TextView que muestra el grupo
     private TextView etxtTitulo; //EditText titulo de la actividad
     private TextView etxtDescripcion; ////EditText descripcion de la actividad
     private TextView txtRecordarme; // textView de Recordarme
@@ -193,6 +194,8 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         linearLayoutP.setBackgroundColor(Color.parseColor(actividad.getColor()));
         scrollView.setBackgroundColor(Color.parseColor(actividad.getColor()));
         linearLayout.setBackgroundColor(Color.parseColor(actividad.getColor()));
+        textViewGrupo=(TextView)findViewById(R.id.textViewGrupo);
+        textViewGrupo.setText(daoActividades.grupo(actividad.getIdAsignacion()));
         etxtTitulo= (TextView) findViewById(R.id.etxtTitulo);
         etxtTitulo.addTextChangedListener(new TextWatcher() {
             @Override
@@ -244,10 +247,10 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 //Inicializar TimePickerDialo y DatePickerDialog
                 Calendar dateNow= Calendar.getInstance();
                 actividad.setYear(dateNow.get(Calendar.YEAR));
-                actividad.setMonthOfYear(dateNow.get(Calendar.MONTH)+1);
+                actividad.setMonthOfYear(dateNow.get(Calendar.MONTH) + 1);
                 actividad.setDayOfMonth(dateNow.get(Calendar.DAY_OF_MONTH));
                 actividad.setHourOfDay(dateNow.get(Calendar.HOUR_OF_DAY));
-                actividad.setMinute( dateNow.get(Calendar.MINUTE));
+                actividad.setMinute(dateNow.get(Calendar.MINUTE));
                 datePickerDialog=DatePickerDialog.newInstance(
                         Actividades.this,
                         dateNow.get(Calendar.YEAR),
@@ -299,7 +302,11 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         });
 
 
-
+        String colorPaletta;
+        if(actividad.getIdActividad()!=null)
+            colorPaletta=actividad.getColor();
+        else
+            colorPaletta="#e0e0e0";
         colorPickerDialog.initialize(R.string.dialog_title, new int[]{  //Inicializando la paleta de colores
                 Color.parseColor("#e0e0e0"),//Color por Default
                 Color.parseColor("#ff9800"),
@@ -308,7 +315,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 Color.parseColor("#ff80ab"),
                 Color.parseColor("#42a5f5"),
                 Color.parseColor("#00e676"),
-                Color.parseColor("#90a4ae")}, Color.parseColor("#e0e0e0"), 4, 2);
+                Color.parseColor("#90a4ae")}, Color.parseColor(colorPaletta), 4, 2);
 
         colorPickerDialog.setOnColorSelectedListener(new OnColorSelectedListener() { //Asignando color a la Actividad
             @Override
@@ -372,7 +379,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
         listaEquipos.setAdapter(myListAdapterEquipos);
         setListViewHeightBasedOnChildren(listaEquipos);
         // Si no hay equipos de TI deshabilita el TEXTVIEW
-        if(jsonArrayEquipos.length()==0)
+        if(jsonArrayEquipos==null)
         {
             tEquiposTi.setVisibility(View.GONE);
         }

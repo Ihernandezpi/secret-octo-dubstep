@@ -252,4 +252,24 @@ public class DAOActividades {
 
         return  grupos;
     }
+    //29/09/2015
+    public String grupo(String idAsignacion)
+    {
+        String grupo="";
+        String query="select grupo.grado, grupo.grupo,materia.materia from materia, asignacion,grupo where materia.idMateria=asignacion.idMateria and  grupo.idGrupo=asignacion.idGrupo and asignacion.idAsignacion='"+idAsignacion+"'";
+        Conexion conexion = new Conexion(context);
+        SQLiteDatabase db= conexion.getBD();
+        Cursor cursor= db.rawQuery(query, null);
+        //Recuperar el Id del profesor
+        if(cursor.moveToFirst())
+        {
+            grupo=cursor.getString(0)+cursor.getString(1)+" "+cursor.getString(2)+" ";
+
+        }
+        else
+        {
+            grupo="";
+        }
+        return grupo;
+    }
 }
