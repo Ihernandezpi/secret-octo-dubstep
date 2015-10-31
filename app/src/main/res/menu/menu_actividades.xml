@@ -6,53 +6,53 @@
     <item
         android:id="@+id/action_AgregarImagen"
         android:orderInCategory="200"
-        android:title="Agregar Imagen"
+        android:title="@string/agregar_imagen"
         android:icon="@mipmap/ic_camara"
         app:showAsAction="always"
         ></item>
     <item
         android:id="@+id/action_AgregarArchivo"
         android:orderInCategory="200"
-        android:title="Agregar Archivo"
+        android:title="@string/agregar_archivo"
         app:showAsAction="never"
         ></item>
     <item
         android:id="@+id/action_HacerCopia"
         android:orderInCategory="200"
-        android:title="Hacer una copia"
+        android:title="@string/Hacer_una_copia"
         app:showAsAction="never"
         ></item>
 
     <item
         android:id="@+id/action_Enviar"
         android:orderInCategory="200"
-        android:title="Compartir"
+        android:title="@string/compartir"
         app:showAsAction="never"
         ></item>
     <item
         android:id="@+id/action_Eliminar"
         android:orderInCategory="200"
-        android:title="Eliminar"
+        android:title="@string/eliminar"
         app:showAsAction="never"
         ></item>
     <item
         android:id="@+id/action_calificar"
         android:orderInCategory="100"
-        android:title="Calificar"
+        android:title="@string/calificar"
         android:icon="@mipmap/ic_action_calificar"
         app:showAsAction="always"
         ></item>
     <item
         android:id="@+id/action_palette_color"
         android:orderInCategory="100"
-        android:title="Color"
+        android:title="@string/color"
         android:icon="@mipmap/ic_action_color"
         app:showAsAction="always"
         ></item>
     <item
         android:id="@+id/action_add_team"
         android:orderInCategory="100"
-        android:title="Equipo"
+        android:title="@string/equipo"
         android:icon="@mipmap/ic_action_addteam"
         app:showAsAction="always"
         ></item>

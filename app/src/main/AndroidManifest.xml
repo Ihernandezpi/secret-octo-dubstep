@@ -93,7 +93,7 @@
         <activity
             android:name=".Equipos.PrincipalCrearEquipo"
             android:configChanges="screenSize|orientation"
-            android:label="Equipo"
+            android:label="@string/equipo"
             android:theme="@style/AppTheme2" >
         </activity>
         <activity

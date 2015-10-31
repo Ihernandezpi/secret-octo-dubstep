@@ -127,15 +127,15 @@ public class Principal extends ActionBarActivity
                     ICONS[i]=R.mipmap.ic_action_group;
                     IDGRUPO[i]=miJsonObject.get("idAsignacion").toString();
                 }
-                TITLES[jsonarrayP.length()]="Papelera";
+                TITLES[jsonarrayP.length()]=getString(R.string.Papelera);
                 ICONS[jsonarrayP.length()]=R.mipmap.ic_papelera;
                 IDGRUPO[jsonarrayP.length()]=" IDCONFIG";
 
-                TITLES[jsonarrayP.length()+1]="Ayuda y Comentarios";
+                TITLES[jsonarrayP.length()+1]=getString(R.string.ayuda);
                 ICONS[jsonarrayP.length()+1]=R.mipmap.ic_action_help;
                 IDGRUPO[jsonarrayP.length()+1]="IDHELP";
 
-                TITLES[jsonarrayP.length()+2]="Salir";
+                TITLES[jsonarrayP.length()+2]=getString(R.string.Salir);
                 ICONS[jsonarrayP.length()+2]=R.mipmap.ic_closesession;
                 IDGRUPO[jsonarrayP.length()+2]="IDCLOSE";
 

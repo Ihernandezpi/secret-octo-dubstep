@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 import mx.com.pineahat.auth10.DAO.DAOEquipos;
+import mx.com.pineahat.auth10.R;
 
 /**
  * Created by Stephani on 27/10/2015.
@@ -76,7 +77,7 @@ public class ListCheckBoxDialogGrupos extends DialogFragment{
 
         final ArrayList itemsSeleccionados = new ArrayList();
 
-        builder.setTitle("Grupos al que desea copiar")
+        builder.setTitle(getString(R.string.Grupos_al_que_desea_copiar))
                 .setMultiChoiceItems(items, itemsChecked, new DialogInterface.OnMultiChoiceClickListener() {
                     @TargetApi(Build.VERSION_CODES.KITKAT)
                     @Override
@@ -84,17 +85,17 @@ public class ListCheckBoxDialogGrupos extends DialogFragment{
                         if (isChecked) {
                             // Guardar indice seleccionado
                             itemsSeleccionados.add(which);
-                           // Toast.makeText(getActivity(),"Checks seleccionados:(" + itemsSeleccionados.size() + ")",Toast.LENGTH_SHORT).show();
-                            onChecked(which,true);
+                            // Toast.makeText(getActivity(),"Checks seleccionados:(" + itemsSeleccionados.size() + ")",Toast.LENGTH_SHORT).show();
+                            onChecked(which, true);
 
                         } else {
                             // Remover indice sin seleccion
                             itemsSeleccionados.remove(Integer.valueOf(which));
-                            onChecked(which,false);
+                            onChecked(which, false);
                         }
                     }
                 })
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(
+                .setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener(
                 ) {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -107,7 +108,7 @@ public class ListCheckBoxDialogGrupos extends DialogFragment{
                       // Toast.makeText(getActivity(),"Aceptar",Toast.LENGTH_SHORT).show(); //actividades.avisar();
                     }
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancelar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getActivity(),"Cancelar",Toast.LENGTH_SHORT).show();

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import mx.com.pineahat.auth10.ActividadEditable;
 import mx.com.pineahat.auth10.DAO.DAOActividades;
 import mx.com.pineahat.auth10.DAO.DAOEquipos;
+import mx.com.pineahat.auth10.R;
 
 /**
  * Created by Stephani on 26/10/2015.
@@ -83,7 +84,7 @@ public class ListCheckBoxDialog extends DialogFragment {
 
         final ArrayList itemsSeleccionados = new ArrayList();
 
-        builder.setTitle("Equipos TI")
+        builder.setTitle(getString(R.string.EquipoTI))
                 .setMultiChoiceItems(items, itemsChecked, new DialogInterface.OnMultiChoiceClickListener() {
                     @TargetApi(Build.VERSION_CODES.KITKAT)
                     @Override
@@ -91,21 +92,21 @@ public class ListCheckBoxDialog extends DialogFragment {
                         if (isChecked) {
                             // Guardar indice seleccionado
                             itemsSeleccionados.add(which);
-                            Toast.makeText(
+                           /* Toast.makeText(
                                     getActivity(),
                                     "Checks seleccionados:(" + itemsSeleccionados.size() + ")",
                                     Toast.LENGTH_SHORT)
-                                    .show();
-                            onChecked(which,true);
+                                    .show();*/
+                            onChecked(which, true);
 
                         } else {
                             // Remover indice sin selecci�n
                             itemsSeleccionados.remove(Integer.valueOf(which));
-                            onChecked(which,false);
+                            onChecked(which, false);
                         }
                     }
                 })
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(
+                .setPositiveButton(getString(R.string.aceptar), new DialogInterface.OnClickListener(
                 ) {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -118,18 +119,18 @@ public class ListCheckBoxDialog extends DialogFragment {
                         {
                             midaoEquipos.insertarEquiposActividadesTI(key,jsonArrayEquipos);
                         }
-                        Toast.makeText(
+                      /*  Toast.makeText(
                                 getActivity(),
                                 "Key "+ key,
                                 Toast.LENGTH_SHORT)
-                                .show();
+                                .show();*/
                         ListCheckBoxDialog.super.getArguments().putString("key", key);
 
                         miActividadEditable.avisar();
 
                     }
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancelar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
