@@ -44,7 +44,7 @@ public class ColorPickerSwatch extends FrameLayout implements View.OnClickListen
 		this.mSwatchImage.setImageDrawable(new ColorStateDrawable(drawables, color));
 	}
 
-	public static abstract interface OnColorSelectedListener {
-		public abstract void onColorSelected(int color);
+	public interface OnColorSelectedListener {
+		void onColorSelected(int color);
 	}
 }

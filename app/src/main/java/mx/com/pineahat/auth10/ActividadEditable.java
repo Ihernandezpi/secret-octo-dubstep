@@ -205,13 +205,13 @@ public class ActividadEditable extends ActionBarActivity implements TimePickerDi
                 parent.removeView(Recordar);
                 parent.addView(vista, index);
                 Calendar now = Calendar.getInstance();
-                year=now.YEAR;
-                monthOfYear=now.MONTH;
-                dayOfMonth=now.DAY_OF_MONTH;
-                hourOfDay=now.HOUR_OF_DAY;
-                minute=now.MINUTE;
-                hourOfDay=now.HOUR_OF_DAY;
-                minute=now.MINUTE;
+                year= Calendar.YEAR;
+                monthOfYear= Calendar.MONTH;
+                dayOfMonth= Calendar.DAY_OF_MONTH;
+                hourOfDay= Calendar.HOUR_OF_DAY;
+                minute= Calendar.MINUTE;
+                hourOfDay= Calendar.HOUR_OF_DAY;
+                minute= Calendar.MINUTE;
                 dpd = DatePickerDialog.newInstance(
                         ActividadEditable.this,
                         now.get(Calendar.YEAR),

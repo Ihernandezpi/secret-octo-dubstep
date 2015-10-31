@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import mx.com.pineahat.auth10.Fechas.FechasFormateadas;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 /**
@@ -84,7 +85,7 @@ public class DAOCalificaciones {
     public void putCalificacion (String idIntegrante, String calif)
     {
         SQLiteDatabase bd = new Conexion(context).getBD();
-        String query ="update integrantes set calificacion='"+calif+"' where idIntegrantes='"+idIntegrante+"';";
+        String query ="update integrantes set calificacion='"+calif+"',  fechaModi='"+ FechasFormateadas.getFecha()+"' where idIntegrantes='"+idIntegrante+"';";
         try
         {
             bd.execSQL(query);

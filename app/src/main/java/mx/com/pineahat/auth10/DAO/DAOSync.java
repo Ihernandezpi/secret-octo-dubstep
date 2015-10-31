@@ -178,7 +178,7 @@ public class DAOSync {
     }
     private JSONArray putJsonDispositivo (JSONArray paquete)
     {
-        if(SyncAdapter.contador<=5)
+        if(SyncAdapter.contador<=30)
         {
             SyncAdapter.contador++;
             try {

@@ -63,7 +63,7 @@ public class CalificacionesAdapter extends RecyclerView.Adapter<CalificacionesAd
         TextView nombreEquipo =(TextView) holder.miView.findViewById(R.id.txtNombreEquipo);
 
         //Partes Ocultas
-        final View layoutOculto =(View) holder.miView.findViewById(R.id.view_hidden);
+        final View layoutOculto = holder.miView.findViewById(R.id.view_hidden);
         ListView listaAlumnos =(ListView) holder.miView.findViewById(R.id.listAlumnosCalificacion);
 
         /**

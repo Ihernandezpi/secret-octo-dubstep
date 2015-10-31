@@ -83,10 +83,8 @@ public class MyFragment extends Fragment{
                 do {
                     if(miLayout.isRefreshing())
                         miLayout.setRefreshing(false);
-                }while (ContentResolver.isSyncActive(account[0],SyncService.AUTHORITY));
+                }while (!ContentResolver.isSyncPending(account[0],SyncService.AUTHORITY));
                 refresh();
-
-
             }
         });
 

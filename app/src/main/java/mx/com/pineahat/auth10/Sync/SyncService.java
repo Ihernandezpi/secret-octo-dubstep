@@ -25,9 +25,9 @@ public class SyncService extends Service {
                 ContentResolver mContentResolver = sSyncAdapter.getContext().getContentResolver();
                 AccountManager miManager = AccountManager.get(getApplicationContext());
                 Account[] a = miManager.getAccountsByType(AUTHORITY);
-                mContentResolver.addPeriodicSync(a[0], AUTHORITY,  Bundle.EMPTY,  5);
-                mContentResolver.setSyncAutomatically(a[0],AUTHORITY,true);
-                mContentResolver.setMasterSyncAutomatically(true);
+                ContentResolver.addPeriodicSync(a[0], AUTHORITY, Bundle.EMPTY, 5);
+                ContentResolver.setSyncAutomatically(a[0], AUTHORITY, true);
+                ContentResolver.setMasterSyncAutomatically(true);
             }
         }
     }

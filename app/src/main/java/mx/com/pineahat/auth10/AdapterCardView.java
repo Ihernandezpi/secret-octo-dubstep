@@ -119,7 +119,7 @@ public class AdapterCardView extends RecyclerView.Adapter<AdapterCardView.ViewHo
         try
         {
 
-                ((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
+                holder.mTextView.findViewById(R.id.linearColor).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));
 
 
             //((LinearLayout)holder.mTextView.findViewById(R.id.linearColor)).setBackgroundColor(Color.parseColor(mDataset.getJSONObject(position).getString("color")));

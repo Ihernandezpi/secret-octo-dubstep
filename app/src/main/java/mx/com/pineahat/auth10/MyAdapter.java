@@ -183,8 +183,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
         else{
 
-            new LoadImage(holder.profile).execute("http://pineahat.com.mx/image/"+id+".png");
-            holder.profile.setImageResource(profile);           // Similarly we set the resources for header view
+            new LoadImage(ViewHolder.profile).execute("http://pineahat.com.mx/image/"+id+".png");
+            ViewHolder.profile.setImageResource(profile);           // Similarly we set the resources for header view
             holder.Name.setText(name);
             holder.email.setText(email);
 
