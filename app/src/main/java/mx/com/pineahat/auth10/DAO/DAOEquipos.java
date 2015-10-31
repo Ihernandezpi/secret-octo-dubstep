@@ -301,9 +301,7 @@ public class DAOEquipos {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = sdf.format(rightNow.getTime());
 
-        String query ="UPDATE equiposActividades\n" +
-                "set estado='Inactivo'\n" +
-                "where idEquiposActividades='"+equipoObject.getIdEquiposActividades()+"';";
+        String query ="UPDATE equiposActividades set estado='Terminado', fechaModi='"+strDate+"' where idEquiposActividades='"+equipoObject.getIdEquiposActividades()+"';";
         try
         {
             bd.execSQL(query);

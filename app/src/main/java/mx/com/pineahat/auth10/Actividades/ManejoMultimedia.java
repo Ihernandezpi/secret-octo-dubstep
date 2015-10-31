@@ -1,10 +1,15 @@
 package mx.com.pineahat.auth10.Actividades;
 
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import mx.com.pineahat.auth10.URL.HttpConnectUploadFile;
 
 /**
  * Created by Ignacio on 29/10/2015.
@@ -45,6 +50,8 @@ public class ManejoMultimedia {
             out.close();
         } catch (IOException e) {
         }
+        new UploadFileTask().execute(new File(rutaArchivos+NombreCompleto));
+
         return NombreCompleto;
 
     }
@@ -88,6 +95,16 @@ public class ManejoMultimedia {
         }
 
         return extension;
+    }
+
+    private static class UploadFileTask extends AsyncTask<File, Void, Void> {
+        protected Void doInBackground(File... args) {
+            HttpConnectUploadFile.uploadFile(args[0]);
+            return null;
+        }
+        protected void onPostExecute() {
+
+        }
     }
 
 

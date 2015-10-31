@@ -20,11 +20,17 @@ import mx.com.pineahat.auth10.utilerias.Conexion;
 public class DAOSync {
     private Context context;
     private String date, dateS;
+    private JSONArray infoProfe;
 
-    public DAOSync(Context context) {
+    public DAOSync(Context context, String myData) {
         this.context = context;
-    }
+        try {
+            this.infoProfe = new JSONArray(myData);
+        }catch (Exception e)
+        {
 
+        }
+    }
     /**
      * Trae todas las actividades que se deben subir aal servidor
      * @param date fecha del telefono de ultima actualización
@@ -89,14 +95,24 @@ public class DAOSync {
             {
                 do {
                     JSONObject equipos = new JSONObject();
-                    equipos.put("nombreTabla","equiposActividades");
+                    equipos.put("nombreTabla","equiposactividades");
                     equipos.put("tipoAccion", "actualizar");
                     equipos.put("idEquiposActividades",miCursor.getString(0));
                     equipos.put("idActividades",miCursor.getString(1));
                     equipos.put("nombre",miCursor.getString(2));
                     equipos.put("fechaModi",miCursor.getString(3));
                     equipos.put("estado",miCursor.getString(4));
-                    equipos.put("idEquipoTI",miCursor.getString(5));
+                    if(miCursor.isNull(5))
+                        equipos.put("idEquipoTI","");
+                    else
+                        equipos.put("idEquipoTI",miCursor.getString(5));
+
+                    if(miCursor.isNull(6))
+                        equipos.put("fechaActualizacion","");
+                    else
+                        equipos.put("fechaActualizacion",miCursor.getString(6));
+
+
                     actividades.put(equipos);
 
                 }while (miCursor.moveToNext());
@@ -131,9 +147,16 @@ public class DAOSync {
                     integrantes.put("idIntegrantes",miCursor.getString(0));
                     integrantes.put("idEquiposActividades",miCursor.getString(1));
                     integrantes.put("idAlumno",miCursor.getString(2));
+                    if(miCursor.isNull(3))
+                        integrantes.put("calificacion"," ");
+                    else
                     integrantes.put("calificacion",miCursor.getString(3));
                     integrantes.put("fechaModi",miCursor.getString(4));
                     integrantes.put("estado",miCursor.getString(5));
+                    if(miCursor.isNull(6))
+                        integrantes.put("fechaActualizacion"," ");
+                    else
+                        integrantes.put("fechaActualizacion",miCursor.getString(6));
                     equiposActividades.put(integrantes);
 
                 }while (miCursor.moveToNext());
@@ -156,6 +179,7 @@ public class DAOSync {
             JSONObject infoDispositivo = new JSONObject();
             infoDispositivo.put("tipoAccion", "dispositivo");
             infoDispositivo.put("ultimaFecha", dateS);
+            infoDispositivo.put("idProfesor", infoProfe.getJSONObject(0).getString("idProfesor"));
             paquete.put(infoDispositivo);
         }catch (Exception e)
         {

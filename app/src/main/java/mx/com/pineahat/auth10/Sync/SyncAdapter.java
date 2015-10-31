@@ -62,7 +62,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             dateS = miManager.getUserData(account, "fechaSyncS");
 
             //Aqui va tu log�ca de negocios
-            DAOSync sync = new DAOSync(context);
+            DAOSync sync = new DAOSync(context,myData);
             JSONArray jsonArray = sync.getActividades(fecha,dateS);
             Log.d("*********************", jsonArray.toString());
             Task miTask = new Task(jsonArray);
@@ -73,13 +73,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 for (int i =0;i<s.length();i++)
                 {
                     switch (s.getJSONObject(i).getString("tipoAccion")) {
-                        case "fechaActualizacion":
+                        case "fechaServidor":
                             Calendar calendar = Calendar.getInstance();
                             Date rightNow = calendar.getTime();
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String strDate = sdf.format(rightNow.getTime());
                             miManager.setUserData(a[0], "fechaSync", strDate);
-                            miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fechaServidor"));
+                            miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fechaActualizacion"));
                         break;
                         case "ultima_fecha":
                             Log.d("---------------------", "Insertando Actualizacion");

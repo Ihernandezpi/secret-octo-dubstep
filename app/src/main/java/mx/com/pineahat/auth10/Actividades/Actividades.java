@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.os.Build;
@@ -80,6 +81,8 @@ import java.util.List;
 import mx.com.pineahat.auth10.ListCheckboxDialog;
 import mx.com.pineahat.auth10.Principal;
 import mx.com.pineahat.auth10.R;
+import mx.com.pineahat.auth10.URL.HttpConnectUploadFile;
+
 //  "Al Cesar lo que es del Cesar"
 public class Actividades extends ActionBarActivity implements TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener {
 
@@ -691,7 +694,7 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
             actividad.setIdActividad(daoActividades.insertActividades(actividad.getIdAsignacion()));
         }
         ManejoMultimedia.crearRutas();
-        imageFileName = actividad.getIdActividad();
+        imageFileName ="I_"+actividad.getIdActividad();
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File real = new File(storageDir.getAbsolutePath()+"/APA/");
         File image = File.createTempFile(imageFileName,".jpg",real);
@@ -723,6 +726,9 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 String nombreCompleto = ManejoMultimedia.insertar(miFile,nombre);
                 DAOArchivos miDaoArchivos = new DAOArchivos(getBaseContext());
                 miDaoArchivos.insertarArchivo(actividad.getIdActividad(),nombreCompleto,"Archivo");
+
+
+
 
             }
             else
@@ -777,5 +783,6 @@ public class Actividades extends ActionBarActivity implements TimePickerDialog.O
                 + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
 
 }
