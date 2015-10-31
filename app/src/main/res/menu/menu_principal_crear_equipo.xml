@@ -2,6 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="mx.com.pineahat.auth10.Equipos.PrincipalCrearEquipo">
-
-
+    <item
+        android:id="@+id/menu_refresh"
+        android:title="@string/abc_action_bar_home_description"
+        android:showAsAction="never"/>
 </menu>

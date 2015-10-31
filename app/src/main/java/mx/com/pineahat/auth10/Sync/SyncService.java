@@ -15,9 +15,6 @@ public class SyncService extends Service {
     public static final String AUTHORITY = "mx.com.pineahat.auth10";
     /*public static final long SECONDS_PER_MINUTE = 1L;
     public static final long SYNC_INTERVAL_IN_MINUTES = 30L;*/
-    public static final long SECONDS_PER_MINUTE = 60L;
-    public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
-    public static final long SYNC_INTERVAL =SYNC_INTERVAL_IN_MINUTES *SECONDS_PER_MINUTE;
     private static SyncAdapter sSyncAdapter = null;
     private static final Object sSyncAdapterLock = new Object();
     @Override
@@ -28,7 +25,7 @@ public class SyncService extends Service {
                 ContentResolver mContentResolver = sSyncAdapter.getContext().getContentResolver();
                 AccountManager miManager = AccountManager.get(getApplicationContext());
                 Account[] a = miManager.getAccountsByType(AUTHORITY);
-                mContentResolver.addPeriodicSync(a[0], AUTHORITY,  Bundle.EMPTY,  SYNC_INTERVAL);
+                mContentResolver.addPeriodicSync(a[0], AUTHORITY,  Bundle.EMPTY,  5);
                 mContentResolver.setSyncAutomatically(a[0],AUTHORITY,true);
                 mContentResolver.setMasterSyncAutomatically(true);
             }

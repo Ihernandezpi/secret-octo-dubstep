@@ -50,7 +50,8 @@ public class ManejoMultimedia {
             out.close();
         } catch (IOException e) {
         }
-        new UploadFileTask().execute(new File(rutaArchivos+NombreCompleto));
+
+        //new UploadFileTask().execute(new File(rutaArchivos+NombreCompleto));
 
         return NombreCompleto;
 

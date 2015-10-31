@@ -5,5 +5,5 @@
     android:userVisible="true"
     android:supportsUploading="true"
     android:allowParallelSyncs="false"
-    android:isAlwaysSyncable="false"
+    android:isAlwaysSyncable="true"
     />

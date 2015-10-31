@@ -3,6 +3,7 @@ import android.*;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,12 +40,12 @@ import mx.com.pineahat.auth10.DAO.DAOCarga;
 import mx.com.pineahat.auth10.DAO.DAOSync;
 import mx.com.pineahat.auth10.DAO.PrincipalDAO;
 import mx.com.pineahat.auth10.Splash.Splash;
+import mx.com.pineahat.auth10.Sync.SyncService;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 
 public class Principal extends ActionBarActivity
 {
-
     Button load_img;
     ImageView img;
     Bitmap bitmap;
@@ -95,12 +96,17 @@ public class Principal extends ActionBarActivity
 
 
 
+
         /*Assing the toolbar object to the view
         and setting the ActionBar to our Tool_bar
          */
+        ContentResolver.setMasterSyncAutomatically(true);
         miAccountManager =  (AccountManager) this.getSystemService(ACCOUNT_SERVICE);
         Account [] account = miAccountManager.getAccountsByType("mx.com.pineahat.auth10");
         String myData = miAccountManager.getUserData(account[0], "JSON");
+        ContentResolver.setSyncAutomatically(account[0], SyncService.AUTHORITY, true);
+
+
         /**
          * VErificar cuando no mantenga la sesión
          */

@@ -42,7 +42,7 @@ public class HttpConnectUploadFile {
         //System.out.println(file.exists() + "!!");
         //InputStream in = resource.openStream();
 
-        byte[] buf = new byte[1024];
+        byte[] buf = new byte[(int)miFile.length()];
 
             for (int readNum; (readNum = fis.read(buf)) != -1;) {
                 bos.write(buf, 0, readNum); //no doubt here is 0

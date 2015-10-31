@@ -1,12 +1,7 @@
 package mx.com.pineahat.auth10.Equipos;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Vibrator;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,25 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import mx.com.pineahat.auth10.ActividadEditable;
-import mx.com.pineahat.auth10.DAO.DAOActividades;
-import mx.com.pineahat.auth10.MyFragment;
+import mx.com.pineahat.auth10.DAO.DAOEquipos;
 import mx.com.pineahat.auth10.R;
 
 public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEquipoAdapter.ViewHolder> {
@@ -45,6 +29,9 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
     private EditText nomrbeRquipo;
     private String nomEquipo ="";
     private boolean flag=false;
+    private String idEquipo=null;
+    DAOEquipos miDaoEquipos;
+    private String idActividad;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View mTextView;
@@ -53,14 +40,20 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
             mTextView = v;
         }
     }
-    public IntegrantesEquipoAdapter(JSONArray myDataset,ArrayList<Integrantes> misIntegrantes) {
+    public IntegrantesEquipoAdapter(JSONArray myDataset,ArrayList<Integrantes> misIntegrantes,String idEquipo, Context context, String idActividad) {
+        miDaoEquipos= new DAOEquipos(context);
         this.mDataset = myDataset;
         this.misIntegrantes= misIntegrantes;
+        this.idEquipo=idEquipo;
+        this.idActividad=idActividad;
     }
-    public IntegrantesEquipoAdapter(JSONArray myDataset,ArrayList<Integrantes> misIntegrantes,String nomEquipo) {
+    public IntegrantesEquipoAdapter(JSONArray myDataset,ArrayList<Integrantes> misIntegrantes,String nomEquipo,String idEquipo,Context context,String idActividad) {
+        miDaoEquipos= new DAOEquipos(context);
         this.mDataset = myDataset;
         this.misIntegrantes= misIntegrantes;
         this.nomEquipo=nomEquipo;
+        this.idEquipo=idEquipo;
+        this.idActividad=idActividad;
     }
 
     @Override
@@ -108,7 +101,7 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
         }
         else {
             try {
-                JSONObject alumno = mDataset.getJSONObject(position-SUMA);
+                final JSONObject alumno = mDataset.getJSONObject(position-SUMA);
                 TextView nombre = (TextView)holder.mTextView.findViewById(R.id.txtNombreAlumno);
                 nombre.setText(alumno.getString("nombre")+" "+alumno.getString("apellidoP"));
                 //Despues asignar imagen
@@ -116,7 +109,12 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
                 if(!alumno.getString("estado").equals("fuera"))
                 {
                     miCheckBox.setChecked(true);
-                    addIntegrante(alumno.getString("idAlumno").toString());
+//                    addIntegrante(alumno);
+                }
+                else
+                {
+                    miCheckBox.setChecked(false);
+                    deleteIntegrante(alumno);
                 }
                 miCheckBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -131,15 +129,14 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
                         if(miCheckBox.isChecked())
                         {
                             flag=true;
-                                Log.d("============","Se agregó "+idAlumno);
-                                addIntegrante(idAlumno);
-
+                            Log.d("============","Se agregó "+idAlumno);
+                            addIntegrante(alumno);
                         }
                         else
                         {
                             flag=true;
-                                Log.d("============","Se Eliminó "+idAlumno);
-                                deleteIntegrante(idAlumno);
+                            Log.d("============","Se Eliminó "+idAlumno);
+                            deleteIntegrante(alumno);
                         }
                     }
                 });
@@ -164,24 +161,23 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
         return position == 0;
     }
 
-    private void addIntegrante(String idAlumno)
-    {
-        Integrantes integrantes = new Integrantes(idAlumno);
-        misIntegrantes.add(integrantes);
 
-        for (Integrantes integrantess:misIntegrantes) {
-            Log.d("==========",integrantess.getIdAlumno());
+    private void addIntegrante(JSONObject alumno) {
+
+        if (this.idEquipo == null) {
+            this.idEquipo = miDaoEquipos.generarEquipo(this.idActividad, getNombre());
         }
+        miDaoEquipos.cambiarNombre(getNombre(),idEquipo);
+        miDaoEquipos.agregarIntegrante(alumno,idEquipo);
+
     }
-    private void deleteIntegrante(String idAlumno)
+    private void deleteIntegrante(JSONObject alumno)
     {
-        for (int i=0;i<misIntegrantes.size();i++) {
-            Integrantes integrantes= misIntegrantes.get(i);
-            if(integrantes.getIdAlumno().equals(idAlumno))
-            {
-                misIntegrantes.remove(i);
-            }
+        if (this.idEquipo == null) {
+            this.idEquipo = miDaoEquipos.generarEquipo(this.idActividad, getNombre());
         }
+        miDaoEquipos.cambiarNombre(getNombre(),idEquipo);
+        miDaoEquipos.eliminarIntegrante(alumno,idEquipo);
     }
 
     public ArrayList<Integrantes> getMisIntegrantes() {
@@ -199,3 +195,4 @@ public class IntegrantesEquipoAdapter extends RecyclerView.Adapter<IntegrantesEq
     }
 
 }
+

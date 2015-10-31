@@ -34,6 +34,7 @@ import java.util.List;
 
 import mx.com.pineahat.auth10.DAO.DAOCarga;
 import mx.com.pineahat.auth10.DAO.DAOSync;
+import mx.com.pineahat.auth10.Fechas.FechasFormateadas;
 import mx.com.pineahat.auth10.R;
 import mx.com.pineahat.auth10.URL.HttpConnectDownload;
 
@@ -41,6 +42,7 @@ import mx.com.pineahat.auth10.URL.HttpConnectDownload;
  * Created by ${Ignacio} on 12/07/2015.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
+    public static int contador=0;
     ContentResolver mContentResolver;
     Context context;
     HttpConnectDownload connectDownload = new HttpConnectDownload();
@@ -68,32 +70,50 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             Task miTask = new Task(jsonArray);
             JSONArray s = miTask.execute().get();
 
-            //Asignar ultima fecha de actualizacion fechaSync
-            if(s!=null) {
-                for (int i =0;i<s.length();i++)
-                {
-                    switch (s.getJSONObject(i).getString("tipoAccion")) {
-                        case "fechaServidor":
-                            Calendar calendar = Calendar.getInstance();
-                            Date rightNow = calendar.getTime();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String strDate = sdf.format(rightNow.getTime());
-                            miManager.setUserData(a[0], "fechaSync", strDate);
-                            miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fechaActualizacion"));
-                        break;
-                        case "ultima_fecha":
-                            Log.d("---------------------", "Insertando Actualizacion");
-                            DAOCarga miCarga = new DAOCarga(context);
-                            JSONObject objeto = s.getJSONObject(i);
-                            objeto.remove("tipoAccion");
-                            JSONArray array = new JSONArray();
-                            array.put(objeto);
-                            miCarga.trunck(array);
-                            break;
+            if(!jsonArray.getJSONObject(0).getString("tipoAccion").equals("inicio")) {
+                if (s != null) {
+                    for (int i = 0; i < s.length(); i++) {
+                        switch (s.getJSONObject(i).getString("tipoAccion")) {
+                            case "fechaServidor":
+                                miManager.setUserData(a[0], "fechaSync", FechasFormateadas.getFecha());
+                                miManager.setUserData(a[0], "fechaSyncS", s.getJSONObject(i).getString("fechaActualizacion"));
+                                break;
+                            case "ultima_fecha":
+                                Log.d("---------------------", "Insertando Actualizacion");
+                                DAOCarga miCarga = new DAOCarga(context);
+                                JSONObject objeto = s.getJSONObject(i);
+                                objeto.remove("tipoAccion");
+                                JSONArray array = new JSONArray();
+                                array.put(objeto);
+                                miCarga.trunck(array);
+                                break;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < s.length(); i++) {
+                if (s != null) {
+                    try {
+                        Log.d("---------------------", "Insertando Todo");
+                        DAOCarga miCarga = new DAOCarga(context);
+                        JSONObject objeto = s.getJSONObject(i);
+                        //objeto.remove("tipoAccion");
+                        JSONArray array = new JSONArray();
+                        array.put(objeto);
+                        miCarga.trunck(array);
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
                 }
-
+                }
             }
+
+
         }catch (Exception e)
         {
             Log.d("*********************", "Error Sync");

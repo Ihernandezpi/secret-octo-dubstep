@@ -56,7 +56,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
             this.idActividad = getIntent().getStringExtra("idActividad");
             JSONArray miJsonArray = miDaoEquipos.traerAlumnos(idActividad);
             if(miJsonArray!=null) {
-                mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes);
+                mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,idEquipo,getBaseContext(),this.idActividad);
                 mRecyclerView.setAdapter(mAdapter);
             }
             else
@@ -71,7 +71,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
             JSONArray miJsonArray = miDaoEquipos.getIntegrantesEquipo(idEquipo);
             String nombreEquipo= miDaoEquipos.getNombre(idEquipo);
             if(miJsonArray!=null) {
-                mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo);
+                mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo,idEquipo,getBaseContext(),this.idActividad);
                 mRecyclerView.setAdapter(mAdapter);
             }
             else
@@ -79,7 +79,7 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
                 this.idActividad = getIntent().getStringExtra("idActividad");
                 miJsonArray = miDaoEquipos.traerAlumnos(idActividad);
                 if(miJsonArray!=null) {
-                    mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo);
+                    mAdapter = new IntegrantesEquipoAdapter(miJsonArray,misIntegrantes,nombreEquipo,idEquipo,getBaseContext(),this.idActividad);
                     mRecyclerView.setAdapter(mAdapter);
                 }
             }
@@ -123,26 +123,8 @@ public class PrincipalCrearEquipo extends AppCompatActivity {
 
     }
     private void procesar() {
-        try {
-        if (mAdapter.getFlag()) {
-
-                String nombre = mAdapter.getNombre();
-                if (!nombre.equals("") || misIntegrantes.size() != 0) {
-                    if (this.idEquipo == null) {
-                        this.idEquipo = crearEquipo(this.idActividad, nombre);
-                    }
-                    DAOEquipos daoEquipos = new DAOEquipos(this);
-                    daoEquipos.actualizarIntegrantes(misIntegrantes, this.idEquipo, nombre);
-                    }
-
-        }
-        } catch (Exception e) {
-
-        }
-
+        String nombre = mAdapter.getNombre();
+        DAOEquipos daoEquipos = new DAOEquipos(this);
+        daoEquipos.cambiarNombre(nombre,this.idEquipo);
     }
-
-
-
-
 }

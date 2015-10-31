@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.sql.Connection;
 
+import mx.com.pineahat.auth10.Sync.SyncAdapter;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 /**
@@ -170,21 +171,41 @@ public class DAOSync {
             bd.close();
             con.close();
         }
-
-        return putJsonDispositivo(equiposActividades);
+        if(equiposActividades.length()>0)
+            return fechaSync(equiposActividades);
+        else
+            return putJsonDispositivo(equiposActividades);
     }
     private JSONArray putJsonDispositivo (JSONArray paquete)
     {
-        try {
-            JSONObject infoDispositivo = new JSONObject();
-            infoDispositivo.put("tipoAccion", "dispositivo");
-            infoDispositivo.put("ultimaFecha", dateS);
-            infoDispositivo.put("idProfesor", infoProfe.getJSONObject(0).getString("idProfesor"));
-            paquete.put(infoDispositivo);
-        }catch (Exception e)
+        if(SyncAdapter.contador<=5)
         {
-            Log.d("TIpo Acción dispo",e.getMessage());
+            SyncAdapter.contador++;
+            try {
+                JSONObject infoDispositivo = new JSONObject();
+                infoDispositivo.put("tipoAccion", "dispositivo");
+                infoDispositivo.put("ultimaFecha", dateS);
+                infoDispositivo.put("idProfesor", infoProfe.getJSONObject(0).getString("idProfesor"));
+                paquete.put(infoDispositivo);
+            }catch (Exception e)
+            {
+                Log.d("TIpo Acción dispo",e.getMessage());
+            }
         }
+        else
+        {
+            SyncAdapter.contador=0;
+            try {
+                JSONObject inicio = new JSONObject();
+                inicio.put("tipoAccion","inicio");
+                inicio.put("idProfesor", infoProfe.getJSONObject(0).getString("idProfesor"));
+                paquete.put(inicio);
+            }catch (Exception e)
+            {
+                Log.d("TIpo Acción dispo",e.getMessage());
+            }
+        }
+
         return fechaSync(paquete);
     }
     private JSONArray fechaSync (JSONArray paquete)

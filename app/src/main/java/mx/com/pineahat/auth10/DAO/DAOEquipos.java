@@ -18,6 +18,7 @@ import java.util.Date;
 
 import mx.com.pineahat.auth10.Equipo;
 import mx.com.pineahat.auth10.Equipos.Integrantes;
+import mx.com.pineahat.auth10.Fechas.FechasFormateadas;
 import mx.com.pineahat.auth10.utilerias.Conexion;
 
 /**
@@ -41,7 +42,7 @@ public class DAOEquipos {
         Conexion conexion = new Conexion(context);
         SQLiteDatabase bd = conexion.getBD();
         String query="select alum.idAlumno,p.nombre,p.apellidoP,p.apellidoM,alum.matricula from alumnos as alum INNER JOIN persona as p on(p.idPersona=alum.idPersona) where alum.idGrupo=(select asig.idGrupo from actividades as ac INNER JOIN asignacion as asig on (asig.idAsignacion=ac.idAsignacion) WHERE ac.idActividades='"+idActividad+"');";
-        Cursor cursor = bd.rawQuery(query,null);
+        Cursor cursor = bd.rawQuery(query, null);
         if(cursor.moveToFirst())
         {
             miLista= new JSONArray();
@@ -66,24 +67,10 @@ public class DAOEquipos {
         return miLista;
     }
 
-    public void actualizarIntegrantes(ArrayList<Integrantes> miIntegrantes,String idEquipo,String nombre)
-    {
-        cambiarNombre(nombre,idEquipo);
-        Conexion conexion= new Conexion(context);
-        SQLiteDatabase bd = conexion.getBD();
-        String query = "delete from integrantes where integrantes.idEquiposActividades='"+idEquipo+"'";
-        bd.execSQL(query);
-        for (Integrantes integrante:miIntegrantes) {
-            String primaryKey = generatePrimaryKeyIntegrante();
-            DateFormat miDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Calendar miCalendar = Calendar.getInstance();
-            String fecha = miDateFormat.format(miCalendar.getTime());
-            String query2 = "INSERT INTO integrantes(idIntegrantes, idEquiposActividades, idAlumno, fechaModi, estado) VALUES('" + primaryKey + "', '" + idEquipo + "', '"+integrante.getIdAlumno()+"', '"+fecha+"', 'Activo');";
-            bd.execSQL(query2);
-        }
-        bd.close();
-        conexion.close();
-    }
+
+
+
+
 
 
     public String generarEquipo (String idActividad,String nombre)
@@ -259,7 +246,7 @@ public class DAOEquipos {
         JSONArray miJsonArray = null;
         Conexion conexion = new Conexion(context);
         SQLiteDatabase bd = conexion.getBD();
-        String query ="select * from integrantes where idEquiposActividades='"+idEquiposActividades+"';";
+        String query ="select * from integrantes where idEquiposActividades='"+idEquiposActividades+"' and estado='Activo';";
         try
         {
             Cursor resp=bd.rawQuery(query,null);
@@ -379,13 +366,13 @@ public class DAOEquipos {
         return arrayEquipos;
     }
 
-    private void cambiarNombre(String nombre, String idEquipo)
+    public void cambiarNombre(String nombre, String idEquipo)
     {
         Conexion con = new Conexion(this.context);
         SQLiteDatabase bd = con.getBD();
         try
         {
-            String query="UPDATE equiposActividades SET nombre='"+nombre+"' WHERE (idEquiposActividades = '"+idEquipo+"');";
+            String query="UPDATE equiposActividades SET nombre='"+nombre+"', fechaModi='"+FechasFormateadas.getFecha()+"' WHERE (idEquiposActividades = '"+idEquipo+"');";
             bd.execSQL(query);
         }catch (Exception e)
         {
@@ -398,7 +385,7 @@ public class DAOEquipos {
 
     public JSONArray getIntegrantesEquipo(String idEquipo) {
         JSONArray miJsonArray = null;
-        String query ="SELECT alumnos.idAlumno, p.nombre,p.apellidoP,p.apellidoM, integrantes.estado FROM alumnos inner JOIN persona as p on (p.idPersona = alumnos.idPersona) inner JOIN integrantes on (integrantes.idAlumno = alumnos.idAlumno) where integrantes.idEquiposActividades='"+idEquipo+"' and alumnos.idGrupo=(select asignacion.idGrupo from equiposActividades INNER JOIN actividades on (actividades.idActividades=equiposActividades.idActividades) INNER JOIN asignacion on (asignacion.idAsignacion=actividades.idAsignacion)where equiposActividades.idEquiposActividades='"+idEquipo+"');";
+        String query ="SELECT alumnos.idAlumno, p.nombre,p.apellidoP,p.apellidoM, integrantes.estado FROM alumnos inner JOIN persona as p on (p.idPersona = alumnos.idPersona) inner JOIN integrantes on (integrantes.idAlumno = alumnos.idAlumno) where integrantes.idEquiposActividades='"+idEquipo+"' and integrantes.estado='Activo' and alumnos.idGrupo=(select asignacion.idGrupo from equiposActividades INNER JOIN actividades on (actividades.idActividades=equiposActividades.idActividades) INNER JOIN asignacion on (asignacion.idAsignacion=actividades.idAsignacion)where equiposActividades.idEquiposActividades='"+idEquipo+"');";
         Conexion con = new Conexion(context);
         SQLiteDatabase bd = con.getBD();
         try
@@ -500,5 +487,50 @@ public class DAOEquipos {
         }
 
         return miJsonArray;
+    }
+
+    public void agregarIntegrante(JSONObject alumno,String idEquipo) {
+
+        Conexion con = new Conexion(context);
+        SQLiteDatabase bd  = con.getBD();
+        String query="";
+        try
+        {
+            if(existeInetgrante(alumno.getString("idAlumno"),idEquipo))
+                query="update integrantes set estado='Activo', fechaModi='"+FechasFormateadas.getFecha()+"' where idAlumno='"+alumno.getString("idAlumno")+"' and idEquiposActividades='"+idEquipo+"';";
+            else
+                query="insert into integrantes values ('"+generatePrimaryKeyIntegrante()+"','"+idEquipo+"','"+alumno.getString("idAlumno")+"','','"+FechasFormateadas.getFecha()+"','Activo', '')";
+            bd.execSQL(query);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    public void eliminarIntegrante(JSONObject alumno,String idEquipo) {
+        Conexion con = new Conexion(context);
+        SQLiteDatabase bd  = con.getBD();
+        try
+        {
+            String query ="update integrantes set estado='Terminado', fechaModi='"+FechasFormateadas.getFecha()+"' where idAlumno='"+alumno.getString("idAlumno")+"' and idEquiposActividades='"+idEquipo+"';";
+            bd.execSQL(query);
+        }catch (Exception e){e.printStackTrace();}
+        con.close();
+        bd.close();
+
+
+    }
+    private boolean existeInetgrante(String idAlumno,String idEquipo)
+    {
+        boolean resp = false;
+        Conexion con = new Conexion(context);
+        SQLiteDatabase bd  = con.getBD();
+        String query ="select * from integrantes where idAlumno='"+idAlumno+"' and idEquiposActividades='"+idEquipo+"';";
+        try
+        {
+            Cursor res = bd.rawQuery(query,null);
+            if(res.moveToFirst())
+            resp=true;
+        }catch (Exception e){e.printStackTrace();}
+        bd.close();
+        con.close();
+        return resp;
     }
 }

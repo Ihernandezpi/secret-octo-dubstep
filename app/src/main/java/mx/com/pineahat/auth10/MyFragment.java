@@ -1,6 +1,9 @@
 package mx.com.pineahat.auth10;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
@@ -10,6 +13,7 @@ import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,6 +41,7 @@ import java.util.TimerTask;
 
 import mx.com.pineahat.auth10.Actividades.Actividades;
 import mx.com.pineahat.auth10.DAO.DAOCardViewItem;
+import mx.com.pineahat.auth10.Sync.SyncService;
 
 /**
  * Created by Stephani on 05/07/2015.
@@ -45,7 +50,7 @@ public class MyFragment extends Fragment{
     private boolean flag =true;
     public final static String ID_GRUPO = "key_text";
     public final static String TYPE="KEY_TYPE";
-
+    public static final String ACCOUNT_SERVICE = "account";
     private String mText;
     private String tipo;
     private RecyclerView miRecyclerView;
@@ -59,8 +64,31 @@ public class MyFragment extends Fragment{
                              Bundle savedInstanceState) {
         mText = getArguments().getString(ID_GRUPO);
         tipo = getArguments().getString(TYPE);
-        View v = inflater.inflate(R.layout.fragment, container, false);
+        final View v = inflater.inflate(R.layout.fragment, container, false);
         TextView tv = (TextView) v.findViewById(R.id.tv_fragment);
+        final SwipeRefreshLayout miLayout = (SwipeRefreshLayout)v.findViewById(R.id.swiperefresh);
+        miLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AccountManager miAccountManager;
+                ContentResolver.setMasterSyncAutomatically(true);
+                miAccountManager =  (AccountManager) v.getContext().getSystemService(ACCOUNT_SERVICE);
+                Account[] account = miAccountManager.getAccountsByType("mx.com.pineahat.auth10");
+                String myData = miAccountManager.getUserData(account[0], "JSON");
+                ContentResolver.setSyncAutomatically(account[0], SyncService.AUTHORITY, true);
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                ContentResolver.requestSync(account[0], SyncService.AUTHORITY, settingsBundle);
+                do {
+                    if(miLayout.isRefreshing())
+                        miLayout.setRefreshing(false);
+                }while (ContentResolver.isSyncActive(account[0],SyncService.AUTHORITY));
+                refresh();
+
+
+            }
+        });
 
             FloatingActionButton miFloatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
         if(tipo.equals("Actividades")) {
